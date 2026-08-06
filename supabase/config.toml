@@ -1,0 +1,129 @@
+# =============================================================================
+# Supabase Configuration (config.toml)
+# Project configuration for Zero-Risk SaaS Stack
+# =============================================================================
+
+[project]
+# Project reference ID (get from supabase dashboard)
+# ref = "your-project-ref"
+
+# Database configuration
+[db]
+  # Major version of Postgres
+  major_version = 17
+  
+  # Port for local development (default: 54322)
+  port = 54322
+  
+  # Shadow database port (for migrations)
+  shadow_port = 54320
+
+# API configuration
+[api]
+  # Port for local API (default: 54321)
+  port = 54321
+  
+  # Enable GraphQL (default: false)
+  graphql = false
+
+# Auth configuration
+[auth]
+  # Site URL for email redirects
+  site_url = "http://localhost:3000"
+  
+  # Additional redirect URLs (comma-separated)
+  additional_redirect_urls = [
+    "http://localhost:3000/**",
+    "http://localhost:3001/**",
+    "https://*.vercel.app/**"
+  ]
+  
+  # JWT expiry in seconds (default: 3600 = 1 hour)
+  jwt_expiry = 3600
+  
+  # Refresh token expiry in seconds (default: 2592000 = 30 days)
+  refresh_token_expiry = 2592000
+  
+  # Enable email confirmations (default: true)
+  enable_confirmations = true
+  
+  # Enable phone confirmations (default: false)
+  enable_phone_confirmations = false
+  
+  # Secure password requirements
+  [auth.password_requirements]
+    min_length = 8
+    require_uppercase = true
+    require_lowercase = true
+    require_numbers = true
+    require_symbols = false
+  
+  # External OAuth providers (configure secrets in .env)
+  [auth.external]
+    # github_enabled = true
+    # google_enabled = true
+    # gitlab_enabled = false
+
+# Storage configuration
+[storage]
+  # Port for local storage (default: 54323)
+  port = 54323
+  
+  # File size limit (default: 52428800 = 50MB)
+  file_size_limit = 52428800
+  
+  # Allowed MIME types (empty = all)
+  allowed_mime_types = []
+
+# Realtime configuration
+[realtime]
+  # Port for local realtime (default: 54324)
+  port = 54324
+  
+  # Enable realtime (default: true)
+  enabled = true
+
+# Edge Functions configuration
+[functions]
+  # Port for local functions (default: 54325)
+  port = 54325
+  
+  # Enable edge functions (default: true)
+  enabled = true
+
+# Studio configuration
+[studio]
+  # Port for local studio (default: 54326)
+  port = 54326
+  
+  # Enable studio (default: true)
+  enabled = true
+
+# Logging configuration
+[logs]
+  # Log level (debug, info, warn, error)
+  level = "info"
+  
+  # Retention days
+  retention_days = 7
+
+# Migration configuration
+[migration]
+  # Migration directory (relative to project root)
+  migration_dir = "supabase/migrations"
+  
+  # Seed directory (relative to project root)
+  seed_dir = "supabase/seed"
+
+# Custom configuration for Zero-Risk SaaS
+[custom]
+  # Architecture mode: "b2b" or "b2c"
+  # This determines which migration variant to apply
+  architecture = "b2b"
+  
+  # Feature flags
+  [custom.features]
+    organizations = true
+    teams = true
+    billing = true
+    analytics = false

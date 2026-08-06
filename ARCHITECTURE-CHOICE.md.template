@@ -1,0 +1,685 @@
+# ARCHITECTURE-CHOICE.md — Architecture Decision Record Template
+
+> **Instructions**: Document every significant architectural decision using this template. Each ADR is immutable once merged — create a new ADR to supersede. Store in `docs/architecture/adr-XXX-title.md`.
+
+---
+
+## 1. ADR Index (Living Document)
+
+| ID | Title | Status | Date | Supersedes | Superseded By |
+|----|-------|--------|------|------------|---------------|
+| 001 | [Title] | [Proposed/Accepted/Deprecated/Superseded] | [Date] | — | — |
+| 002 | [Title] | ... | ... | ... | ... |
+
+> **Status Values**: `Proposed` → `Accepted` → `Deprecated` / `Superseded`
+
+---
+
+## 2. ADR Template (Copy for Each Decision)
+
+### ADR-XXX: [Short Descriptive Title]
+
+**Status**: [Proposed | Accepted | Deprecated | Superseded]
+**Date**: [YYYY-MM-DD]
+**Deciders**: [Names/roles]
+**Consulted**: [Names/roles]
+**Informed**: [Teams/stakeholders]
+
+#### Context
+[What is the problem we're solving? What forces are at play? Include technical, business, team, and organizational context. Link to related issues, PRs, or discussions.]
+
+#### Decision
+[What did we decide? State clearly and concisely. This is the "what."]
+
+#### Consequences
+
+##### Positive
+- [Benefit 1]
+- [Benefit 2]
+
+##### Negative
+- [Cost/Trade-off 1]
+- [Cost/Trade-off 2]
+
+##### Neutral
+- [Observation 1]
+
+#### Alternatives Considered
+
+| Alternative | Pros | Cons | Why Not Chosen |
+|-------------|------|------|----------------|
+| [Option A] | [Pros] | [Cons] | [Reason] |
+| [Option B] | [Pros] | [Cons] | [Reason] |
+| [Option C] | [Pros] | [Cons] | [Reason] |
+
+#### Implementation Notes
+[Technical details: migration path, config changes, code examples, rollback plan]
+
+#### Validation Criteria
+[How will we know this decision was right? Metrics, load tests, developer feedback, etc.]
+
+#### Related ADRs
+- ADR-XXX: [Title]
+- ADR-YYY: [Title]
+
+---
+
+## 3. Core Architecture Decisions (Pre-filled for Zero-Risk SaaS Stack)
+
+### ADR-001: Frontend Framework — TanStack Start
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+**Deciders**: [Team]
+
+#### Context
+Need a React-based full-stack framework with:
+- File-based routing
+- Server-side rendering (SSR) + client-side navigation
+- Type-safe API layer
+- Good developer experience
+- Deployable to Cloudflare Pages
+
+#### Decision
+Use **TanStack Start** (v1.x) as the primary frontend framework.
+
+#### Consequences
+**Positive**:
+- Built on TanStack Router (type-safe, nested routes, loaders)
+- TanStack Query integrated for server state
+- Vite-based, fast HMR
+- Cloudflare Pages adapter available
+- React Server Components (RSC) support via Vinxi
+- Full-stack type safety with Zod + tRPC-style procedures
+
+**Negative**:
+- Newer ecosystem (smaller community than Next.js)
+- Fewer third-party integrations
+- RSC still maturing in Vinxi/TanStack Start
+
+**Neutral**:
+- Learning curve for team unfamiliar with TanStack ecosystem
+
+#### Alternatives Considered
+| Alternative | Pros | Cons | Why Not Chosen |
+|-------------|------|------|----------------|
+| Next.js 14+ (App Router) | Mature, huge ecosystem, RSC native | Vercel lock-in, heavier, middleware complexity on Cloudflare | Cloudflare Pages deployment friction |
+| Remix v2 | Strong web standards, nested routes | Shopify ownership uncertainty, no RSC yet | TanStack Router superior type safety |
+| Astro + React Islands | Great performance, multi-framework | Not a full app framework, limited SSR patterns | Need full SSR app, not content site |
+| Hono + React | Lightweight, Cloudflare-native | No file routing, manual SSR setup | Higher DX cost |
+
+#### Implementation Notes
+- Use `@tanstack/start` with `@tanstack/react-router`, `@tanstack/react-query`
+- Configure `vite.config.ts` with `cloudflarePages()` adapter
+- Define routes in `routes/` directory with `.tsx` files
+- Use `createServerFn()` for type-safe server functions (RPC style)
+- Integrate with Supabase via server functions (not client-side)
+
+#### Validation Criteria
+- [ ] Cold start < 500ms on Cloudflare Pages
+- [ ] TypeScript errors catch route param mismatches
+- [ ] Server functions work in preview + production
+- [ ] Bundle size < 200KB gzipped (initial JS)
+
+---
+
+### ADR-002: Backend & Database — Supabase (PostgreSQL)
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+
+#### Context
+Need managed PostgreSQL with:
+- Auth (email/password, OAuth, MFA)
+- Real-time subscriptions
+- Row Level Security (RLS)
+- Edge-compatible (Cloudflare Workers)
+- Generous free tier
+
+#### Decision
+Use **Supabase** as the primary backend platform (PostgreSQL + Auth + Realtime + Storage).
+
+#### Consequences
+**Positive**:
+- PostgreSQL (not forked) — standard SQL, tooling, extensions
+- Auth integrated with RLS — JWT claims map to policies
+- Real-time via WebSockets (Postgres changes → clients)
+- Edge-compatible client (`@supabase/supabase-js` works in Workers)
+- Generous free tier (500MB DB, 50k MAU)
+- Self-hostable exit strategy
+
+**Negative**:
+- Vendor lock-in on Auth/Realtime/Storage APIs
+- Connection pooling required for serverless (PgBouncer)
+- Cold starts on free tier
+- Limited control over Postgres config (extensions, versions)
+
+**Neutral**:
+- Must design RLS policies carefully — security boundary
+
+#### Alternatives Considered
+| Alternative | Pros | Cons | Why Not Chosen |
+|-------------|------|------|----------------|
+| Neon + Clerk + Custom | Serverless Postgres, separate best-in-class auth | More moving parts, integration complexity | Supabase = integrated DX |
+| PlanetScale + Kinde | MySQL-compatible, scalable | MySQL not PostgreSQL, different semantics | Team prefers Postgres |
+| Railway/Render + Custom | Simpler, cheaper at scale | No built-in auth/realtime, more ops | Speed to market |
+| Cloudflare D1 + Custom | Native Workers integration | SQLite limitations, no auth/realtime | Not production-ready for auth |
+
+#### Implementation Notes
+- Use Supabase JS client in TanStack Start server functions (not browser)
+- Enable RLS on all tables; policies reference `auth.uid()`
+- Use `supabase.auth.getUser()` in server functions for session validation
+- Connection pooling via Supavisor (built-in) — use `pooler.supabase.com:6543`
+- Migrations via Supabase CLI (`supabase db push` / migration files)
+- Storage buckets for user uploads; signed URLs for private files
+
+#### Validation Criteria
+- [ ] RLS policies block cross-tenant access in integration tests
+- [ ] Auth flows work end-to-end (signup, login, MFA, password reset)
+- [ ] Real-time subscriptions work in Cloudflare Pages preview
+- [ ] PgBouncer connection pool handles 100 concurrent serverless invocations
+
+---
+
+### ADR-003: Hosting & Edge Runtime — Cloudflare Pages
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+
+#### Context
+Need hosting with:
+- Global edge network (low latency)
+- Zero-config deployments from Git
+- Support for TanStack Start (Vite + SSR)
+- Free tier for development
+- Custom domains, SSL, headers
+
+#### Decision
+Deploy to **Cloudflare Pages** with **Cloudflare Workers** for edge functions.
+
+#### Consequences
+**Positive**:
+- True edge runtime (V8 isolates, not Node.js) — cold start ~0ms
+- Generous free tier (500k requests/month, unlimited sites)
+- Git integration (auto-deploy on push)
+- Built-in D1, KV, R2, Queues for future expansion
+- WAF, DDoS, bot protection included
+- `wrangler` CLI for local dev (`wrangler pages dev`)
+
+**Negative**:
+- **No Node.js APIs** — must use Web Standards (Fetch, Streams, Crypto)
+- No `fs`, `path`, `process` — polyfills needed for some packages
+- 10ms CPU limit per request (free), 30ms (paid)
+- 128MB memory limit
+- No long-running processes (use Queues/Durable Objects)
+
+**Neutral**:
+- TanStack Start Cloudflare adapter handles most incompatibilities
+- Supabase JS client works (uses Fetch)
+
+#### Alternatives Considered
+| Alternative | Pros | Cons | Why Not Chosen |
+|-------------|------|------|----------------|
+| Vercel | Best Next.js support, edge functions | Cost at scale, vendor lock-in, no free tier for teams | Cost predictability |
+| Netlify | Good free tier, edge functions | Less performant edge, fewer primitives | Cloudflare network superior |
+| AWS Amplify + Lambda@Edge | Enterprise features | Complex, expensive, slow deployments | DX |
+| Fly.io / Railway | Full control, containers | More ops, not edge-native | Team size |
+
+#### Implementation Notes
+- `wrangler.toml` config for Pages + Functions
+- `output: 'server'` in TanStack Start config (SSR)
+- Edge-compatible dependencies only — audit with `wrangler pages dev`
+- Use `@cloudflare/kv-asset-handler` for static assets if needed
+- Custom domain via Cloudflare Registrar or CNAME
+- Preview deployments on every PR
+
+#### Validation Criteria
+- [ ] `wrangler pages dev` matches production behavior
+- [ ] All npm dependencies resolve without Node.js polyfills
+- [ ] Cold start < 100ms (measured via Workers Trace)
+- [ ] Deploy preview URL works for every PR
+
+---
+
+### ADR-004: Payments — Stripe
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+
+#### Context
+Need payment processing with:
+- Subscriptions (tiered, usage-based)
+- One-time payments
+- Customer portal
+- Webhooks for provisioning
+- Tax handling
+- Global support
+
+#### Decision
+Use **Stripe** for all payments, subscriptions, and billing.
+
+#### Consequences
+**Positive**:
+- Best-in-class API, docs, SDKs
+- Stripe Billing handles subscriptions, trials, proration, dunning
+- Customer Portal — no-build self-service
+- Stripe Tax — automated calculation/collection
+- Webhooks reliable with retry/backoff
+- Supports 135+ currencies, local payment methods
+
+**Negative**:
+- Fees: 2.9% + 30¢ (US), higher internationally
+- Complexity: many objects (Price, Product, Subscription, Invoice, etc.)
+- Webhook handling must be idempotent
+- PCI compliance scope (mitigated by Stripe Elements)
+
+**Neutral**:
+- Use Stripe Checkout (hosted) for PCI SAQ-A simplicity
+- Store `stripe_customer_id` on Supabase `profiles` table
+
+#### Alternatives Considered
+| Alternative | Pros | Cons | Why Not Chosen |
+|-------------|------|------|----------------|
+| Paddle | Merchant of Record, handles tax/VAT | Less flexible, higher fees, limited APIs | Need Stripe's flexibility |
+| Lemon Squeezy | MoR, good for digital goods | Smaller ecosystem, less enterprise-ready | B2B SaaS focus |
+| Braintree | PayPal ecosystem | Older API, less subscription features | Stripe superior DX |
+| Custom + Adyen/Checkout.com | Lower fees at scale | Massive engineering investment | Not at scale yet |
+
+#### Implementation Notes
+- **Server-only**: Stripe secret key only in Cloudflare Workers (env vars)
+- **Client**: Stripe.js + Elements / Checkout Session redirect
+- **Webhooks**: `stripe/webhooks` endpoint in TanStack Start server function
+- **Idempotency**: Use `stripe-webhook-secret` + event `id` dedup in Supabase
+- **Sync**: Webhook → Supabase `subscriptions` table (RLS-protected)
+- **Portal**: `/billing/portal` server function → `stripe.billingPortal.sessions.create()`
+
+#### Validation Criteria
+- [ ] Checkout → success → subscription active in DB
+- [ ] Webhook idempotency handles duplicate events
+- [ ] Customer Portal accessible, shows correct plan
+- [ ] Cancel/downgrade/upgrade flows work end-to-end
+- [ ] Tax calculated correctly for US/EU test addresses
+
+---
+
+### ADR-005: Transactional Email — Brevo (formerly Sendinblue)
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+
+#### Context
+Need transactional email with:
+- High deliverability
+- Template management
+- API + SMTP
+- Free tier for development
+- Webhooks for tracking (open, click, bounce)
+
+#### Decision
+Use **Brevo** for transactional email.
+
+#### Consequences
+**Positive**:
+- Generous free tier (300 emails/day)
+- Good deliverability reputation
+- Template editor (drag-drop + HTML)
+- REST API + SMTP relay
+- Webhooks for events
+- Supabase Auth can use Brevo SMTP for magic links
+
+**Negative**:
+- Marketing-focused UI (transactional buried)
+- API rate limits on free tier
+- Less developer-centric than Resend/Postmark
+
+**Neutral**:
+- Use dedicated transactional API key (not master)
+
+#### Alternatives Considered
+| Alternative | Pros | Cons | Why Not Chosen |
+|-------------|------|------|----------------|
+| Resend | Developer-first, React Email, great DX | No free tier (pay-as-you-go), newer | Cost at low volume |
+| Postmark | Best deliverability, fast | Expensive, no free tier | Budget |
+| SendGrid | Enterprise features | Deliverability issues on shared IPs, complex | Reputation |
+| AWS SES | Cheap at scale | Complex setup, poor DX, no templates | Team velocity |
+
+#### Implementation Notes
+- Server function `sendEmail({ to, templateId, params })`
+- Store templates in Brevo; reference by ID
+- Supabase Auth email config → Brevo SMTP
+- Webhook endpoint for bounce/complaint suppression list sync
+
+#### Validation Criteria
+- [ ] Magic link emails deliver in < 10s
+- [ ] Template variables render correctly
+- [ ] Bounce webhook suppresses future sends
+- [ ] 300/day free tier sufficient for dev/staging
+
+---
+
+### ADR-006: Authentication Architecture — Supabase Auth + Server-Side Sessions
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+
+#### Context
+Need auth with:
+- Email/password + OAuth (GitHub, Google)
+- MFA (TOTP)
+- Session management on edge (Cloudflare Workers)
+- RLS integration
+
+#### Decision
+**Supabase Auth** as identity provider. **Server-side session validation** in TanStack Start server functions (not client-side).
+
+#### Consequences
+**Positive**:
+- JWT verified on server — no client trust
+- `auth.uid()` available in RLS policies
+- Automatic token refresh via Supabase client
+- OAuth providers configured in Supabase dashboard
+- MFA (TOTP) built-in
+
+**Negative**:
+- Extra network hop (Worker → Supabase Auth) per request
+- Must handle session expiry/refresh in server functions
+- Cookies must be set securely (HttpOnly, Secure, SameSite)
+
+**Neutral**:
+- Use `@supabase/ssr` package for cookie-based session handling
+
+#### Implementation Notes
+- `createServerClient()` in TanStack Start middleware/loader
+- Cookies: `sb-<project>-auth-token` (access + refresh)
+- Server function wrapper: `getUser()` → throws if invalid
+- RLS policies: `auth.uid() = user_id`
+- OAuth: Configure redirect URLs in Supabase + provider dashboards
+
+#### Validation Criteria
+- [ ] Unauthenticated requests blocked at server function level
+- [ ] RLS prevents cross-user data access
+- [ ] OAuth flow works (GitHub, Google)
+- [ ] MFA enrollment + challenge works
+- [ ] Session persists across deployments
+
+---
+
+### ADR-007: API Layer — TanStack Start Server Functions (RPC)
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+
+#### Context
+Need type-safe API between frontend and backend without:
+- REST/OpenAPI boilerplate
+- GraphQL complexity
+- Separate backend deployment
+
+#### Decision
+Use **TanStack Start Server Functions** (`createServerFn`) as the primary API layer — RPC-style, type-safe, co-located with routes.
+
+#### Consequences
+**Positive**:
+- End-to-end TypeScript types (input/output validated with Zod)
+- Runs on Cloudflare Workers (edge)
+- Automatic request/response serialization
+- Middleware support (auth, rate limit, logging)
+- No separate API gateway needed
+
+**Negative**:
+- Tight coupling (frontend imports server functions directly)
+- Not a public API — external consumers need REST wrapper
+- Testing requires mocking or integration test setup
+
+**Neutral**:
+- Public API (if needed) built as separate Hono/Express app on Workers
+
+#### Implementation Notes
+```typescript
+// server-functions/get-user.ts
+export const getUser = createServerFn({ method: 'GET' })
+  .validator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data }) => {
+    const user = await getUserFromDb(data.id);
+    return user;
+  });
+
+// Component usage
+const { data: user } = useQuery({ queryKey: ['user', id], queryFn: () => getUser({ id }) });
+```
+
+#### Validation Criteria
+- [ ] TypeScript catches input/output mismatches at compile time
+- [ ] Server functions deploy to Cloudflare Workers
+- [ ] Middleware runs on every call (auth, rate limit)
+- [ ] Error serialization works (Zod errors → client)
+
+---
+
+### ADR-008: State Management — TanStack Query (Server) + React Context (Client)
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+
+#### Context
+Need to manage:
+- Server state (data fetching, caching, mutations)
+- Client state (UI: modals, sidebar, form drafts)
+- Global config (theme, feature flags)
+
+#### Decision
+- **Server state**: TanStack Query (built into TanStack Start)
+- **Client UI state**: React Context + `useReducer` (lightweight)
+- **Global config**: React Context (theme, user preferences)
+- **No**: Redux, Zustand, Jotai, Signals
+
+#### Consequences
+**Positive**:
+- TanStack Query handles caching, deduping, retries, invalidation
+- Zero boilerplate for server state
+- React Context sufficient for simple client state
+- Minimal dependencies
+
+**Negative**:
+- Context can cause re-renders (mitigate with `useMemo`, split contexts)
+- No devtools for client state (unlike Redux/Zustand)
+
+#### Implementation Notes
+- `QueryClientProvider` at app root (TanStack Start default)
+- `queryClient.invalidateQueries({ queryKey: ['projects'] })` after mutations
+- Client state contexts: `UIStateProvider`, `ThemeProvider`
+- Persist client preferences to localStorage + sync to Supabase on login
+
+#### Validation Criteria
+- [ ] No stale data after mutations (invalidations work)
+- [ ] Optimistic updates feel instant
+- [ ] Context re-renders < 5% of components per interaction
+- [ ] Bundle size impact minimal
+
+---
+
+### ADR-009: Schema Management — Supabase Migrations + Zod
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+
+#### Context
+Need:
+- Database schema version control
+- Type-safe database access
+- Runtime validation of inputs/outputs
+
+#### Decision
+- **Migrations**: Supabase CLI (`supabase migration new`, `supabase db push`)
+- **Type generation**: `supabase gen types typescript` → `database.types.ts`
+- **Runtime validation**: Zod schemas mirroring DB (shared with server functions)
+- **ORM**: **None** — raw SQL via Supabase client (PostgREST) or Postgres.js for complex queries
+
+#### Consequences
+**Positive**:
+- SQL migrations are standard, reviewable, reversible
+- Generated types always in sync with DB
+- Zod validates at API boundary
+- No ORM abstraction leaks / performance surprises
+- Full Postgres power (CTEs, window functions, JSONB)
+
+**Negative**:
+- More verbose than ORM for simple CRUD
+- Manual mapping for complex joins
+- Two sources of truth (SQL + Zod) — mitigate with codegen
+
+#### Implementation Notes
+- `supabase/migrations/` in repo (committed)
+- CI runs `supabase db reset --linked` on test DB
+- Zod schemas in `shared/schemas/` (imported by server functions + client)
+- Use `supabase.from('table').select()` for simple queries
+- Use `postgres` (Postgres.js) for complex reporting queries
+
+#### Validation Criteria
+- [ ] `supabase db diff` shows no drift in CI
+- [ ] Generated types match runtime query results
+- [ ] Zod validation catches invalid inputs before DB
+- [ ] Migration rollback tested
+
+---
+
+### ADR-010: Observability — Cloudflare Workers Logs + Sentry
+
+**Status**: Accepted
+**Date**: [YYYY-MM-DD]
+
+#### Context
+Need:
+- Error tracking (client + server)
+- Performance monitoring
+- Log aggregation
+- Alerting
+
+#### Decision
+- **Errors**: Sentry (React + Cloudflare Workers SDKs)
+- **Logs**: Cloudflare Workers Logs (real-time tail, Logpush to R2/S3)
+- **Metrics**: Cloudflare Workers Analytics + custom Sentry metrics
+- **Uptime**: Better Uptime / UptimeRobot (external)
+
+#### Consequences
+**Positive**:
+- Sentry captures context (user, release, breadcrumbs)
+- Workers Logs native, no agent
+- Logpush to R2 → cheap long-term storage + SQL queries
+- Free tiers sufficient for early stage
+
+**Negative**:
+- Two tools for errors vs. logs
+- Sentry pricing scales with volume
+- No distributed tracing (yet)
+
+#### Implementation Notes
+- `@sentry/react` + `@sentry/cloudflare` (Wrangler integration)
+- `wrangler.toml` → `sentry.upload_source_maps`
+- Logpush: Workers → R2 bucket → Athena/ClickHouse for analysis
+- Custom spans for server function duration
+
+#### Validation Criteria
+- [ ] Errors appear in Sentry with stack traces
+- [ ] Source maps upload on deploy
+- [ ] Logpush delivers to R2 within 5 min
+- [ ] Alert fires on error rate > 1%
+
+---
+
+## 4. Decision-Making Framework
+
+### 4.1 Reversibility Classification
+| Type | Examples | Process |
+|------|----------|---------|
+| **Type 1 (Irreversible)** | Database choice, auth provider, hosting platform | Full ADR, team consensus, documented alternatives |
+| **Type 2 (Reversible with cost)** | Component library, state management, email provider | Lightweight ADR, 1-2 day spike, reversible |
+| **Type 3 (Easily reversible)** | Linting rules, folder structure, naming conventions | PR discussion, no ADR needed |
+
+### 4.2 When to Create an ADR
+- [ ] New external dependency (service, library)
+- [ ] Data model change affecting multiple teams
+- [ ] API contract change (breaking)
+- [ ] Infrastructure provisioning
+- [ ] Security/authentication change
+- [ ] Performance-critical path decision
+
+### 4.3 ADR Lifecycle
+1. **Draft** — Author creates PR with ADR template
+2. **Review** — Team async review (48h), sync if needed
+3. **Decide** — Owner merges (accepts) or closes (rejects)
+4. **Implement** — Link PRs/issues to ADR
+5. **Validate** — Check validation criteria post-deploy
+6. **Deprecate** — New ADR supersedes; old marked `Superseded`
+
+---
+
+## 5. Architecture Diagram (Mermaid)
+
+```mermaid
+graph TB
+    subgraph Client["Browser"]
+        UI[TanStack Start App]
+    end
+
+    subgraph Edge["Cloudflare Edge Network"]
+        Pages[Cloudflare Pages<br/>TanStack Start SSR]
+        Functions[Server Functions<br/>RPC API]
+        Workers[Cloudflare Workers<br/>Cron, Queues, Webhooks]
+    end
+
+    subgraph Data["Supabase Platform"]
+        Postgres[(PostgreSQL<br/>+ RLS)]
+        Auth[Supabase Auth]
+        Realtime[Realtime Engine]
+        Storage[Object Storage]
+    end
+
+    subgraph Services["External Services"]
+        Stripe[Stripe<br/>Payments/Billing]
+        Brevo[Brevo<br/>Transactional Email]
+        Sentry[Sentry<br/>Error Tracking]
+    end
+
+    UI -->|HTTPS| Pages
+    Pages -->|SSR| Functions
+    Functions -->|PostgREST| Postgres
+    Functions -->|JWT Verification| Auth
+    Functions -->|Webhooks| Stripe
+    Functions -->|API| Brevo
+    Functions -->|Errors| Sentry
+    Workers -->|Cron/Queue| Postgres
+    Workers -->|Webhooks| Stripe
+    Auth -.->|Magic Links| Brevo
+    UI -->|Realtime| Realtime
+    UI -->|Uploads| Storage
+```
+
+---
+
+## 6. Appendix: Quick Reference Decisions
+
+| Area | Decision | Key Config |
+|------|----------|------------|
+| **Framework** | TanStack Start | `@tanstack/start`, `vite.config.ts` |
+| **Router** | TanStack Router | File-based, type-safe |
+| **Data Fetching** | TanStack Query | Server functions + `useQuery` |
+| **Database** | Supabase (PostgreSQL) | RLS, Migrations via CLI |
+| **Auth** | Supabase Auth | SSR cookies, OAuth, MFA |
+| **Hosting** | Cloudflare Pages | `wrangler.toml`, edge runtime |
+| **Payments** | Stripe | Checkout, Billing, Portal |
+| **Email** | Brevo | Templates, Webhooks, SMTP |
+| **Error Tracking** | Sentry | React + Workers SDK |
+| **Logs** | Cloudflare Logs + Logpush | R2 storage |
+| **Styling** | Tailwind CSS + CSS Variables | Design tokens → Tailwind config |
+| **Components** | shadcn/ui (Radix primitives) | CVA variants |
+| **Forms** | React Hook Form + Zod | Server function validators |
+| **Testing** | Vitest (unit), Playwright (e2e) | CI on every PR |
+| **CI/CD** | GitHub Actions → Cloudflare Pages | Preview on PR, prod on main |
+
+---
+
+> **Template Version**: 1.0  
+> **Last Updated**: [Date]  
+> **Owner**: [Tech Lead / Architect]  
+> **Review Cadence**: Per major decision or quarterly

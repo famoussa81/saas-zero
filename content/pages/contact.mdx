@@ -1,0 +1,156 @@
+---
+title: "Contactez-nous"
+description: "Une question, un projet ? Parlons-en."
+heroImage: "/images/contact-hero.jpg"
+order: 2
+---
+
+# Contactez-nous
+
+Une question, un projet en tête, ou simplement l'envie de discuter ? Nous serions ravis d'échanger avec vous.
+
+## Écrivez-nous
+
+<form id="contact-form" className="space-y-6 max-w-xl">
+  <div className="grid md:grid-cols-2 gap-6">
+    <div>
+      <label htmlFor="firstName" className="block text-sm font-medium mb-1">
+        Prénom *
+      </label>
+      <input
+        type="text"
+        id="firstName"
+        name="firstName"
+        required
+        className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+        placeholder="Votre prénom"
+      />
+    </div>
+    <div>
+      <label htmlFor="lastName" className="block text-sm font-medium mb-1">
+        Nom *
+      </label>
+      <input
+        type="text"
+        id="lastName"
+        name="lastName"
+        required
+        className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+        placeholder="Votre nom"
+      />
+    </div>
+  </div>
+
+  <div>
+    <label htmlFor="email" className="block text-sm font-medium mb-1">
+      Email *
+    </label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      required
+      className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+      placeholder="votre@email.com"
+    />
+  </div>
+
+  <div>
+    <label htmlFor="company" className="block text-sm font-medium mb-1">
+      Entreprise
+    </label>
+    <input
+      type="text"
+      id="company"
+      name="company"
+      className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+      placeholder="Votre entreprise (optionnel)"
+    />
+  </div>
+
+  <div>
+    <label htmlFor="subject" className="block text-sm font-medium mb-1">
+      Sujet *
+    </label>
+    <select
+      id="subject"
+      name="subject"
+      required
+      className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+    >
+      <option value="">-- Choisissez un sujet --</option>
+      <option value="project">Nouveau projet</option>
+      <option value="partnership">Partenariat</option>
+      <option value="press">Presse / Médias</option>
+      <option value="careers">Carrières</option>
+      <option value="other">Autre</option>
+    </select>
+  </div>
+
+  <div>
+    <label htmlFor="message" className="block text-sm font-medium mb-1">
+      Message *
+    </label>
+    <textarea
+      id="message"
+      name="message"
+      required
+      rows={6}
+      className="w-full px-4 py-3 rounded-lg border border-border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
+      placeholder="Décrivez votre projet, vos besoins, vos questions..."
+    ></textarea>
+  </div>
+
+  <button
+    type="submit"
+    className="w-full md:w-auto px-8 py-4 bg-primary text-primary-foreground text-lg font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-[1.02] active:scale-[0.98]"
+  >
+    Envoyer le message
+  </button>
+
+  <p className="text-sm text-muted-foreground text-center">
+    En soumettant ce formulaire, vous acceptez notre
+    <a href="/politique-confidentialite" className="underline hover:text-primary">politique de confidentialité</a>.
+  </p>
+</form>
+
+## Autres moyens de nous joindre
+
+<div className="grid md:grid-cols-3 gap-8 mt-16">
+  <div className="text-center p-6 rounded-2xl bg-card border border-border">
+    <div className="text-4xl mb-4">📧</div>
+    <h3 className="text-xl font-bold mb-2">Email</h3>
+    <p className="text-muted-foreground">
+      <a href="mailto:hello@notresite.com" className="hover:text-primary transition-colors">
+        hello@notresite.com
+      </a>
+    </p>
+    <p className="text-sm text-muted-foreground mt-2">Réponse sous 24h ouvrées</p>
+  </div>
+
+  <div className="text-center p-6 rounded-2xl bg-card border border-border">
+    <div className="text-4xl mb-4">📍</div>
+    <h3 className="text-xl font-bold mb-2">Bureau</h3>
+    <p className="text-muted-foreground">
+      123 Rue de la Tech<br />
+      75001 Paris, France
+    </p>
+    <p className="text-sm text-muted-foreground mt-2">Sur rendez-vous uniquement</p>
+  </div>
+
+  <div className="text-center p-6 rounded-2xl bg-card border border-border">
+    <div className="text-4xl mb-4">📱</div>
+    <h3 className="text-xl font-bold mb-2">Réseaux sociaux</h3>
+    <div className="flex justify-center gap-4 mt-4">
+      <a href="https://twitter.com" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter">
+        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25h8.084l3.476 4.687L21.592 3.53 15.832 1.786l-.99 7.525 4.95-1.754-2.25 2.25-1.68-.847L3.576 12.52l7.436 5.23-.48 7.042h4.193l-6.14-5.515 2.28-4.54h2.77l-2.487 7.268 3.311.976.798-7.87H23.97l-7.944-5.06 3.115-7.327-7.56-2.754L11.62 2.25z"/></svg>
+      </a>
+      <a href="https://linkedin.com" className="text-muted-foreground hover:text-primary transition-colors" aria-label="LinkedIn">
+        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.64-1.22 2.2-2.555 4.54-2.555 4.852 0 5.726 3.193 5.726 7.355V20.452zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.141-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.642v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="https://github.com" className="text-muted-foreground hover:text-primary transition-colors" aria-label="GitHub">
+        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.793.577C23.998 17.8 27 13.302 27 12c0-6.627-5.373-12-12-12S0 5.373 0 12c0 6.627 5.373 12 12 12z"/></svg>
+      </a>
+    </div>
+  </div>
+</div>

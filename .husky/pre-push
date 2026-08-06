@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# FULL QUALITY GATES + FAIL-CLOSED REVIEW - BLOCKS PUSH ON FAILURE
+echo "🔒 Running pre-push gates + review check..."
+
+# 1. Tous les 13 gates
+if ! ./.claude/commands/ns-verify.sh; then
+  echo "❌ Quality gates failed. Push blocked."
+  exit 1
+fi
+
+# 2. Fail-closed : lire le verdict de review (REVIEW.md) s'il existe
+REVIEW_FILE="REVIEW.md"
+if [ -f "$REVIEW_FILE" ]; then
+  VERDICT=$(grep -iE "## Verdict: *(PRÊT|PRE?T|À REVOIR|A REVOIR)" "$REVIEW_FILE" 2>/dev/null | head -1)
+  case "$VERDICT" in
+    *"À REVOIR"*|*"A REVOIR"*)
+      echo "❌ REVIEW.md -> À REVOIR. Corrige les problèmes signalés puis relance /ns-review."
+      exit 1
+      ;;
+    *"PRÊT"*|*"PRE?T"*|*"PRET"*)
+      echo "✅ Review: PRÊT (fail-closed satisfait)"
+      ;;
+    *)
+      echo "⚠️  REVIEW.md présent mais verdict non reconnu. Par précaution, push bloqué."
+      exit 1
+      ;;
+  esac
+else
+  echo "⚠️  Pas de REVIEW.md. Push autorisé par les gates qualité (review recommandée sur main)."
+fi
+
+# 3. Impeccable audit (optionnel, si hermes dispo)
+if command -v npx > /dev/null 2>&1 && npx hermes agent run saas-project-compliance --input="pre-push" 2>/dev/null; then
+  echo "✅ Impeccable audit passed"
+fi
+
+echo "✅ All pre-push checks passed. Pushing..."

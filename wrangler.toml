@@ -1,0 +1,178 @@
+# =============================================================================
+# Cloudflare Workers Configuration (wrangler.toml)
+# Zero-Risk SaaS Stack - Workers for Stripe, Brevo, Health Checks
+# =============================================================================
+
+name = "saas-workers"
+main = "workers/index.ts"
+compatibility_date = "2024-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+# =============================================================================
+# Environment Variables
+# =============================================================================
+
+[vars]
+ENVIRONMENT = "development"
+APP_VERSION = "1.0.0"
+
+# =============================================================================
+# Worker Definitions
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Stripe Webhook Worker
+# Handles Stripe webhook events with idempotency and signature verification
+# -----------------------------------------------------------------------------
+[[workers]]
+name = "stripe-webhook"
+main = "workers/stripe-webhook.ts"
+compatibility_date = "2024-08-01"
+
+[workers.vars]
+WORKER_NAME = "stripe-webhook"
+
+# Routes - Stripe webhooks should be accessible at /api/webhooks/stripe
+[[workers.routes]]
+pattern = "your-domain.com/api/webhooks/stripe*"
+zone_name = "your-domain.com"
+# Or for Pages deployment:
+# pattern = "*.pages.dev/api/webhooks/stripe*"
+
+# -----------------------------------------------------------------------------
+# Brevo Email Worker
+# Handles transactional email sending via Brevo API with queue and retries
+# -----------------------------------------------------------------------------
+[[workers]]
+name = "brevo-email"
+main = "workers/brevo-email.ts"
+compatibility_date = "2024-08-01"
+
+[workers.vars]
+WORKER_NAME = "brevo-email"
+
+# Routes - Email API endpoints
+[[workers.routes]]
+pattern = "your-domain.com/api/email/*"
+zone_name = "your-domain.com"
+# Or for Pages deployment:
+# pattern = "*.pages.dev/api/email/*"
+
+# Cron trigger for processing email queue every 5 minutes
+[workers.triggers]
+cron = "*/5 * * * *"
+
+# -----------------------------------------------------------------------------
+# Health Check Worker
+# Verifies connectivity to Supabase, Stripe, and Brevo
+# -----------------------------------------------------------------------------
+[[workers]]
+name = "health-check"
+main = "workers/health-check.ts"
+compatibility_date = "2024-08-01"
+
+[workers.vars]
+WORKER_NAME = "health-check"
+
+# Routes - Health check endpoints
+[[workers.routes]]
+pattern = "your-domain.com/health*"
+zone_name = "your-domain.com"
+# Or for Pages deployment:
+# pattern = "*.pages.dev/health*"
+
+# =============================================================================
+# Bindings - Shared across all workers (set as secrets via wrangler secret put)
+# =============================================================================
+# SUPABASE_URL
+# SUPABASE_SERVICE_ROLE_KEY
+# STRIPE_SECRET_KEY
+# STRIPE_WEBHOOK_SECRET
+# BREVO_API_KEY
+
+# =============================================================================
+# D1 Database (if using Cloudflare D1 instead of Supabase)
+# =============================================================================
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "saas-db"
+# database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# =============================================================================
+# KV Namespaces (for caching, rate limiting, etc.)
+# =============================================================================
+# [[kv_namespaces]]
+# binding = "CACHE"
+# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# preview_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# =============================================================================
+# R2 Buckets (for file storage)
+# =============================================================================
+# [[r2_buckets]]
+# binding = "FILES"
+# bucket_name = "saas-files"
+
+# =============================================================================
+# Service Bindings (for worker-to-worker communication)
+# =============================================================================
+# [[services]]
+# binding = "STRIPE_WEBHOOK"
+# service = "stripe-webhook"
+
+# [[services]]
+# binding = "BREVO_EMAIL"
+# service = "brevo-email"
+
+# [[services]]
+# binding = "HEALTH_CHECK"
+# service = "health-check"
+
+# =============================================================================
+# Environment-Specific Configuration
+# =============================================================================
+
+[env.production]
+name = "saas-workers-prod"
+vars = { ENVIRONMENT = "production" }
+
+[env.staging]
+name = "saas-workers-staging"
+vars = { ENVIRONMENT = "staging" }
+
+[env.development]
+name = "saas-workers-dev"
+vars = { ENVIRONMENT = "development" }
+
+# =============================================================================
+# Build Configuration
+# =============================================================================
+
+[build]
+command = "npm run build"
+watch_dir = "workers"
+
+# =============================================================================
+# Observability
+# =============================================================================
+
+[observability]
+enabled = true
+
+# =============================================================================
+# Limits
+# =============================================================================
+
+[limits]
+cpu_ms = 50
+memory_mb = 128
+
+# =============================================================================
+# Notes
+# =============================================================================
+# 1. Set secrets using: wrangler secret put SECRET_NAME
+# 2. Deploy with: wrangler deploy
+# 3. Deploy to specific env: wrangler deploy --env production
+# 4. View logs: wrangler tail
+# 5. Test locally: wrangler dev
+# 6. For custom domains, update the routes.pattern and zone_name values

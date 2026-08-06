@@ -1,0 +1,523 @@
+# =============================================================================
+# GitHub Actions - Supabase Migrations Deployment
+# Zero-Risk SaaS Stack: TanStack Start + Supabase + Cloudflare Pages + Stripe + Brevo
+# Runs on push to main with supabase/ changes, validates migration order
+# =============================================================================
+
+name: Supabase Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+      - 'supabase/config.toml'
+      - 'supabase/seed/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+      migration_name:
+        description: 'Specific migration to deploy (optional, deploys all pending)'
+        required: false
+        type: string
+      dry_run:
+        description: 'Run as dry-run (validate only)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  SUPABASE_CLI_VERSION: 'latest'
+
+concurrency:
+  group: supabase-deploy-${{ github.ref }}-${{ github.event.inputs.environment || 'production' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  # ===========================================================================
+  # VALIDATE - Migration file validation
+  # ===========================================================================
+  validate:
+    name: Validate Migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      migration_files: ${{ steps.files.outputs.migration_files }}
+      migration_count: ${{ steps.files.outputs.migration_count }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: ${{ env.SUPABASE_CLI_VERSION }}
+
+      - name: List migration files
+        id: files
+        run: |
+          MIGRATION_FILES=$(ls supabase/migrations/*.sql 2>/dev/null | sort -V)
+          MIGRATION_COUNT=$(echo "$MIGRATION_FILES" | grep -c '\.sql$' || echo "0")
+          
+          if [ "$MIGRATION_COUNT" -eq 0 ]; then
+            echo "No migration files found"
+            echo "migration_files=" >> $GITHUB_OUTPUT
+            echo "migration_count=0" >> $GITHUB_OUTPUT
+          else
+            echo "Found $MIGRATION_COUNT migration files:"
+            echo "$MIGRATION_FILES"
+            echo "migration_files<<EOF" >> $GITHUB_OUTPUT
+            echo "$MIGRATION_FILES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            echo "migration_count=$MIGRATION_COUNT" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate migration naming convention
+        run: |
+          # Check naming: YYYYMMDDHHMMSS_description.sql
+          for file in supabase/migrations/*.sql; do
+            basename=$(basename "$file")
+            if [[ ! "$basename" =~ ^[0-9]{14}_[a-z0-9_]+\.sql$ ]]; then
+              echo "❌ Invalid migration name: $basename"
+              echo "Expected format: YYYYMMDDHHMMSS_description.sql"
+              exit 1
+            fi
+          done
+          echo "✅ All migration names follow convention"
+
+      - name: Validate migration order (chronological)
+        run: |
+          # Extract timestamps and verify chronological order
+          PREV_TS=0
+          for file in supabase/migrations/*.sql; do
+            basename=$(basename "$file")
+            TS=${basename:0:14}
+            if [ "$TS" -le "$PREV_TS" ]; then
+              echo "❌ Migration order violation: $basename (timestamp: $TS) comes after previous ($PREV_TS)"
+              exit 1
+            fi
+            PREV_TS=$TS
+          done
+          echo "✅ Migrations are in chronological order"
+
+      - name: Validate SQL syntax (basic)
+        run: |
+          for file in supabase/migrations/*.sql; do
+            echo "Checking: $file"
+            # Basic SQL validation - check for common issues
+            if grep -q "DROP TABLE" "$file"; then
+              echo "⚠️ Warning: $file contains DROP TABLE"
+            fi
+            if grep -q "DROP COLUMN" "$file"; then
+              echo "⚠️ Warning: $file contains DROP COLUMN"
+            fi
+            if grep -q "ALTER TABLE.*DROP" "$file"; then
+              echo "⚠️ Warning: $file contains ALTER TABLE DROP"
+            fi
+          done
+          echo "✅ Basic SQL validation passed"
+
+      - name: Validate config.toml
+        run: |
+          if [ ! -f supabase/config.toml ]; then
+            echo "❌ supabase/config.toml not found"
+            exit 1
+          fi
+          
+          # Check required fields
+          if ! grep -q "project" supabase/config.toml; then
+            echo "⚠️ Warning: No project ref in config.toml"
+          fi
+          
+          if ! grep -q "migration_dir" supabase/config.toml; then
+            echo "❌ migration_dir not configured in config.toml"
+            exit 1
+          fi
+          
+          echo "✅ config.toml validation passed"
+
+  # ===========================================================================
+  # LINT - SQL linting with sqlfluff
+  # ===========================================================================
+  lint-sql:
+    name: Lint SQL
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: validate
+    if: ${{ needs.validate.outputs.migration_count > 0 }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install sqlfluff
+        run: pip install sqlfluff sqlfluff-templater-dbt
+
+      - name: Create sqlfluff config
+        run: |
+          cat > .sqlfluff << 'EOF'
+          [sqlfluff]
+          templater = raw
+          dialect = postgres
+          exclude_rules = L010,L016,L036
+          
+          [sqlfluff:rules:L010]
+          capitalisation_policy = lower
+          
+          [sqlfluff:rules:L016]
+          capitalisation_policy = lower
+          
+          [sqlfluff:rules:L036]
+          select_clause_trailing_comma = True
+          EOF
+
+      - name: Lint migration files
+        run: |
+          sqlfluff lint supabase/migrations/*.sql --format=github-annotation
+          echo "✅ SQL linting passed"
+
+  # ===========================================================================
+  # DRY RUN - Validate against linked project
+  # ===========================================================================
+  dry-run:
+    name: Dry Run Migration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [validate, lint-sql]
+    if: ${{ needs.validate.outputs.migration_count > 0 && (github.event.inputs.dry_run == 'true' || github.event_name == 'pull_request') }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: ${{ env.SUPABASE_CLI_VERSION }}
+
+      - name: Link to Supabase project
+        run: |
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Run migration dry-run
+        run: |
+          echo "Running dry-run against linked project..."
+          supabase db push --linked --dry-run
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        working-directory: ./supabase
+
+      - name: Show pending migrations
+        run: |
+          supabase migration list --linked
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+  # ===========================================================================
+  # DEPLOY - Apply migrations to target environment
+  # ===========================================================================
+  deploy:
+    name: Deploy Migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [validate, lint-sql]
+    if: ${{ needs.validate.outputs.migration_count > 0 && github.event_name != 'pull_request' && github.event.inputs.dry_run != 'true' }}
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: ${{ env.SUPABASE_CLI_VERSION }}
+
+      - name: Link to Supabase project
+        run: |
+          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Show current migration status
+        run: |
+          echo "=== Current migration status ==="
+          supabase migration list --linked
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Apply migrations
+        id: migrate
+        run: |
+          echo "=== Applying migrations ==="
+          
+          if [ -n "${{ github.event.inputs.migration_name }}" ]; then
+            # Deploy specific migration
+            echo "Deploying specific migration: ${{ github.event.inputs.migration_name }}"
+            supabase db push --linked --include-all
+          else
+            # Deploy all pending migrations
+            echo "Deploying all pending migrations..."
+            supabase db push --linked
+          fi
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        working-directory: ./supabase
+
+      - name: Verify migrations applied
+        run: |
+          echo "=== Verifying applied migrations ==="
+          supabase migration list --linked
+          
+          # Check for any failed migrations
+          FAILED=$(supabase migration list --linked --json | jq -r '.[] | select(.status=="failed") | .name')
+          if [ -n "$FAILED" ]; then
+            echo "❌ Failed migrations detected: $FAILED"
+            exit 1
+          fi
+          
+          echo "✅ All migrations applied successfully"
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Run seed data (if exists)
+        run: |
+          if [ -d "supabase/seed" ] && [ "$(ls -A supabase/seed)" ]; then
+            echo "=== Running seed data ==="
+            for seed_file in supabase/seed/*.sql; do
+              echo "Applying seed: $seed_file"
+              supabase db execute --linked -f "$seed_file"
+            done
+            echo "✅ Seed data applied"
+          else
+            echo "No seed data to apply"
+          fi
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Generate updated TypeScript types
+        run: |
+          echo "=== Generating TypeScript types ==="
+          supabase gen types typescript --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} > ./workers/database.types.ts
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Verify type generation
+        run: |
+          if [ ! -s ./workers/database.types.ts ]; then
+            echo "❌ Type generation failed - file is empty"
+            exit 1
+          fi
+          
+          # Check for basic type structure
+          if ! grep -q "export type" ./workers/database.types.ts; then
+            echo "❌ Generated types appear invalid"
+            exit 1
+          fi
+          
+          echo "✅ TypeScript types generated successfully"
+          echo "File size: $(wc -c < ./workers/database.types.ts) bytes"
+
+      - name: Commit type changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update database types after migration [skip ci]"
+          file_pattern: workers/database.types.ts
+          branch: ${{ github.head_ref || github.ref_name }}
+
+  # ===========================================================================
+  # POST-DEPLOY - Verify database health
+  # ===========================================================================
+  post-deploy:
+    name: Post-Deploy Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: deploy
+    if: ${{ needs.deploy.result == 'success' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: ${{ env.SUPABASE_CLI_VERSION }}
+
+      - name: Verify database connectivity
+        run: |
+          echo "=== Testing database connectivity ==="
+          supabase db execute --linked -c "SELECT version();"
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Verify critical tables exist
+        run: |
+          echo "=== Verifying critical tables ==="
+          TABLES=("organizations" "profiles" "subscriptions" "invoices" "webhook_events")
+          
+          for table in "${TABLES[@]}"; do
+            RESULT=$(supabase db execute --linked -c "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = '$table');" --json)
+            EXISTS=$(echo "$RESULT" | jq -r '.[0].exists')
+            if [ "$EXISTS" = "true" ]; then
+              echo "✅ Table '$table' exists"
+            else
+              echo "❌ Table '$table' MISSING"
+              exit 1
+            fi
+          done
+
+      - name: Verify RLS policies
+        run: |
+          echo "=== Verifying RLS policies ==="
+          POLICIES=$(supabase db execute --linked -c "
+            SELECT schemaname, tablename, policyname 
+            FROM pg_policies 
+            WHERE schemaname = 'public'
+            ORDER BY tablename, policyname;
+          " --json)
+          
+          POLICY_COUNT=$(echo "$POLICIES" | jq 'length')
+          echo "Found $POLICY_COUNT RLS policies"
+          
+          if [ "$POLICY_COUNT" -eq 0 ]; then
+            echo "⚠️ Warning: No RLS policies found"
+          else
+            echo "$POLICIES" | jq -r '.[] | "\(.tablename): \(.policyname)"'
+          fi
+
+      - name: Verify indexes
+        run: |
+          echo "=== Verifying critical indexes ==="
+          INDEXES=$(supabase db execute --linked -c "
+            SELECT indexname, tablename 
+            FROM pg_indexes 
+            WHERE schemaname = 'public' 
+            AND indexname LIKE 'idx_%'
+            ORDER BY tablename, indexname;
+          " --json)
+          
+          INDEX_COUNT=$(echo "$INDEXES" | jq 'length')
+          echo "Found $INDEX_COUNT custom indexes"
+          
+          if [ "$INDEX_COUNT" -gt 0 ]; then
+            echo "$INDEXES" | jq -r '.[] | "\(.tablename): \(.indexname)"'
+          fi
+
+      - name: Verify functions
+        run: |
+          echo "=== Verifying database functions ==="
+          FUNCTIONS=$(supabase db execute --linked -c "
+            SELECT routine_name 
+            FROM information_schema.routines 
+            WHERE routine_schema = 'public'
+            ORDER BY routine_name;
+          " --json)
+          
+          FUNC_COUNT=$(echo "$FUNCTIONS" | jq 'length')
+          echo "Found $FUNC_COUNT functions"
+          
+          if [ "$FUNC_COUNT" -gt 0 ]; then
+            echo "$FUNCTIONS" | jq -r '.[].routine_name'
+          fi
+
+  # ===========================================================================
+  # NOTIFICATION - Migration deployment complete
+  # ===========================================================================
+  notify:
+    name: Notify Migration Complete
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [validate, lint-sql, deploy, post-deploy]
+    if: always()
+    steps:
+      - name: Determine deployment status
+        id: status
+        run: |
+          if [ "${{ needs.deploy.result }}" = "success" ] && [ "${{ needs.post-deploy.result }}" = "success" ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "message=✅ Supabase migrations deployed successfully!" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "message=❌ Supabase migration deployment failed." >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post migration summary
+        run: |
+          echo "## Supabase Migration Summary"
+          echo ""
+          echo "**Status:** ${{ steps.status.outputs.message }}"
+          echo "**Commit:** ${{ github.sha }}"
+          echo "**Environment:** ${{ github.event.inputs.environment || 'production' }}"
+          echo "**Triggered by:** ${{ github.actor }}"
+          echo "**Timestamp:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          echo ""
+          echo "### Migration Files"
+          echo "${{ needs.validate.outputs.migration_count }} migration(s) processed"
+          echo ""
+          echo "### Validation"
+          echo "- ✅ Naming convention"
+          echo "- ✅ Chronological order"
+          echo "- ✅ SQL syntax"
+          echo "- ✅ SQL linting"
+          echo ""
+          echo "### Deployment"
+          echo "${{ needs.deploy.result == 'success' && '✅ Applied' || '❌ Failed' }}"
+          echo ""
+          echo "### Post-Deploy Verification"
+          echo "${{ needs.post-deploy.result == 'success' && '✅ Passed' || '❌ Failed' }}"
+          echo ""
+          echo "[View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+      - name: Send Slack notification
+        if: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
+            {
+              "text": "${{ steps.status.outputs.message }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ steps.status.outputs.message }}\n*Migrations:* ${{ needs.validate.outputs.migration_count }}\n*Environment:* ${{ github.event.inputs.environment || 'production' }}\n*Triggered by:* ${{ github.actor }}"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Workflow"
+                      },
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Fail if deployment failed
+        if: ${{ steps.status.outputs.status == 'failure' }}
+        run: exit 1

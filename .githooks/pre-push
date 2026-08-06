@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# Git pre-push hook - Blocks push if quality gates failed
+# Reads SAAS-DESIGN-REVIEW.md and PERF-REPORT.md for "Verdict : REFUSÉ" or "Verdict : À CORRIGER"
+#
+# Bypass: Use git push --no-verify to bypass this check
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Find the repository root
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ -z "$REPO_ROOT" ]; then
+    echo "Error: Not in a git repository"
+    exit 1
+fi
+
+# Quality gate files to check
+GATE_FILES="SAAS-DESIGN-REVIEW.md PERF-REPORT.md"
+
+# Patterns that indicate a failed gate
+FAILED_PATTERNS="Verdict : REFUSÉ|Verdict : À CORRIGER"
+
+has_failure=0
+
+for file in $GATE_FILES; do
+    filepath="$REPO_ROOT/$file"
+    
+    if [ ! -f "$filepath" ]; then
+        echo "${YELLOW}Warning: $file not found at $filepath${NC}"
+        continue
+    fi
+    
+    # Check for failed verdict patterns
+    if grep -qE "$FAILED_PATTERNS" "$filepath" 2>/dev/null; then
+        echo "${RED}✗ Quality gate failed in $file${NC}"
+        grep -E "$FAILED_PATTERNS" "$filepath" | head -5
+        has_failure=1
+    fi
+done
+
+if [ $has_failure -eq 1 ]; then
+    echo ""
+    echo "${RED}Push blocked: One or more quality gates have failed.${NC}"
+    echo "Fix the issues in the review reports and try again."
+    echo ""
+    echo "To bypass this check (not recommended):"
+    echo "  git push --no-verify"
+    exit 1
+fi
+
+echo "✓ All quality gates passed. Proceeding with push..."
+exit 0

@@ -1,0 +1,383 @@
+# DESIGN-CHOICE.md — Design System Decision Template
+
+> **Instructions**: Complete this document when establishing or updating the design system. Each section represents a key design decision. Delete placeholder text and select/complete options. This becomes the design constitution for the product.
+
+---
+
+## 1. Design Philosophy & Principles
+
+### 1.1 Core Design Principles
+| Principle | Description | Trade-off Accepted |
+|-----------|-------------|-------------------|
+| **Clarity over cleverness** | Obvious beats cute; users shouldn't guess | May feel less "delightful" initially |
+| **Consistency over customization** | Shared patterns > one-off solutions | Less flexibility per feature |
+| **Performance as a feature** | Fast is beautiful; no jank | May constrain animation complexity |
+| **Accessibility by default** | Inclusive from day one, not retrofit | Extra upfront investment |
+| **Data-informed, not data-driven** | Qualitative insight + quantitative validation | Slower than pure A/B testing |
+
+### 1.2 Brand Personality Attributes
+Select 3-5 that define the voice:
+- [ ] **Professional** — Trustworthy, competent, polished
+- [ ] **Approachable** — Friendly, human, conversational
+- [ ] **Bold** — Confident, opinionated, distinctive
+- [ ] **Minimal** — Clean, focused, essential
+- [ ] **Playful** — Delightful, unexpected, warm
+- [ ] **Technical** — Precise, detailed, expert
+- [ ] **Other**: [Custom attributes]
+
+### 1.3 Design Token Philosophy
+- [ ] **Primitive tokens only** — Colors, spacing, typography scales (no semantic aliases)
+- [ ] **Semantic tokens** — Aliases like `color-primary`, `color-error` mapping to primitives
+- [ ] **Component tokens** — Per-component overrides (e.g., `button-primary-bg`)
+- [ ] **Mode-aware tokens** — Light/dark/auto variants built into token structure
+
+---
+
+## 2. Color System
+
+### 2.1 Color Palette Strategy
+- [ ] **Single brand color + neutrals** (Stripe, Linear style)
+- [ ] **Extended palette** — Primary, secondary, accent, semantic (success/warning/error)
+- [ ] **Data visualization palette** — Categorical, sequential, diverging scales
+- [ ] **Custom per-customer theming** (Enterprise white-label)
+
+### 2.2 Base Palette Definition
+| Token | Light Value | Dark Value | Usage |
+|-------|-------------|------------|-------|
+| `color-brand-50` | `#eff6ff` | `#1e3a5f` | Lightest brand tint |
+| `color-brand-100` | `#dbeafe` | `#1e426e` | ... |
+| `color-brand-500` | `#3b82f6` | `#60a5fa` | **Primary brand** |
+| `color-brand-600` | `#2563eb` | `#3b82f6` | Hover/active |
+| `color-neutral-50` | `#fafafa` | `#0a0a0a` | Background base |
+| `color-neutral-900` | `#171717` | `#fafafa` | Text primary |
+| `color-success-500` | `#22c55e` | `#4ade80` | Success states |
+| `color-warning-500` | `#f59e0b` | `#fbbf24` | Warning states |
+| `color-error-500` | `#ef4444` | `#f87171` | Error states |
+
+> **Note**: Use 50-950 scale (Tailwind convention). Define all 11 steps per hue.
+
+### 2.3 Semantic Color Aliases
+| Semantic Token | Light Maps To | Dark Maps To |
+|----------------|---------------|--------------|
+| `color-bg-primary` | `neutral-50` | `neutral-950` |
+| `color-bg-secondary` | `neutral-100` | `neutral-900` |
+| `color-text-primary` | `neutral-900` | `neutral-50` |
+| `color-text-secondary` | `neutral-600` | `neutral-400` |
+| `color-border-subtle` | `neutral-200` | `neutral-800` |
+| `color-border-strong` | `neutral-300` | `neutral-700` |
+| `color-interactive-primary` | `brand-600` | `brand-400` |
+| `color-interactive-primary-hover` | `brand-700` | `brand-300` |
+
+### 2.4 Accessibility Requirements
+- [ ] **AA contrast** (4.5:1 text, 3:1 UI) — minimum
+- [ ] **AAA contrast** (7:1 text) — for critical text
+- [ ] **Color-blind safe** — Tested with protanopia/deuteranopia/tritanopia
+- [ ] **Forced colors mode** — Windows High Contrast supported
+
+---
+
+## 3. Typography
+
+### 3.1 Font Stack Strategy
+- [ ] **System font stack** — Native OS fonts (San Francisco, Segoe UI, Roboto)
+- [ ] **Single variable font** — One font file, multiple weights (e.g., Inter, Geist)
+- [ ] **Font pair** — Display + UI font (e.g., Cal Sans + Inter)
+- [ ] **Custom brand font** — Licensed web font (budget/performance cost)
+
+### 3.2 Type Scale Definition
+| Token | Font Size | Line Height | Font Weight | Letter Spacing | Use Case |
+|-------|-----------|-------------|-------------|----------------|----------|
+| `text-display-xl` | 72px / 4.5rem | 1.1 | 700 | -0.02em | Marketing hero |
+| `text-display-lg` | 60px / 3.75rem | 1.1 | 700 | -0.02em | Page titles |
+| `text-display-md` | 48px / 3rem | 1.2 | 600 | -0.01em | Section headers |
+| `text-display-sm` | 36px / 2.25rem | 1.2 | 600 | -0.01em | Card titles |
+| `text-heading-xl` | 30px / 1.875rem | 1.3 | 600 | 0 | H1 |
+| `text-heading-lg` | 24px / 1.5rem | 1.3 | 600 | 0 | H2 |
+| `text-heading-md` | 20px / 1.25rem | 1.4 | 600 | 0 | H3 |
+| `text-heading-sm` | 18px / 1.125rem | 1.4 | 600 | 0 | H4 |
+| `text-body-lg` | 18px / 1.125rem | 1.6 | 400 | 0 | Lead paragraph |
+| `text-body-md` | 16px / 1rem | 1.6 | 400 | 0 | **Body default** |
+| `text-body-sm` | 14px / 0.875rem | 1.5 | 400 | 0 | Secondary text |
+| `text-caption` | 12px / 0.75rem | 1.5 | 500 | 0.01em | Labels, meta |
+| `text-code` | 14px / 0.875rem | 1.6 | 400 | 0 | Monospace |
+
+### 3.3 Font Loading Strategy
+- [ ] **Preload critical fonts** — `<link rel="preload" as="font">`
+- [ ] **Font-display: swap** — Show fallback immediately
+- [ ] **Subset fonts** — Latin only, or per-language subsets
+- [ ] **Variable font** — Single file for all weights
+
+---
+
+## 4. Spacing & Layout
+
+### 4.1 Spacing Scale
+| Token | Value | Rem | Use Case |
+|-------|-------|-----|----------|
+| `space-0` | 0 | 0 | Reset |
+| `space-1` | 4px | 0.25rem | Micro gaps |
+| `space-2` | 8px | 0.5rem | **Base unit** |
+| `space-3` | 12px | 0.75rem | Tight groups |
+| `space-4` | 16px | 1rem | Standard gap |
+| `space-5` | 20px | 1.25rem | Comfortable |
+| `space-6` | 24px | 1.5rem | Section padding |
+| `space-8` | 32px | 2rem | Large sections |
+| `space-10` | 40px | 2.5rem | Page margins |
+| `space-12` | 48px | 3rem | Hero sections |
+| `space-16` | 64px | 4rem | Major breaks |
+| `space-20` | 80px | 5rem | Landing pages |
+
+> **Rule**: All spacing uses tokens. No arbitrary pixel values in components.
+
+### 4.2 Layout Grid
+- [ ] **12-column grid** — Traditional, flexible
+- [ ] **8-column grid** — Mobile-friendly, simpler
+- [ ] **CSS Grid auto-fit** — Content-driven, no fixed columns
+- [ ] **No grid** — Flexbox/container queries only
+
+### 4.3 Container Widths
+| Breakpoint | Max Width | Padding |
+|------------|-----------|---------|
+| `sm` (640px) | 640px | `space-4` |
+| `md` (768px) | 768px | `space-6` |
+| `lg` (1024px) | 1024px | `space-8` |
+| `xl` (1280px) | 1280px | `space-8` |
+| `2xl` (1536px) | 1400px | `space-10` |
+
+---
+
+## 5. Border Radius & Elevation
+
+### 5.1 Border Radius Scale
+| Token | Value | Use Case |
+|-------|-------|----------|
+| `radius-none` | 0 | Sharp corners (tables, code) |
+| `radius-sm` | 4px | Badges, tags, small inputs |
+| `radius-md` | 8px | **Default** — buttons, cards, inputs |
+| `radius-lg` | 12px | Modals, dropdowns, panels |
+| `radius-xl` | 16px | Large cards, feature blocks |
+| `radius-2xl` | 24px | Hero elements |
+| `radius-full` | 9999px | Pills, avatars, progress |
+
+### 5.2 Elevation / Shadow Scale
+| Token | Value | Use Case |
+|-------|-------|----------|
+| `shadow-none` | none | Flat |
+| `shadow-sm` | `0 1px 2px rgb(0 0 0 / 0.05)` | Cards, inputs (hover) |
+| `shadow-md` | `0 4px 6px -1px rgb(0 0 0 / 0.1)` | Dropdowns, tooltips |
+| `shadow-lg` | `0 10px 15px -3px rgb(0 0 0 / 0.1)` | Modals, drawers |
+| `shadow-xl` | `0 20px 25px -5px rgb(0 0 0 / 0.1)` | Overlays, popovers |
+| `shadow-inner` | `inset 0 2px 4px rgb(0 0 0 / 0.05)` | Inputs (focus) |
+
+> **Dark mode**: Shadows use `rgb(0 0 0 / opacity)` — works on both backgrounds.
+
+---
+
+## 6. Component Library Strategy
+
+### 6.1 Build vs. Buy vs. Adopt
+| Component Category | Decision | Library/Notes |
+|--------------------|----------|---------------|
+| **Primitives** (Button, Input, Checkbox) | [Build / Adopt] | [shadcn/ui, Radix, Headless UI, custom] |
+| **Composites** (Select, DatePicker, Table) | [Build / Adopt] | [Same or different] |
+| **Layout** (Grid, Stack, Container) | [Build / Adopt] | [Custom tokens + CSS Grid] |
+| **Feedback** (Toast, Modal, Tooltip) | [Build / Adopt] | [Sonner, Radix, custom] |
+| **Navigation** (Tabs, Breadcrumb, Pagination) | [Build / Adopt] | [Custom] |
+| **Data Display** (Table, List, Card, Badge) | [Build / Adopt] | [TanStack Table + custom] |
+| **Forms** (Form, FieldArray, Validation) | [Build / Adopt] | [React Hook Form + Zod + custom] |
+
+### 6.2 Component API Conventions
+- [ ] **Compound components** — `<Select><Select.Trigger /><Select.Content /></Select>`
+- [ ] **Render props** — `<Select render={({ open }) => ...} />`
+- [ ] **Props-only** — `<Select options={[]} onChange={...} />`
+- [ ] **ClassName-based** — `className="select-trigger"` (Tailwind)
+
+### 6.3 Variant System
+| Approach | Example |
+|----------|---------|
+| **CVA (Class Variance Authority)** | `button({ variant: 'primary', size: 'lg' })` |
+| **Tailwind `variants` plugin** | `@variants primary { ... }` |
+| **Manual className merging** | `cn(base, variants[variant], variants[size])` |
+| **Styled-system / Theme UI** | `<Button variant="primary" size="lg" />` |
+
+> **Recommendation**: CVA + Tailwind for type-safe variants with zero runtime.
+
+---
+
+## 7. Motion & Animation
+
+### 7.1 Motion Philosophy
+- [ ] **Functional only** — Feedback, state transitions, spatial relationships
+- [ ] **Expressive** — Brand moments, onboarding, empty states
+- [ ] **Reduced motion first** — All animations respect `prefers-reduced-motion`
+
+### 7.2 Animation Tokens
+| Token | Duration | Easing | Use Case |
+|-------|----------|--------|----------|
+| `motion-instant` | 0ms | linear | Immediate feedback |
+| `motion-fast` | 100ms | `ease-out` | Hover, focus, tap |
+| `motion-normal` | 200ms | `ease-in-out` | **Default** — transitions |
+| `motion-slow` | 300ms | `ease-out` | Modals, drawers, toasts |
+| `motion-slower` | 500ms | `ease-in-out` | Page transitions |
+
+### 7.3 Standard Transitions
+```css
+/* Define once, use everywhere */
+.transition-fast { transition: all 100ms ease-out; }
+.transition-normal { transition: all 200ms ease-in-out; }
+.transition-slow { transition: all 300ms ease-out; }
+
+/* Property-specific */
+.transition-colors { transition: color, background-color, border-color 200ms ease-in-out; }
+.transform-transition { transition: transform 200ms ease-out; }
+.opacity-transition { transition: opacity 200ms ease-in-out; }
+```
+
+---
+
+## 8. Iconography
+
+### 8.1 Icon System
+- [ ] **Single icon set** — Lucide, Heroicons, Phosphor, Tabler (pick one)
+- [ ] **Mixed** — Different sets for UI vs. marketing
+- [ ] **Custom** — Designed in-house (Figma → SVG → React components)
+
+### 8.2 Icon Sizing Tokens
+| Token | Size | Use Case |
+|-------|------|----------|
+| `icon-xs` | 12px | Inline with caption text |
+| `icon-sm` | 16px | Inline with body text, buttons |
+| `icon-md` | 20px | **Default** — nav, toolbar |
+| `icon-lg` | 24px | Feature cards, empty states |
+| `icon-xl` | 32px | Hero illustrations |
+| `icon-2xl` | 48px | Large empty states |
+
+### 8.3 Icon Styling
+- [ ] **Stroke width**: 1.5px (default), 2px (bold)
+- [ ] **CurrentColor** — Inherits text color (preferred)
+- [ ] **Explicit color** — `text-primary`, `text-muted`
+
+---
+
+## 9. Dark Mode Strategy
+
+### 9.1 Implementation Approach
+- [ ] **CSS custom properties** — `:root` + `[data-theme="dark"]` (recommended)
+- [ ] **Tailwind `dark:` variant** — Class-based (`dark:` prefix)
+- [ ] **Media query only** — `@media (prefers-color-scheme: dark)`
+- [ ] **Manual toggle + persistence** — User preference stored in localStorage/cookie
+
+### 9.2 Color Inversion Rules
+| Light | Dark | Rule |
+|-------|------|------|
+| `neutral-50` → `neutral-950` | Backgrounds invert |
+| `neutral-900` → `neutral-50` | Text inverts |
+| `brand-600` → `brand-400` | Primary shifts lighter |
+| `shadow-*` | Same values | Shadows work on dark (black with opacity) |
+| Images | Optional `filter: brightness(0.9)` | Reduce glare |
+
+---
+
+## 10. Responsive Breakpoints
+
+### 10.1 Breakpoint Tokens
+| Token | Min Width | Target Devices |
+|-------|-----------|----------------|
+| `bp-xs` | 320px | Small phones |
+| `bp-sm` | 640px | Large phones / small tablets |
+| `bp-md` | 768px | Tablets portrait |
+| `bp-lg` | 1024px | Tablets landscape / small laptops |
+| `bp-xl` | 1280px | Desktops |
+| `bp-2xl` | 1536px | Large desktops |
+
+### 10.2 Mobile-First vs. Desktop-First
+- [ ] **Mobile-first** — Base styles for mobile, `min-width` media queries up (Tailwind default)
+- [ ] **Desktop-first** — Base styles for desktop, `max-width` media queries down
+
+---
+
+## 11. Accessibility Checklist (Per Component)
+
+### 11.1 Required for Every Interactive Component
+- [ ] **Keyboard accessible** — Tab, Enter/Space, Escape, Arrow keys
+- [ ] **Focus visible** — `:focus-visible` ring (never `outline: none` without replacement)
+- [ ] **ARIA labels** — `aria-label`, `aria-labelledby`, or visible label
+- [ ] **Role** — Implicit (native HTML) or explicit (`role="button"`)
+- [ ] **State** — `aria-expanded`, `aria-selected`, `aria-disabled`, `aria-pressed`
+- [ ] **Live regions** — `aria-live` for dynamic updates (toasts, errors)
+
+### 11.2 Testing Requirements
+- [ ] **axe-core** — Automated in CI
+- [ ] **Screen reader** — NVDA (Windows), VoiceOver (Mac), TalkBack (Android)
+- [ ] **Keyboard-only** — Full flow without mouse
+- [ ] **Zoom** — 200% browser zoom, 400% text-only zoom
+- [ ] **Reduced motion** — `prefers-reduced-motion: reduce`
+
+---
+
+## 12. Design Tokens Implementation
+
+### 12.1 Token Format
+- [ ] **Style Dictionary** — JSON/YAML source → multi-platform output (CSS, JS, iOS, Android)
+- [ ] **CSS Custom Properties only** — Native, no build step
+- [ ] **Figma Tokens plugin** — Design → code sync
+- [ ] **Custom JSON + build script** — Tailwind config generation
+
+### 12.2 Token Structure (Style Dictionary Example)
+```json
+{
+  "color": {
+    "brand": {
+      "500": { "value": "#3b82f6", "type": "color" }
+    },
+    "semantic": {
+      "primary": { "value": "{color.brand.500}", "type": "color" }
+    }
+  },
+  "spacing": {
+    "4": { "value": "16px", "type": "dimension" }
+  }
+}
+```
+
+### 12.3 Theming Pipeline
+```
+Figma Tokens → style-dictionary.json → build →
+  ├── tailwind.config.ts (CSS vars + Tailwind theme)
+  ├── tokens.css (raw CSS custom properties)
+  ├── tokens.ts (TypeScript constants)
+  └── tokens.swift / tokens.kt (mobile)
+```
+
+---
+
+## 13. Decision Log
+
+| Date | Decision | Options Considered | Chosen | Rationale |
+|------|----------|-------------------|--------|-----------|
+| [Date] | Icon set | Lucide, Heroicons, Phosphor | [Choice] | [Why] |
+| [Date] | Font | Inter, Geist, System | [Choice] | [Why] |
+| [Date] | Component lib | shadcn, Radix, Headless, Custom | [Choice] | [Why] |
+| [Date] | Dark mode | CSS vars, Tailwind dark:, media query | [Choice] | [Why] |
+
+---
+
+## 14. Migration & Versioning
+
+### 14.1 Breaking Change Policy
+- [ ] **Major version** — Breaking token/component changes
+- [ ] **Minor version** — New tokens/components, non-breaking
+- [ ] **Patch version** — Bug fixes, token value tweaks
+
+### 14.2 Deprecation Process
+1. Mark deprecated in docs + code (`@deprecated` JSDoc)
+2. Add migration guide
+3. Wait 1 major version
+4. Remove
+
+---
+
+> **Template Version**: 1.0  
+> **Last Updated**: [Date]  
+> **Owner**: [Design Lead]  
+> **Review Cadence**: Quarterly or per major release

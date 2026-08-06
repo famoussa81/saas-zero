@@ -1,0 +1,251 @@
+# SPEC.md — Product Specification Template
+
+> **Generated during Discovery Phase** — Fill in all sections completely before proceeding to scaffold phase.
+
+---
+
+## 1. Product Identity
+
+| Field | Value |
+|-------|-------|
+| **Product Name** | [e.g., "TaskFlow Pro"] |
+| **Tagline** | [One sentence: what it does + for whom] |
+| **Description** | [2-3 sentences: problem solved, target user, key differentiator] |
+| **Target Launch Date** | [YYYY-MM-DD or "ASAP"] |
+
+---
+
+## 2. Business Model
+
+### 2.1 Model Type
+- [ ] **B2B SaaS** — Organizations/Teams, per-seat pricing, invitations, roles
+- [ ] **B2C Consumer** — Individual users, personal billing, no orgs
+- [ ] **Marketplace** — Two-sided, commissions, escrow
+- [ ] **Internal Tool** — Not public, no billing, no SEO
+- [ ] **Prototype/MVP** — Throwaway, speed over quality
+
+### 2.2 Revenue Model
+- [ ] **Subscription Tiers** — Monthly/Annual plans (Free, Pro, Enterprise)
+- [ ] **Usage-Based** — Pay per API call, storage, seats
+- [ ] **Freemium** — Free tier + paid upgrades
+- [ ] **One-Time / Lifetime** — Single payment
+- [ ] **Free** — No monetization
+
+### 2.3 Pricing Structure
+| Tier | Monthly | Yearly (20% off) | Features |
+|------|---------|------------------|----------|
+| Free | $0 | $0 | [List] |
+| Starter | $9 | $90 | [List] |
+| Pro | $29 | $290 | [List] |
+| Enterprise | Custom | Custom | [List] |
+
+---
+
+## 3. Target Audience
+
+| Dimension | Selection |
+|-----------|-----------|
+| **Primary Audience** | [Developers / Designers / Marketers / PMs / General / Other] |
+| **Company Size** | [Solo / SMB (1-50) / Mid-market (51-500) / Enterprise (500+)] |
+| **Technical Proficiency** | [High / Medium / Low] |
+| **Geography** | [Global / US/EU only / Specific regions] |
+
+---
+
+## 4. Core Features (MVP Scope)
+
+### 4.1 Must-Have Features (P0)
+1. [Feature 1] — [Description + acceptance criteria]
+2. [Feature 2] — [Description + acceptance criteria]
+3. [Feature 3] — [Description + acceptance criteria]
+
+### 4.2 Should-Have Features (P1)
+1. [Feature 4] — [Description]
+3. [Feature 5] — [Description]
+
+### 4.3 Nice-to-Have Features (P2)
+1. [Feature 6] — [Description]
+
+---
+
+## 5. Authentication Strategy
+
+| Method | Required? | Notes |
+|--------|-----------|-------|
+| Email + Password | [ ] | Standard |
+| Magic Link | [ ] | Passwordless |
+| OAuth: GitHub | [ ] | Dev audience |
+| OAuth: Google | [ ] | General audience |
+| OAuth: Microsoft | [ ] | Enterprise |
+| MFA (TOTP) | [ ] | Security |
+| SSO/SAML | [ ] | Enterprise only |
+
+**Session Management**: JWT in httpOnly cookies + refresh tokens
+
+---
+
+## 6. Billing & Payments
+
+### 6.1 Stripe Configuration
+- **Mode**: [Test / Live]
+- **Webhook Events**: checkout.session.completed, customer.subscription.*, invoice.payment_*, customer.subscription.trial_will_end
+- **Customer Portal**: Enabled [ ] / Disabled [ ]
+- **Trial Period**: [14 / 30 / None] days
+
+### 6.2 Usage Metering
+- [ ] API calls per month
+- [ ] Storage (GB)
+- [ ] Team members
+- [ ] Projects / Workspaces
+- [ ] Custom: _______________
+
+---
+
+## 7. Email & Notifications
+
+### 7.1 Provider
+- [ ] **Brevo** (300/day free) — Recommended
+- [ ] **Resend** (3,000/month free)
+- [ ] **SendGrid** (100/day free)
+- [ ] **Postmark** (Paid only)
+
+### 7.2 Transactional Emails Required
+- [ ] Welcome / Email verification
+- [ ] Magic link / OTP
+- [ ] Password reset
+- [ ] Invoice / Receipt
+- [ ] Trial ending (3d, 1d, 0d)
+- [ ] Payment failed / Dunning
+- [ ] Subscription cancelled
+- [ ] Team invitation
+- [ ] Password changed / Security alert
+
+### 7.3 Marketing Emails
+- [ ] Weekly digest
+- [ ] Feature announcements
+- [ ] Onboarding sequence
+- [ ] Re-engagement / Win-back
+
+---
+
+## 8. Design & UX Preferences
+
+### 8.1 Design System Reference
+- [ ] **Linear** — Dark, precise, indigo accent
+- [ ] **Vercel** — White minimal, Geist font, shadow borders
+- [ ] **Stripe** — White premium, navy/purple, elegant
+- [ ] **Framer** — Void black, blue accent, motion-first
+- [ ] **Custom** — [Describe or link reference]
+
+### 8.2 Motion Tier
+- [ ] **Minimal** — Transitions only (150ms)
+- [ ] **Moderate** — Scroll reveal (Motion/Framer Motion)
+- [ ] **Bold** — GSAP ScrollTrigger, 3D, video backgrounds
+
+### 8.3 Visual Vibe
+- [ ] **Professional / Corporate** — Clean, trustworthy
+- [ ] **Bold / Energetic** — High contrast, dynamic
+- [ ] **Warm / Human** — Rounded, friendly, approachable
+- [ ] **Technical / Precise** — Monospace, data-dense
+
+---
+
+## 9. Content Status
+
+- [ ] **Final copy ready** — All text, images, videos provided
+- [ ] **Draft copy** — Placeholder text OK, will iterate
+- [ ] **Generate realistic content** — AI should write plausible content
+
+### 9.1 Media Assets
+- [ ] **Real photos/videos available** — Provide links/folder
+- [ ] **Stock photos OK** — Pexels/Unsplash (attribution required)
+- [ ] **AI-generated video** — Via Apiframe (costs money, confirm budget)
+- [ ] **Motion design** — HTML/CSS/GSAP → MP4 via HyperFrames (free)
+
+---
+
+## 10. Technical Requirements
+
+### 10.1 Scale Targets
+| Metric | Target |
+|--------|--------|
+| Concurrent users | [100 / 1,000 / 10,000 / 100,000+] |
+| API requests/day | [1K / 10K / 100K / 1M+] |
+| Database size | [100MB / 1GB / 10GB / 100GB+] |
+| File storage | [1GB / 10GB / 100GB+] |
+
+### 10.2 Compliance & Security
+- [ ] **GDPR** — EU users
+- [ ] **SOC 2** — Enterprise requirement
+- [ ] **HIPAA** — Healthcare data
+- [ ] **PCI DSS** — Payment handling (Stripe handles)
+- [ ] **Custom**: _______________
+
+### 10.3 Integrations
+- [ ] **GitHub** — OAuth, repos, webhooks
+- [ ] **Slack** — Notifications, commands
+- [ ] **Jira/Linear** — Issue sync
+- [ ] **Zapier/Make** — Automation
+- [ ] **Custom API** — Webhooks + API keys
+
+---
+
+## 11. Pages & Routes (MVP)
+
+### Public (Marketing)
+- [ ] `/` — Landing (Hero, Features, Social Proof, Pricing, CTA, Footer)
+- [ ] `/pricing` — Pricing table, FAQ, toggle monthly/annual
+- [ ] `/auth/*` — Signup, Login, Magic Link, Verify, Reset Password
+- [ ] `/changelog` — Version history
+- [ ] `/docs` — Documentation
+- [ ] `/blog` — Content marketing
+
+### Protected (Authenticated)
+- [ ] `/dashboard` — Overview, metrics, quick actions
+- [ ] `/settings` — Profile, Security, Notifications, Billing, Team
+- [ ] `/billing` — Current plan, usage, invoices, portal link
+
+### B2B Only (if applicable)
+- [ ] `/org/[slug]/dashboard` — Org overview
+- [ ] `/org/[slug]/team` — Members, invites, roles
+- [ ] `/org/[slug]/billing` — Org billing, usage
+- [ ] `/org/[slug]/settings` — Org profile, defaults
+- [ ] `/admin` — Global admin (users, orgs, revenue)
+
+---
+
+## 12. Acceptance Criteria (Definition of Done)
+
+- [ ] All P0 features implemented and tested
+- [ ] 13 quality gates pass (typecheck, lint, test, e2e, visual, lighthouse, bundle, cwv, hydration, rls, security, accessibility, contracts)
+- [ ] Visual regression baselines committed
+- [ ] Playwright E2E: Auth flow, Billing flow, Core journey all pass
+- [ ] Accessibility: WCAG 2.1 AA, axe-core 0 violations
+- [ ] Performance: Lighthouse ≥90 all categories, bundle <200KB gz
+- [ ] Security: npm audit clean, SAST clean, RLS policies tested
+- [ ] Deployed to staging, smoke tests pass
+- [ ] Documentation: README, API docs, changelog updated
+
+---
+
+## 13. Risks & Mitigations
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| [Risk 1] | [High/Med/Low] | [High/Med/Low] | [Mitigation] |
+| [Risk 2] | [High/Med/Low] | [High/Med/Low] | [Mitigation] |
+| [Risk 3] | [High/Med/Low] | [High/Med/Low] | [Mitigation] |
+
+---
+
+## 14. Sign-Off
+
+| Role | Name | Date | Signature |
+|------|------|------|-----------|
+| Product Owner | | | |
+| Tech Lead | | | |
+| Designer | | | |
+
+---
+
+> **Next Step**: Run `/ns-ship --from-phase=2` to begin scaffold phase, or `/ns-ship` to run full pipeline.

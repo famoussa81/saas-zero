@@ -1,0 +1,34 @@
+{
+  "ci": {
+    "collect": {
+      "numberOfRuns": 3,
+      "startServerCommand": "pnpm next:dev",
+      "url": [
+        "http://localhost:3000/fr",
+        "http://localhost:3000/fr/blog",
+        "http://localhost:3000/fr/connexion",
+        "http://localhost:3000/fr/tableau-de-bord",
+        "http://localhost:3000/fr/pricing"
+      ],
+      "settings": {
+        "headless": true,
+        "preset": "desktop",
+        "staticDistDir": ".next/server"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": ["error", { "minScore": 0.9 }],
+        "categories:accessibility": ["error", { "minScore": 0.9 }],
+        "categories:best-practices": ["error", { "minScore": 0.9 }],
+        "categories:seo": ["error", { "minScore": 0.9 }],
+        "first-contentful-paint": ["error", { "maxNumericValue": 2500 }],
+        "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
+        "interactive": ["error", { "maxNumericValue": 3500 }],
+        "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
+        "total-blocking-time": ["error", { "maxNumericValue": 200 }]
+      }
+    },
+    "upload": { "target": "temporary-public-storage" }
+  }
+}

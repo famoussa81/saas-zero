@@ -1,0 +1,50 @@
+module.exports = {
+  env: {
+    browser: true,
+    es2022: true,
+    node: true,
+  },
+  // Exclure les fichiers de config JS (non inclus dans le tsconfig projeté par parserOptions.project)
+  ignorePatterns: [
+    ".eslintrc.js",
+    "next.config.js",
+    "postcss.config.js",
+    "tailwind.config.ts",
+    "*.config.js",
+    "*.config.mjs",
+    "node_modules/",
+    ".next/",
+    ".content-collections/",
+    "playwright-visual-report/",
+    "playwright-report/",
+  ],
+  extends: [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+  ],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
+    ecmaFeatures: { jsx: true },
+    project: "./tsconfig.eslint.json",
+  },
+  plugins: ["@typescript-eslint", "react", "react-hooks", "jsx-a11y"],
+  settings: {
+    react: { version: "18.3" },
+    next: { rootDir: __dirname },
+  },
+  rules: {
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-noninteractive-element-interactions": "warn",
+    "@next/next/no-img-element": "off",
+    "import/no-anonymous-default-export": "off",
+  },
+};

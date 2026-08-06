@@ -1,0 +1,27 @@
+{
+  "name": "workers",
+  "version": "1.0.0",
+  "description": "Cloudflare Workers for Stripe webhooks, Brevo emails, and health checks",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "tsc --noEmit && esbuild index.ts --bundle --platform=node --outfile=dist/index.js --external:@cloudflare/workers-types --external:stripe --external:@supabase/supabase-js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "stripe": "^16.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240801.0",
+    "esbuild": "^0.28.1",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0",
+    "wrangler": "^3.70.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

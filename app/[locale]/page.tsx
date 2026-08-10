@@ -15,6 +15,7 @@ import {
   WebsiteJsonLd,
   SoftwareApplicationJsonLd,
 } from "@/components/ui/JsonLd";
+import { PipelineHero } from "@/components/marketing/PipelineHero";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -128,56 +129,63 @@ export default function HomePage() {
           data-testid="landing-hero"
         >
           <div className="container">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-border/50 mb-8">
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                <span className="text-sm font-medium text-muted-foreground">
-                  Nouveau : Pipeline SaaS complète en 2h
-                </span>
-              </div>
+            <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-8">
+              <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left">
+                <div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-border/50 mb-8">
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Nouveau : Pipeline SaaS complète en 2h
+                  </span>
+                </div>
 
-              <h1 className="scroll-reveal font-display font-bold tracking-tight text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 leading-[1.1]">
-                Build <span className="gradient-text">SaaS</span> Faster
-              </h1>
+                <h1 className="scroll-reveal font-display font-bold tracking-tight text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 leading-[1.1]">
+                  Build <span className="gradient-text">SaaS</span> Faster
+                </h1>
 
-              <p className="scroll-reveal scroll-reveal-delay-1 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed">
-                La pipeline{" "}
-                <span className="font-medium text-foreground">/ns-ship</span>{" "}
-                g&eacute;n&egrave;re un SaaS production-ready avec auth,
-                billing, dashboard, équipe et API keys — en une seule commande.
-              </p>
+                <p className="scroll-reveal scroll-reveal-delay-1 text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-12 leading-relaxed">
+                  La pipeline{" "}
+                  <span className="font-medium text-foreground">/ns-ship</span>{" "}
+                  g&eacute;n&egrave;re un SaaS production-ready avec auth,
+                  billing, dashboard, équipe et API keys — en une seule
+                  commande.
+                </p>
 
-              <div className="scroll-reveal scroll-reveal-delay-2 flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-                <Link
-                  href="/fr/inscription"
-                  className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full text-lg font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"
-                >
-                  Commencer gratuitement
-                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  href="/fr/blog"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-border text-foreground rounded-full text-lg font-semibold hover:bg-muted transition-all hover-lift active-scale focus-visible-ring"
-                >
-                  Voir la documentation
-                </Link>
-              </div>
-
-              {/* Social Proof */}
-              <div className="scroll-reveal scroll-reveal-delay-3 flex flex-wrap items-center justify-center gap-8 md:gap-12 text-center">
-                {socialProof.map((item, i) => (
-                  <div
-                    key={item.label}
-                    className={`scroll-reveal-delay-${i + 4}`}
+                <div className="scroll-reveal scroll-reveal-delay-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-16">
+                  <Link
+                    href="/fr/inscription"
+                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full text-lg font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"
                   >
-                    <div className="font-display font-bold text-3xl md:text-4xl text-foreground gradient-text">
-                      {item.metric}
+                    Commencer gratuitement
+                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                  <Link
+                    href="/fr/blog"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-border text-foreground rounded-full text-lg font-semibold hover:bg-muted transition-all hover-lift active-scale focus-visible-ring"
+                  >
+                    Voir la documentation
+                  </Link>
+                </div>
+
+                {/* Social Proof */}
+                <div className="scroll-reveal scroll-reveal-delay-3 flex flex-wrap items-center justify-center lg:justify-start gap-8 md:gap-12 text-center lg:text-left">
+                  {socialProof.map((item, i) => (
+                    <div
+                      key={item.label}
+                      className={`scroll-reveal-delay-${i + 4}`}
+                    >
+                      <div className="font-display font-bold text-3xl md:text-4xl text-foreground gradient-text">
+                        {item.metric}
+                      </div>
+                      <div className="text-sm text-muted-foreground font-medium">
+                        {item.label}
+                      </div>
                     </div>
-                    <div className="text-sm text-muted-foreground font-medium">
-                      {item.label}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+
+              <div className="scroll-reveal scroll-reveal-delay-2">
+                <PipelineHero />
               </div>
             </div>
           </div>

@@ -11,7 +11,7 @@
 | Check                     | Status  | Details                                        |
 | ------------------------- | ------- | ---------------------------------------------- |
 | Hardcoded Values          | ❌ FAIL | 0 violations in 0 files                        |
-| Component Token Coverage  | ✅ PASS | 97.4% (threshold: 90%)                         |
+| Component Token Coverage  | ✅ PASS | 97.5% (threshold: 90%)                         |
 | Token Usage Efficiency    | ✅ PASS | 67.3% used (21 unused, threshold: <50% unused) |
 | Impeccable Semantic Score | ✅ PASS | 95/100 (threshold: 95)                         |
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { getAllPosts } from "@/lib/content";
+import { Search } from "@/components/ui/Search";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -19,6 +20,9 @@ export default async function BlogIndexPage() {
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Découvrez nos derniers articles, guides et actualités.
         </p>
+        <div className="max-w-md mx-auto mt-8 text-left">
+          <Search />
+        </div>
       </header>
 
       {posts.length === 0 ? (

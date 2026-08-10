@@ -16,11 +16,12 @@ const { globSync } = require("glob");
 
 // --- Configuration -----------------------------------------------------------
 const DEFAULT_CONFIG = {
-  includePaths: [
-    "src/components/**/*.tsx",
-    "src/app/**/*.tsx",
-    "src/lib/**/*.ts",
-  ],
+  // Component token coverage only makes sense for files that render JSX —
+  // lib/**/*.ts is server logic with no visual output, scanning it here
+  // would count non-UI files as "components missing tokens" (a category
+  // error). design-tokens-audit.js still scans .ts files separately for
+  // stray hardcoded values, which is a different, valid question.
+  componentPaths: ["components/**/*.tsx", "app/**/*.tsx"],
   excludePaths: [
     "**/*.stories.tsx",
     "**/*.test.tsx",
@@ -54,6 +55,63 @@ if (fs.existsSync(configPath)) {
 // CSS custom properties (tokens being USED)
 const CSS_VAR_USAGE = /var\(--([a-zA-Z0-9-]+)\)/g;
 
+// Tailwind utility classes that tailwind.config.ts wires to CSS custom
+// properties (see theme.extend.colors/fontSize/fontWeight/boxShadow/
+// borderRadius). Using `bg-primary` IS using the --primary token — same as
+// `var(--primary)` would be, just spelled through Tailwind's utility layer.
+const COLOR_TOKEN_NAMES = [
+  "background",
+  "foreground",
+  "card",
+  "popover",
+  "primary",
+  "secondary",
+  "destructive",
+  "muted",
+  "accent",
+  "border",
+  "input",
+  "ring",
+];
+const TAILWIND_COLOR_CLASS = new RegExp(
+  `\\b(?:bg|text|border|ring|fill|stroke|accent|caret|decoration|placeholder|outline|divide|from|via|to)-(${COLOR_TOKEN_NAMES.join("|")})(?:-foreground)?\\b`,
+  "g",
+);
+const TAILWIND_FONT_SIZE_CLASS =
+  /\btext-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)\b/g;
+const TAILWIND_FONT_WEIGHT_CLASS =
+  /\bfont-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)\b/g;
+const TAILWIND_SHADOW_CLASS = /\bshadow-(sm|md|lg|xl|2xl|inner)\b/g;
+const TAILWIND_RADIUS_CLASS = /\brounded-(sm|md|lg|xl|2xl|3xl|full)\b/g;
+
+function findTailwindTokenClasses(content) {
+  const found = new Set();
+  let m;
+
+  TAILWIND_COLOR_CLASS.lastIndex = 0;
+  while ((m = TAILWIND_COLOR_CLASS.exec(content)) !== null) found.add(m[1]);
+
+  TAILWIND_FONT_SIZE_CLASS.lastIndex = 0;
+  while ((m = TAILWIND_FONT_SIZE_CLASS.exec(content)) !== null)
+    found.add(`font-size-${m[1]}`);
+
+  TAILWIND_FONT_WEIGHT_CLASS.lastIndex = 0;
+  while ((m = TAILWIND_FONT_WEIGHT_CLASS.exec(content)) !== null)
+    found.add(`font-weight-${m[1]}`);
+
+  TAILWIND_SHADOW_CLASS.lastIndex = 0;
+  while ((m = TAILWIND_SHADOW_CLASS.exec(content)) !== null)
+    found.add(`shadow-${m[1]}`);
+
+  TAILWIND_RADIUS_CLASS.lastIndex = 0;
+  while ((m = TAILWIND_RADIUS_CLASS.exec(content)) !== null) {
+    // sm/md/lg map to the base --radius token; xl/2xl/3xl/full have their own
+    found.add(["sm", "md", "lg"].includes(m[1]) ? "radius" : `radius-${m[1]}`);
+  }
+
+  return found;
+}
+
 // Token definitions in JSON (Style Dictionary format)
 const TOKEN_DEF = /"([a-zA-Z0-9-]+)":\s*\{\s*"value"/g;
 
@@ -75,7 +133,7 @@ function getFiles(patterns) {
         const excludeRegex = new RegExp(
           excludePattern.replace(/\*\*/g, ".*").replace(/\*/g, "[^/]*"),
         );
-        if (excludeRegex.test(file)) {
+        if (excludeRegex.test(file.replace(/\\/g, "/"))) {
           excluded = true;
           break;
         }
@@ -161,7 +219,7 @@ async function main() {
   console.log("\n📊 Design Inventory\n");
 
   // 1. Get component files
-  const componentFiles = getFiles(config.includePaths);
+  const componentFiles = getFiles(config.componentPaths || config.includePaths);
   console.log(`Scanning ${componentFiles.length} component files...`);
 
   // 2. Get token definition files
@@ -197,14 +255,35 @@ async function main() {
 
   console.log(`Found ${definedTokens.size} defined tokens`);
 
-  // 4. Analyze each component file for token usage
+  // 4. Analyze each component file for token usage.
+  // Files with no className/style attribute at all render no styled markup
+  // of their own (typical for Server Component route wrappers that just
+  // check auth/fetch data and delegate to a child component) — "coverage"
+  // doesn't apply to them, so they're excluded from both the numerator and
+  // the denominator rather than counted as violations.
+  const HAS_STYLING_SURFACE = /className\s*=|style\s*=\s*\{/;
   const fileReports = [];
   let totalComponentsUsingTokens = 0;
-  let totalComponents = componentFiles.length;
+  let skippedNoStylingSurface = 0;
+  const scoredFiles = [];
   const usedTokens = new Set();
 
   for (const file of componentFiles) {
     const content = fs.readFileSync(file, "utf-8");
+
+    if (!HAS_STYLING_SURFACE.test(content)) {
+      skippedNoStylingSurface++;
+      fileReports.push({
+        path: path.relative(process.cwd(), file),
+        tokensUsed: [],
+        tokenCount: 0,
+        hasTokens: null,
+        skipped: "no styling surface (no className/style)",
+      });
+      continue;
+    }
+    scoredFiles.push(file);
+
     const tokensInFile = new Set();
 
     // Find all var(--token-name) usages
@@ -225,6 +304,12 @@ async function main() {
       }
     }
 
+    // Count Tailwind utility classes backed by tokens via tailwind.config.ts
+    for (const tokenName of findTailwindTokenClasses(content)) {
+      tokensInFile.add(tokenName);
+      usedTokens.add(tokenName);
+    }
+
     const hasTokens = tokensInFile.size > 0;
     if (hasTokens) totalComponentsUsingTokens++;
 
@@ -235,6 +320,8 @@ async function main() {
       hasTokens,
     });
   }
+
+  const totalComponents = scoredFiles.length;
 
   // 5. Calculate coverage stats
   const componentCoverage =
@@ -275,6 +362,7 @@ async function main() {
       usingTokens: totalComponentsUsingTokens,
       violations: totalComponents - totalComponentsUsingTokens,
       coverage: `${componentCoverage}%`,
+      skippedNoStylingSurface,
     },
     tokens: {
       defined: definedTokens.size,
@@ -298,6 +386,11 @@ async function main() {
   console.log(
     `Components: ${totalComponentsUsingTokens}/${totalComponents} using tokens (${componentCoverage}%)`,
   );
+  if (skippedNoStylingSurface > 0) {
+    console.log(
+      `  (${skippedNoStylingSurface} files skipped — no className/style, no styling surface)`,
+    );
+  }
   console.log(
     `Tokens: ${usedTokens.size}/${definedTokens.size} used (${Math.round(tokenUsageRatio * 1000) / 10}%)`,
   );

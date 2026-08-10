@@ -1,11 +1,40 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { PLANS, getPlanByPriceId } from "@/lib/stripe";
+
+const {
+  mockCreateCheckout,
+  mockCreatePortal,
+  mockList,
+  mockCreateCustomer,
+  mockConstructEvent,
+} = vi.hoisted(() => ({
+  mockCreateCheckout: vi.fn(),
+  mockCreatePortal: vi.fn(),
+  mockList: vi.fn(),
+  mockCreateCustomer: vi.fn(),
+  mockConstructEvent: vi.fn(),
+}));
+
+vi.mock("stripe", () => ({
+  default: vi.fn().mockImplementation(function () {
+    return {
+      checkout: { sessions: { create: mockCreateCheckout } },
+      billingPortal: { sessions: { create: mockCreatePortal } },
+      customers: { list: mockList, create: mockCreateCustomer },
+      webhooks: { constructEvent: mockConstructEvent },
+    };
+  }),
+}));
 
 describe("stripe", () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
     vi.resetModules();
+    mockCreateCheckout.mockReset();
+    mockCreatePortal.mockReset();
+    mockList.mockReset();
+    mockCreateCustomer.mockReset();
+    mockConstructEvent.mockReset();
     process.env = { ...originalEnv };
     process.env.STRIPE_SECRET_KEY = "sk_test_123";
     process.env.STRIPE_PRICE_STARTER_MONTHLY = "price_starter_test";
@@ -19,32 +48,37 @@ describe("stripe", () => {
   });
 
   describe("PLANS", () => {
-    it("has all required plans", () => {
+    it("has all required plans", async () => {
+      const { PLANS } = await import("@/lib/stripe");
       expect(PLANS.free).toBeDefined();
       expect(PLANS.starter).toBeDefined();
       expect(PLANS.pro).toBeDefined();
       expect(PLANS.enterprise).toBeDefined();
     });
 
-    it("free plan has no price ID", () => {
+    it("free plan has no price ID", async () => {
+      const { PLANS } = await import("@/lib/stripe");
       expect(PLANS.free.stripePriceId).toBeNull();
       expect(PLANS.free.priceId).toBeNull();
     });
 
-    it("paid plans have price IDs from env or defaults", () => {
+    it("paid plans have price IDs from env or defaults", async () => {
+      const { PLANS } = await import("@/lib/stripe");
       expect(PLANS.starter.stripePriceId).toBe("price_starter_test");
       expect(PLANS.pro.stripePriceId).toBe("price_pro_test");
       expect(PLANS.enterprise.stripePriceId).toBe("price_enterprise_test");
     });
 
-    it("all plans have features array", () => {
+    it("all plans have features array", async () => {
+      const { PLANS } = await import("@/lib/stripe");
       Object.values(PLANS).forEach((plan) => {
         expect(Array.isArray(plan.features)).toBe(true);
         expect(plan.features.length).toBeGreaterThan(0);
       });
     });
 
-    it("all plans have limits object", () => {
+    it("all plans have limits object", async () => {
+      const { PLANS } = await import("@/lib/stripe");
       Object.values(PLANS).forEach((plan) => {
         expect(plan.limits).toBeDefined();
         expect(typeof plan.limits.projects).toBe("number");
@@ -55,27 +89,32 @@ describe("stripe", () => {
   });
 
   describe("getPlanByPriceId", () => {
-    it("returns correct plan for starter price ID", () => {
+    it("returns correct plan for starter price ID", async () => {
+      const { PLANS, getPlanByPriceId } = await import("@/lib/stripe");
       const plan = getPlanByPriceId("price_starter_test");
       expect(plan).toEqual(PLANS.starter);
     });
 
-    it("returns correct plan for pro price ID", () => {
+    it("returns correct plan for pro price ID", async () => {
+      const { PLANS, getPlanByPriceId } = await import("@/lib/stripe");
       const plan = getPlanByPriceId("price_pro_test");
       expect(plan).toEqual(PLANS.pro);
     });
 
-    it("returns correct plan for enterprise price ID", () => {
+    it("returns correct plan for enterprise price ID", async () => {
+      const { PLANS, getPlanByPriceId } = await import("@/lib/stripe");
       const plan = getPlanByPriceId("price_enterprise_test");
       expect(plan).toEqual(PLANS.enterprise);
     });
 
-    it("returns null for unknown price ID", () => {
+    it("returns null for unknown price ID", async () => {
+      const { getPlanByPriceId } = await import("@/lib/stripe");
       const plan = getPlanByPriceId("price_unknown");
       expect(plan).toBeNull();
     });
 
-    it("returns null for free plan price ID (null)", () => {
+    it("returns null for free plan price ID (null)", async () => {
+      const { getPlanByPriceId } = await import("@/lib/stripe");
       const plan = getPlanByPriceId(null as unknown as string);
       expect(plan).toBeNull();
     });
@@ -83,19 +122,10 @@ describe("stripe", () => {
 
   describe("createCheckoutSession", () => {
     it("calls stripe.checkout.sessions.create with correct parameters", async () => {
-      const mockCreate = vi
-        .fn()
-        .mockResolvedValue({
-          id: "cs_test_123",
-          url: "https://checkout.stripe.com/...",
-        });
-      vi.mock("stripe", () => ({
-        default: vi.fn().mockImplementation(() => ({
-          checkout: {
-            sessions: { create: mockCreate },
-          },
-        })),
-      }));
+      mockCreateCheckout.mockResolvedValue({
+        id: "cs_test_123",
+        url: "https://checkout.stripe.com/...",
+      });
 
       const { createCheckoutSession } = await import("@/lib/stripe");
       const session = await createCheckoutSession({
@@ -107,7 +137,7 @@ describe("stripe", () => {
       });
 
       expect(session.id).toBe("cs_test_123");
-      expect(mockCreate).toHaveBeenCalledWith(
+      expect(mockCreateCheckout).toHaveBeenCalledWith(
         expect.objectContaining({
           customer: "cus_test",
           mode: "subscription",
@@ -125,16 +155,9 @@ describe("stripe", () => {
 
   describe("createPortalSession", () => {
     it("calls stripe.billingPortal.sessions.create with correct parameters", async () => {
-      const mockCreate = vi
-        .fn()
-        .mockResolvedValue({ url: "https://billing.stripe.com/..." });
-      vi.mock("stripe", () => ({
-        default: vi.fn().mockImplementation(() => ({
-          billingPortal: {
-            sessions: { create: mockCreate },
-          },
-        })),
-      }));
+      mockCreatePortal.mockResolvedValue({
+        url: "https://billing.stripe.com/...",
+      });
 
       const { createPortalSession } = await import("@/lib/stripe");
       const session = await createPortalSession({
@@ -143,7 +166,7 @@ describe("stripe", () => {
       });
 
       expect(session.url).toBe("https://billing.stripe.com/...");
-      expect(mockCreate).toHaveBeenCalledWith(
+      expect(mockCreatePortal).toHaveBeenCalledWith(
         expect.objectContaining({
           customer: "cus_test",
           return_url: "https://example.com/billing",
@@ -158,12 +181,7 @@ describe("stripe", () => {
         id: "cus_existing",
         email: "test@example.com",
       };
-      const mockList = vi.fn().mockResolvedValue({ data: [existingCustomer] });
-      vi.mock("stripe", () => ({
-        default: vi.fn().mockImplementation(() => ({
-          customers: { list: mockList },
-        })),
-      }));
+      mockList.mockResolvedValue({ data: [existingCustomer] });
 
       const { getOrCreateCustomer } = await import("@/lib/stripe");
       const customer = await getOrCreateCustomer({
@@ -185,13 +203,8 @@ describe("stripe", () => {
         email: "test@example.com",
         name: "Test User",
       };
-      const mockList = vi.fn().mockResolvedValue({ data: [] });
-      const mockCreate = vi.fn().mockResolvedValue(newCustomer);
-      vi.mock("stripe", () => ({
-        default: vi.fn().mockImplementation(() => ({
-          customers: { list: mockList, create: mockCreate },
-        })),
-      }));
+      mockList.mockResolvedValue({ data: [] });
+      mockCreateCustomer.mockResolvedValue(newCustomer);
 
       const { getOrCreateCustomer } = await import("@/lib/stripe");
       const customer = await getOrCreateCustomer({
@@ -202,7 +215,7 @@ describe("stripe", () => {
 
       expect(customer).toEqual(newCustomer);
       expect(mockList).toHaveBeenCalled();
-      expect(mockCreate).toHaveBeenCalledWith(
+      expect(mockCreateCustomer).toHaveBeenCalledWith(
         expect.objectContaining({
           email: "test@example.com",
           name: "Test User",
@@ -214,17 +227,10 @@ describe("stripe", () => {
 
   describe("verifyWebhookSignature", () => {
     it("verifies webhook signature correctly", async () => {
-      const mockConstructEvent = vi
-        .fn()
-        .mockReturnValue({
-          id: "evt_test",
-          type: "checkout.session.completed",
-        });
-      vi.mock("stripe", () => ({
-        default: vi.fn().mockImplementation(() => ({
-          webhooks: { constructEvent: mockConstructEvent },
-        })),
-      }));
+      mockConstructEvent.mockReturnValue({
+        id: "evt_test",
+        type: "checkout.session.completed",
+      });
 
       const { verifyWebhookSignature } = await import("@/lib/stripe");
       const event = verifyWebhookSignature(

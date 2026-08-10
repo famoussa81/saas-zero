@@ -1,19 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-describe("content", () => {
-  const originalEnv = process.env;
-
-  beforeEach(() => {
-    vi.resetModules();
-    process.env = { ...originalEnv };
-  });
-
-  afterEach(() => {
-    process.env = originalEnv;
-  });
-
-  // Mock the generated content
-  const mockPosts = [
+const { mockPosts, mockPages, mockComponents } = vi.hoisted(() => ({
+  mockPosts: [
     {
       slug: "post-1",
       title: "Post 1",
@@ -35,9 +23,8 @@ describe("content", () => {
       draft: false,
       content: "Content 3",
     },
-  ];
-
-  const mockPages = [
+  ],
+  mockPages: [
     {
       slug: "page-1",
       title: "Page 1",
@@ -59,22 +46,32 @@ describe("content", () => {
       hidden: true,
       content: "Page 3",
     },
-  ];
-
-  const mockComponents = [
+  ],
+  mockComponents: [
     { slug: "comp-1", title: "Component 1", description: "Desc 1" },
     { slug: "comp-2", title: "Component 2", description: "Desc 2" },
-  ];
+  ],
+}));
+
+vi.mock("@/src/lib/content/generated", () => ({
+  allPosts: mockPosts,
+  allPages: mockPages,
+  allComponents: mockComponents,
+  Post: {},
+  Page: {},
+  Component: {},
+}));
+
+describe("content", () => {
+  const originalEnv = process.env;
 
   beforeEach(() => {
-    vi.mock("../src/lib/content/generated", () => ({
-      allPosts: mockPosts,
-      allPages: mockPages,
-      allComponents: mockComponents,
-      Post: {},
-      Page: {},
-      Component: {},
-    }));
+    vi.resetModules();
+    process.env = { ...originalEnv };
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
   });
 
   describe("getAllPosts", () => {

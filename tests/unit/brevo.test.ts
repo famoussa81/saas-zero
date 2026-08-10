@@ -1,10 +1,20 @@
-﻿import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+
+const { mockSend } = vi.hoisted(() => ({ mockSend: vi.fn() }));
+
+vi.mock("@getbrevo/brevo", () => ({
+  BrevoClient: vi.fn().mockImplementation(function () {
+    return { transactionalEmails: { sendTransacEmail: mockSend } };
+  }),
+}));
 
 describe("brevo", () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
     vi.resetModules();
+    mockSend.mockReset();
+    mockSend.mockResolvedValue({});
     process.env = { ...originalEnv };
     process.env.BREVO_API_KEY = "test-api-key";
     process.env.BREVO_SENDER_EMAIL = "test@example.com";
@@ -30,13 +40,6 @@ describe("brevo", () => {
     });
 
     it("sends email successfully with all parameters", async () => {
-      const mockSend = vi.fn().mockResolvedValue({});
-      vi.mock("@getbrevo/brevo", () => ({
-        BrevoClient: vi.fn().mockImplementation(() => ({
-          transactionalEmails: { sendTransacEmail: mockSend },
-        })),
-      }));
-
       const { sendTransactionalEmail } = await import("@/lib/brevo");
       const result = await sendTransactionalEmail({
         to: [{ email: "test@example.com", name: "Test User" }],
@@ -62,13 +65,7 @@ describe("brevo", () => {
     });
 
     it("handles Brevo API error", async () => {
-      const mockSend = vi.fn().mockRejectedValue(new Error("API Error"));
-      vi.mock("@getbrevo/brevo", () => ({
-        BrevoClient: vi.fn().mockImplementation(() => ({
-          transactionalEmails: { sendTransacEmail: mockSend },
-        })),
-      }));
-
+      mockSend.mockRejectedValue(new Error("API Error"));
       const { sendTransactionalEmail } = await import("@/lib/brevo");
       const result = await sendTransactionalEmail({
         to: [{ email: "test@example.com" }],
@@ -83,13 +80,6 @@ describe("brevo", () => {
 
   describe("sendWelcomeEmail", () => {
     it("sends welcome email with correct content", async () => {
-      const mockSend = vi.fn().mockResolvedValue({});
-      vi.mock("@getbrevo/brevo", () => ({
-        BrevoClient: vi.fn().mockImplementation(() => ({
-          transactionalEmails: { sendTransacEmail: mockSend },
-        })),
-      }));
-
       const { sendWelcomeEmail } = await import("@/lib/brevo");
       const result = await sendWelcomeEmail("user@example.com", "John");
 
@@ -106,13 +96,6 @@ describe("brevo", () => {
 
   describe("sendInvoiceEmail", () => {
     it("sends invoice email with formatted amount", async () => {
-      const mockSend = vi.fn().mockResolvedValue({});
-      vi.mock("@getbrevo/brevo", () => ({
-        BrevoClient: vi.fn().mockImplementation(() => ({
-          transactionalEmails: { sendTransacEmail: mockSend },
-        })),
-      }));
-
       const { sendInvoiceEmail } = await import("@/lib/brevo");
       const result = await sendInvoiceEmail(
         "user@example.com",
@@ -134,13 +117,6 @@ describe("brevo", () => {
 
   describe("sendPasswordResetEmail", () => {
     it("sends password reset email with reset URL", async () => {
-      const mockSend = vi.fn().mockResolvedValue({});
-      vi.mock("@getbrevo/brevo", () => ({
-        BrevoClient: vi.fn().mockImplementation(() => ({
-          transactionalEmails: { sendTransacEmail: mockSend },
-        })),
-      }));
-
       const { sendPasswordResetEmail } = await import("@/lib/brevo");
       const result = await sendPasswordResetEmail(
         "user@example.com",
@@ -160,13 +136,6 @@ describe("brevo", () => {
 
   describe("sendTeamInvitationEmail", () => {
     it("sends team invitation email with correct content", async () => {
-      const mockSend = vi.fn().mockResolvedValue({});
-      vi.mock("@getbrevo/brevo", () => ({
-        BrevoClient: vi.fn().mockImplementation(() => ({
-          transactionalEmails: { sendTransacEmail: mockSend },
-        })),
-      }));
-
       const { sendTeamInvitationEmail } = await import("@/lib/brevo");
       const result = await sendTeamInvitationEmail(
         "invitee@example.com",

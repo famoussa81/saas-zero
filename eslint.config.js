@@ -24,6 +24,7 @@ module.exports = tseslint.config(
       "dist/",
       "components.json",
       ".claude/",
+      "storybook-static/",
     ],
   },
   {

@@ -42,7 +42,9 @@
     ".content-collections/**/*.ts",
     ".next/types/**/*.ts",
     "tests/**/*",
-    "supabase/functions/**/*"
+    "supabase/functions/**/*",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx"
   ],
   "exclude": ["node_modules"]
 }

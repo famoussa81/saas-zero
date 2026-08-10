@@ -57,3 +57,5 @@ Desktop.ini
 
 # TypeScript
 *.tsbuildinfo
+*storybook.log
+storybook-static

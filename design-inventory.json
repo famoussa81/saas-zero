@@ -1,0 +1,536 @@
+{
+  "components": {
+    "total": 64,
+    "usingTokens": 2,
+    "violations": 62,
+    "coverage": "3.1%"
+  },
+  "tokens": {
+    "defined": 23,
+    "used": 3,
+    "unused": 23,
+    "usageRatio": "13%"
+  },
+  "byCategory": {
+    "other": {
+      "defined": 15,
+      "used": 0
+    },
+    "color": {
+      "defined": 4,
+      "used": 0
+    },
+    "radius": {
+      "defined": 1,
+      "used": 0
+    },
+    "typography": {
+      "defined": 3,
+      "used": 0
+    }
+  },
+  "files": [
+    {
+      "path": "app\\[locale]\\(app)\\equipe\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\(app)\\facturation\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\(app)\\layout.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\(app)\\projets\\[id]\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\(app)\\projets\\page.tsx",
+      "tokensUsed": ["color-primary"],
+      "tokenCount": 1,
+      "hasTokens": true
+    },
+    {
+      "path": "app\\[locale]\\(app)\\reglages\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\(app)\\tableau-de-bord\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\[...slug]\\not-found.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\[...slug]\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\analytics\\AdminAnalyticsPage.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\analytics\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\layout.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\organizations\\AdminOrganizationsPage.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\organizations\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\settings\\AdminSettingsPage.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\settings\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\subscriptions\\AdminSubscriptionsPage.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\subscriptions\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\users\\AdminUsersPage.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\admin\\users\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\blog\\[slug]\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\blog\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\components-demo\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\connexion\\ConnexionForm.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\connexion\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\inscription\\InscriptionForm.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\inscription\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\layout.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\mot-de-passe-oublie\\MotDePasseOublieForm.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\mot-de-passe-oublie\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\onboarding\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "app\\[locale]\\page.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\MDXComponents.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\MDXContent.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\forms\\ContactForm.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\providers\\AnalyticsProvider.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\JsonLd.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\Search.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\avatar.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\badge.stories.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\badge.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\button.stories.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\button.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\dialog.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\dropdown-menu.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\input.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\label.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\pagination.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\select.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\sonner.tsx",
+      "tokensUsed": ["radix-toast-swipe-end-x", "radix-toast-swipe-move-x"],
+      "tokenCount": 2,
+      "hasTokens": true
+    },
+    {
+      "path": "components\\ui\\switch.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\table.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "components\\ui\\tabs.tsx",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\actions\\billing.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\actions\\organizations.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\actions\\profile.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\analytics\\index.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\brevo.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\content.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\stripe.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\supabase\\admin.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\supabase\\client.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\supabase\\server.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    },
+    {
+      "path": "lib\\utils.ts",
+      "tokensUsed": [],
+      "tokenCount": 0,
+      "hasTokens": false
+    }
+  ],
+  "unusedTokens": [
+    {
+      "name": "background",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "foreground",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "card",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "card-foreground",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "popover",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "popover-foreground",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "primary",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "primary-foreground",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "secondary",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "secondary-foreground",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "muted",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "muted-foreground",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "accent",
+      "category": "color",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "accent-foreground",
+      "category": "color",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "destructive",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "destructive-foreground",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "border",
+      "category": "color",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "input",
+      "category": "other",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "ring",
+      "category": "color",
+      "definedIn": ["src\\styles\\globals.css", "src\\styles\\globals.css"]
+    },
+    {
+      "name": "radius",
+      "category": "radius",
+      "definedIn": ["src\\styles\\globals.css"]
+    },
+    {
+      "name": "font-sans",
+      "category": "typography",
+      "definedIn": ["src\\styles\\globals.css"]
+    },
+    {
+      "name": "font-display",
+      "category": "typography",
+      "definedIn": ["src\\styles\\globals.css"]
+    },
+    {
+      "name": "font-mono",
+      "category": "typography",
+      "definedIn": ["src\\styles\\globals.css"]
+    }
+  ],
+  "timestamp": "2026-08-10T23:15:44.658Z"
+}

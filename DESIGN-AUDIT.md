@@ -1,0 +1,2078 @@
+# Design Audit Report
+
+**Project**: saas-zero
+**Date**: 2026-08-10
+**Status**: ❌ FAILED
+
+---
+
+## Gate Results
+
+| Check                     | Status  | Details                                      |
+| ------------------------- | ------- | -------------------------------------------- |
+| Hardcoded Values          | ❌ FAIL | 1499 violations in 40 files                  |
+| Component Token Coverage  | ❌ FAIL | 3.1% (threshold: 90%)                        |
+| Token Usage Efficiency    | ⚠️ WARN | 13% used (23 unused, threshold: <50% unused) |
+| Impeccable Semantic Score | ✅ PASS | 95/100 (threshold: 95)                       |
+
+---
+
+## Violations Detail
+
+### app\[locale]\(app)\equipe\page.tsx (20)
+
+- **Line 19:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Équipe</h1>`
+- **Line 19:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Équipe</h1>`
+- **Line 20:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 35:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Équipe</h1>`
+- **Line 35:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Équipe</h1>`
+- **Line 36:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 61:22** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Équipe</h1>`
+- **Line 61:31** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Équipe</h1>`
+- **Line 62:23** — `tailwind-spacing`: `mt-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mt-6 rounded-xl border border-border bg-card p-5">`
+- **Line 62:68** — `tailwind-spacing`: `p-5`
+  - 💡 Use var(--space-5) or Tailwind config token
+  - Context: `<div className="mt-6 rounded-xl border border-border bg-card p-5">`
+- **Line 62:28** — `tailwind-radius`: `rounded-xl`
+  - 💡 Use var(--radius-xl) or rounded-[var(--radius-md)]
+  - Context: `<div className="mt-6 rounded-xl border border-border bg-card p-5">`
+- **Line 63:23** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-sm text-muted-foreground">`
+- **Line 69:26** — `tailwind-spacing`: `mt-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<ul className="mt-4 space-y-2">`
+- **Line 69:31** — `tailwind-spacing`: `space-y-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<ul className="mt-4 space-y-2">`
+- **Line 73:94** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="flex items-center justify-between rounded-lg border border-border px-3 py-2"`
+- **Line 73:99** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="flex items-center justify-between rounded-lg border border-border px-3 py-2"`
+- **Line 73:62** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className="flex items-center justify-between rounded-lg border border-border px-3 py-2"`
+- **Line 75:34** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<span className="text-sm font-medium">`
+- **Line 75:42** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<span className="text-sm font-medium">`
+- **Line 78:34** — `tailwind-font-size`: `text-xs`
+  - 💡 Use var(--font-size-xs) or text-[var(--font-size-lg)]
+  - Context: `<span className="text-xs text-muted-foreground">{m.role}</span>`
+
+### app\[locale]\(app)\facturation\page.tsx (21)
+
+- **Line 36:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Facturation</h1>`
+- **Line 36:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Facturation</h1>`
+- **Line 37:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 52:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Facturation</h1>`
+- **Line 52:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Facturation</h1>`
+- **Line 53:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 90:22** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Facturation</h1>`
+- **Line 90:31** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Facturation</h1>`
+- **Line 91:23** — `tailwind-spacing`: `mt-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mt-6 rounded-xl border border-border bg-card p-5">`
+- **Line 91:68** — `tailwind-spacing`: `p-5`
+  - 💡 Use var(--space-5) or Tailwind config token
+  - Context: `<div className="mt-6 rounded-xl border border-border bg-card p-5">`
+- **Line 91:28** — `tailwind-radius`: `rounded-xl`
+  - 💡 Use var(--radius-xl) or rounded-[var(--radius-md)]
+  - Context: `<div className="mt-6 rounded-xl border border-border bg-card p-5">`
+- **Line 92:23** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-sm text-muted-foreground">`
+- **Line 94:28** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<span className="font-medium text-foreground">`
+- **Line 100:50** — `tailwind-spacing`: `mt-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<form action={handlePortal} className="mt-4">`
+- **Line 104:27** — `tailwind-spacing`: `mt-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="mt-4 grid gap-3 sm:grid-cols-3">`
+- **Line 104:37** — `tailwind-spacing`: `gap-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `<div className="mt-4 grid gap-3 sm:grid-cols-3">`
+- **Line 110:67** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="rounded-lg border border-border p-4">`
+- **Line 110:35** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `<div className="rounded-lg border border-border p-4">`
+- **Line 111:35** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<p className="font-medium">{plan.name}</p>`
+- **Line 112:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-sm text-muted-foreground">`
+- ... and 1 more
+
+### app\[locale]\(app)\layout.tsx (16)
+
+- **Line 29:81** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<aside className="hidden w-60 shrink-0 border-r border-border bg-muted/40 p-4 md:block">`
+- **Line 30:25** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mb-6 px-2 text-lg font-semibold">TaskFlow</div>`
+- **Line 30:30** — `tailwind-spacing`: `px-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="mb-6 px-2 text-lg font-semibold">TaskFlow</div>`
+- **Line 30:35** — `tailwind-font-size`: `text-lg`
+  - 💡 Use var(--font-size-lg) or text-[var(--font-size-lg)]
+  - Context: `<div className="mb-6 px-2 text-lg font-semibold">TaskFlow</div>`
+- **Line 30:43** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="mb-6 px-2 text-lg font-semibold">TaskFlow</div>`
+- **Line 31:39** — `tailwind-spacing`: `gap-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<nav className="flex flex-col gap-1">`
+- **Line 37:29** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `"rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",`
+- **Line 37:34** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",`
+- **Line 37:18** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",`
+- **Line 37:39** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",`
+- **Line 37:47** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `"rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",`
+- **Line 49:68** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="flex items-center justify-between border-b px-4 py-3 md:hidden">`
+- **Line 49:73** — `tailwind-spacing`: `py-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `<div className="flex items-center justify-between border-b px-4 py-3 md:hidden">`
+- **Line 50:28** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `<span className="font-semibold">TaskFlow</span>`
+- **Line 52:25** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="p-4 md:p-8">{children}</div>`
+- **Line 52:32** — `tailwind-spacing`: `p-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="p-4 md:p-8">{children}</div>`
+
+### app\[locale]\(app)\projets\[id]\page.tsx (26)
+
+- **Line 34:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Projet</h1>`
+- **Line 34:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Projet</h1>`
+- **Line 35:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 50:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Projet</h1>`
+- **Line 50:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Projet</h1>`
+- **Line 51:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 88:22** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">{project.name}</h1>`
+- **Line 88:31** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">{project.name}</h1>`
+- **Line 89:23** — `tailwind-spacing`: `mt-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mt-6 grid gap-4 md:grid-cols-4">`
+- **Line 89:33** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="mt-6 grid gap-4 md:grid-cols-4">`
+- **Line 95:70** — `tailwind-spacing`: `p-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="rounded-xl border border-border bg-muted/30 p-3"`
+- **Line 95:26** — `tailwind-radius`: `rounded-xl`
+  - 💡 Use var(--radius-xl) or rounded-[var(--radius-md)]
+  - Context: `className="rounded-xl border border-border bg-muted/30 p-3"`
+- **Line 97:31** — `tailwind-spacing`: `mb-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `<div className="mb-3 flex items-center justify-between px-1">`
+- **Line 97:70** — `tailwind-spacing`: `px-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<div className="mb-3 flex items-center justify-between px-1">`
+- **Line 98:34** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<span className="text-sm font-semibold">{col.label}</span>`
+- **Line 98:42** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `<span className="text-sm font-semibold">{col.label}</span>`
+- **Line 99:56** — `tailwind-spacing`: `px-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<span className="rounded-full bg-muted px-2 py-0.5 text-xs">`
+- **Line 99:61** — `tailwind-spacing`: `py-0.5`
+  - 💡 Use var(--space-0.5) or Tailwind config token
+  - Context: `<span className="rounded-full bg-muted px-2 py-0.5 text-xs">`
+- **Line 99:34** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `<span className="rounded-full bg-muted px-2 py-0.5 text-xs">`
+- **Line 99:68** — `tailwind-font-size`: `text-xs`
+  - 💡 Use var(--font-size-xs) or text-[var(--font-size-lg)]
+  - Context: `<span className="rounded-full bg-muted px-2 py-0.5 text-xs">`
+- ... and 6 more
+
+### app\[locale]\(app)\projets\page.tsx (21)
+
+- **Line 20:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Projets</h1>`
+- **Line 20:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Projets</h1>`
+- **Line 21:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 36:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Projets</h1>`
+- **Line 36:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Projets</h1>`
+- **Line 37:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 69:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Projets</h1>`
+- **Line 69:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Projets</h1>`
+- **Line 72:44** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"`
+- **Line 72:49** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"`
+- **Line 72:22** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"`
+- **Line 72:54** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"`
+- **Line 72:62** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"`
+- **Line 79:23** — `tailwind-spacing`: `mt-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<p className="mt-6 text-muted-foreground">`
+- **Line 84:25** — `tailwind-spacing`: `mt-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">`
+- **Line 84:35** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">`
+- **Line 89:72** — `tailwind-spacing`: `p-5`
+  - 💡 Use var(--space-5) or Tailwind config token
+  - Context: `className="block rounded-xl border border-border bg-card p-5 transition-colors hover:bg-accent/50"`
+- **Line 89:32** — `tailwind-radius`: `rounded-xl`
+  - 💡 Use var(--radius-xl) or rounded-[var(--radius-md)]
+  - Context: `className="block rounded-xl border border-border bg-card p-5 transition-colors hover:bg-accent/50"`
+- **Line 92:28** — `tailwind-spacing`: `mb-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="mb-3 h-1.5 w-10 rounded-full"`
+- **Line 92:44** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `className="mb-3 h-1.5 w-10 rounded-full"`
+- ... and 1 more
+
+### app\[locale]\(app)\reglages\page.tsx (109)
+
+- **Line 121:39** — `tailwind-spacing`: `space-y-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="max-w-3xl mx-auto space-y-8">`
+- **Line 123:24** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-3xl font-bold tracking-tight">Réglages</h1>`
+- **Line 123:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-3xl font-bold tracking-tight">Réglages</h1>`
+- **Line 124:23** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<p className="mt-1 text-muted-foreground">`
+- **Line 130:67** — `tailwind-spacing`: `p-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<section className="rounded-xl border border-border bg-card p-6">`
+- **Line 130:27** — `tailwind-radius`: `rounded-xl`
+  - 💡 Use var(--radius-xl) or rounded-[var(--radius-md)]
+  - Context: `<section className="rounded-xl border border-border bg-card p-6">`
+- **Line 131:24** — `tailwind-font-size`: `text-xl`
+  - 💡 Use var(--font-size-xl) or text-[var(--font-size-lg)]
+  - Context: `<h2 className="text-xl font-semibold">Profil</h2>`
+- **Line 131:32** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `<h2 className="text-xl font-semibold">Profil</h2>`
+- **Line 132:57** — `tailwind-spacing`: `mt-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<form onSubmit={handleProfileSubmit} className="mt-4 space-y-4">`
+- **Line 132:62** — `tailwind-spacing`: `space-y-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<form onSubmit={handleProfileSubmit} className="mt-4 space-y-4">`
+- **Line 133:32** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="grid gap-4 sm:grid-cols-2">`
+- **Line 137:54** — `tailwind-spacing`: `mb-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `className="block text-sm font-medium mb-1"`
+- **Line 137:34** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="block text-sm font-medium mb-1"`
+- **Line 137:42** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `className="block text-sm font-medium mb-1"`
+- **Line 149:80** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"`
+- **Line 149:85** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"`
+- **Line 149:35** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"`
+- **Line 149:90** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"`
+- **Line 156:54** — `tailwind-spacing`: `mb-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `className="block text-sm font-medium mb-1"`
+- **Line 156:34** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="block text-sm font-medium mb-1"`
+- ... and 89 more
+
+### app\[locale]\(app)\tableau-de-bord\page.tsx (16)
+
+- **Line 20:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Tableau de bord</h1>`
+- **Line 20:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Tableau de bord</h1>`
+- **Line 21:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 37:24** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Tableau de bord</h1>`
+- **Line 37:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Tableau de bord</h1>`
+- **Line 38:23** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="mt-2 text-muted-foreground">`
+- **Line 87:22** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-2xl font-bold">Tableau de bord</h1>`
+- **Line 87:31** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-2xl font-bold">Tableau de bord</h1>`
+- **Line 88:23** — `tailwind-spacing`: `mt-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mt-6 grid gap-4 sm:grid-cols-3">`
+- **Line 88:33** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="mt-6 grid gap-4 sm:grid-cols-3">`
+- **Line 92:64** — `tailwind-spacing`: `p-5`
+  - 💡 Use var(--space-5) or Tailwind config token
+  - Context: `className="rounded-xl border border-border bg-card p-5"`
+- **Line 92:24** — `tailwind-radius`: `rounded-xl`
+  - 💡 Use var(--radius-xl) or rounded-[var(--radius-md)]
+  - Context: `className="rounded-xl border border-border bg-card p-5"`
+- **Line 94:29** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<div className="text-sm text-muted-foreground">{c.label}</div>`
+- **Line 95:29** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<div className="mt-1 text-3xl font-bold">{c.value}</div>`
+- **Line 95:34** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="mt-1 text-3xl font-bold">{c.value}</div>`
+- **Line 95:43** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="mt-1 text-3xl font-bold">{c.value}</div>`
+
+### app\[locale]\[...slug]\not-found.tsx (14)
+
+- **Line 19:35** — `tailwind-spacing`: `px-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="text-center px-6">`
+- **Line 20:68** — `tailwind-spacing`: `mb-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<h1 className="text-6xl font-bold text-muted-foreground/50 mb-4">`
+- **Line 20:24** — `tailwind-font-size`: `text-6xl`
+  - 💡 Use var(--font-size-6xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-6xl font-bold text-muted-foreground/50 mb-4">`
+- **Line 20:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-6xl font-bold text-muted-foreground/50 mb-4">`
+- **Line 23:43** — `tailwind-spacing`: `mb-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<h1 className="text-4xl font-bold mb-4">Page non trouvée</h1>`
+- **Line 23:24** — `tailwind-font-size`: `text-4xl`
+  - 💡 Use var(--font-size-4xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl font-bold mb-4">Page non trouvée</h1>`
+- **Line 23:33** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-4xl font-bold mb-4">Page non trouvée</h1>`
+- **Line 24:45** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mb-8 max-w-md mx-auto">`
+- **Line 31:47** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground text-lg font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-[0.98]"`
+- **Line 31:53** — `tailwind-spacing`: `px-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground text-lg font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-[0.98]"`
+- **Line 31:58** — `tailwind-spacing`: `py-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground text-lg font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-[0.98]"`
+- **Line 31:120** — `tailwind-radius`: `rounded-xl`
+  - 💡 Use var(--radius-xl) or rounded-[var(--radius-md)]
+  - Context: `className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground text-lg font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-[0.98]"`
+- **Line 31:98** — `tailwind-font-size`: `text-lg`
+  - 💡 Use var(--font-size-lg) or text-[var(--font-size-lg)]
+  - Context: `className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground text-lg font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-[0.98]"`
+- **Line 31:106** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground text-lg font-semibold rounded-xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-[0.98]"`
+
+### app\[locale]\[...slug]\page.tsx (16)
+
+- **Line 55:45** — `tailwind-spacing`: `mb-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<h1 className="text-4xl font-bold mb-4">Page non trouvée</h1>`
+- **Line 55:26** — `tailwind-font-size`: `text-4xl`
+  - 💡 Use var(--font-size-4xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl font-bold mb-4">Page non trouvée</h1>`
+- **Line 55:35** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-4xl font-bold mb-4">Page non trouvée</h1>`
+- **Line 56:47** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mb-8">`
+- **Line 69:43** — `tailwind-spacing`: `px-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<article className="max-w-3xl mx-auto px-6 py-16">`
+- **Line 69:48** — `tailwind-spacing`: `py-16`
+  - 💡 Use var(--space-16) or Tailwind config token
+  - Context: `<article className="max-w-3xl mx-auto px-6 py-16">`
+- **Line 70:26** — `tailwind-spacing`: `mb-12`
+  - 💡 Use var(--space-12) or Tailwind config token
+  - Context: `<header className="mb-12">`
+- **Line 71:95** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 71:24** — `tailwind-font-size`: `text-4xl`
+  - 💡 Use var(--font-size-4xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 71:36** — `tailwind-font-size`: `text-5xl`
+  - 💡 Use var(--font-size-5xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 71:48** — `tailwind-font-size`: `text-6xl`
+  - 💡 Use var(--font-size-6xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 71:70** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 74:53** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<p className="text-xl text-muted-foreground mb-8">{page.description}</p>`
+- **Line 74:23** — `tailwind-font-size`: `text-xl`
+  - 💡 Use var(--font-size-xl) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-xl text-muted-foreground mb-8">{page.description}</p>`
+- **Line 76:27** — `tailwind-spacing`: `mt-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="mt-8 rounded-2xl overflow-hidden">`
+- **Line 76:32** — `tailwind-radius`: `rounded-2xl`
+  - 💡 Use var(--radius-2xl) or rounded-[var(--radius-md)]
+  - Context: `<div className="mt-8 rounded-2xl overflow-hidden">`
+
+### app\[locale]\admin\analytics\AdminAnalyticsPage.tsx (70)
+
+- **Line 130:56** — `tailwind-spacing`: `py-24`
+  - 💡 Use var(--space-24) or Tailwind config token
+  - Context: `<div className="flex items-center justify-center py-24">`
+- **Line 159:21** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="space-y-6">`
+- **Line 160:84** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">`
+- **Line 162:49** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 162:39** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 165:47** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mt-1">{aT("subtitle")}</p>`
+- **Line 181:55** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="grid grid-cols-2 md:grid-cols-4 gap-4">`
+- **Line 184:95** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">`
+- **Line 184:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">`
+- **Line 184:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">`
+- **Line 189:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 189:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 197:95** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">`
+- **Line 197:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">`
+- **Line 197:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">`
+- **Line 202:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 202:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 205:29** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<div className="text-sm text-muted-foreground">`
+- **Line 212:95** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">`
+- **Line 212:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">`
+- ... and 50 more
+
+### app\[locale]\admin\layout.tsx (36)
+
+- **Line 165:66** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="flex items-center justify-between h-16 px-4 border-b border-border">`
+- **Line 168:49** — `tailwind-font-size`: `text-xl`
+  - 💡 Use var(--font-size-xl) or text-[var(--font-size-lg)]
+  - Context: `className="font-display font-bold text-xl text-foreground"`
+- **Line 168:39** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `className="font-display font-bold text-xl text-foreground"`
+- **Line 173:36** — `tailwind-spacing`: `p-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="lg:hidden p-2 rounded-md hover:bg-muted"`
+- **Line 173:40** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `className="lg:hidden p-2 rounded-md hover:bg-muted"`
+- **Line 181:34** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `<nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">`
+- **Line 181:39** — `tailwind-spacing`: `py-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">`
+- **Line 181:44** — `tailwind-spacing`: `space-y-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">`
+- **Line 186:46** — `tailwind-spacing`: `gap-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"`
+- **Line 186:52** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"`
+- **Line 186:57** — `tailwind-spacing`: `py-2.5`
+  - 💡 Use var(--space-2.5) or Tailwind config token
+  - Context: `className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"`
+- **Line 186:64** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"`
+- **Line 186:75** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"`
+- **Line 186:83** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"`
+- **Line 195:27** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="p-4 border-t border-border">`
+- **Line 196:47** — `tailwind-spacing`: `gap-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `<div className="flex items-center gap-3 mb-3">`
+- **Line 196:53** — `tailwind-spacing`: `mb-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `<div className="flex items-center gap-3 mb-3">`
+- **Line 208:31** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-sm font-medium truncate">`
+- **Line 208:39** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<p className="text-sm font-medium truncate">`
+- **Line 211:55** — `tailwind-font-size`: `text-xs`
+  - 💡 Use var(--font-size-xs) or text-[var(--font-size-lg)]
+  - Context: `<Badge variant="secondary" className="text-xs">`
+- ... and 16 more
+
+### app\[locale]\admin\organizations\AdminOrganizationsPage.tsx (80)
+
+- **Line 206:21** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="space-y-6">`
+- **Line 208:84** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">`
+- **Line 210:49** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 210:39** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 213:47** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mt-1">{orgsT("subtitle")}</p>`
+- **Line 215:43** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="flex items-center gap-2">`
+- **Line 217:42** — `tailwind-spacing`: `mr-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<Download className="w-4 h-4 mr-2" />`
+- **Line 224:55** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="grid grid-cols-2 md:grid-cols-4 gap-4">`
+- **Line 227:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 227:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 232:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 232:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 239:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 239:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 244:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-green-600">`
+- **Line 244:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-green-600">`
+- **Line 254:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 254:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 259:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-primary">`
+- **Line 259:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-primary">`
+- ... and 60 more
+
+### app\[locale]\admin\settings\AdminSettingsPage.tsx (48)
+
+- **Line 85:21** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="space-y-6">`
+- **Line 86:84** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">`
+- **Line 88:49** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 88:39** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 91:47** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mt-1">{t("subtitle")}</p>`
+- **Line 98:46** — `tailwind-spacing`: `mr-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<SettingsIcon className="w-4 h-4 mr-2" />`
+- **Line 102:40** — `tailwind-spacing`: `mr-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<Shield className="w-4 h-4 mr-2" />`
+- **Line 106:38** — `tailwind-spacing`: `mr-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<Mail className="w-4 h-4 mr-2" />`
+- **Line 110:44** — `tailwind-spacing`: `mr-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<CreditCard className="w-4 h-4 mr-2" />`
+- **Line 114:38** — `tailwind-spacing`: `mr-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<Plug className="w-4 h-4 mr-2" />`
+- **Line 119:49** — `tailwind-spacing`: `space-y-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<TabsContent value="general" className="space-y-4">`
+- **Line 124:42** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<CardContent className="grid gap-4 sm:grid-cols-2">`
+- **Line 125:31** — `tailwind-spacing`: `space-y-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="space-y-2">`
+- **Line 135:31** — `tailwind-spacing`: `space-y-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="space-y-2">`
+- **Line 145:31** — `tailwind-spacing`: `space-y-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="space-y-2">`
+- **Line 156:31** — `tailwind-spacing`: `space-y-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="space-y-2">`
+- **Line 166:31** — `tailwind-spacing`: `space-y-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="space-y-2">`
+- **Line 180:50** — `tailwind-spacing`: `space-y-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<TabsContent value="security" className="space-y-4">`
+- **Line 185:42** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<CardContent className="grid gap-4 sm:grid-cols-2">`
+- **Line 186:83** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="flex items-center justify-between rounded-lg border p-4">`
+- ... and 28 more
+
+### app\[locale]\admin\subscriptions\AdminSubscriptionsPage.tsx (90)
+
+- **Line 253:21** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="space-y-6">`
+- **Line 255:84** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">`
+- **Line 257:49** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 257:39** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 260:47** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mt-1">{subsT("subtitle")}</p>`
+- **Line 262:43** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="flex items-center gap-2">`
+- **Line 264:42** — `tailwind-spacing`: `mr-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<Download className="w-4 h-4 mr-2" />`
+- **Line 271:55** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="grid grid-cols-2 md:grid-cols-6 gap-4">`
+- **Line 274:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 274:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 279:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 279:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 286:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 286:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 291:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-green-600">`
+- **Line 291:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-green-600">`
+- **Line 298:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 298:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 303:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-blue-600">`
+- **Line 303:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-blue-600">`
+- ... and 70 more
+
+### app\[locale]\admin\users\AdminUsersPage.tsx (91)
+
+- **Line 319:21** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="space-y-6">`
+- **Line 321:84** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">`
+- **Line 323:49** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 323:39** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="font-display font-bold text-3xl text-foreground">`
+- **Line 326:47** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mt-1">{usersT("subtitle")}</p>`
+- **Line 328:43** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="flex items-center gap-2">`
+- **Line 330:42** — `tailwind-spacing`: `mr-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<UserPlus className="w-4 h-4 mr-2" />`
+- **Line 334:42** — `tailwind-spacing`: `mr-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<UserPlus className="w-4 h-4 mr-2" />`
+- **Line 341:55** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="grid grid-cols-2 md:grid-cols-4 gap-4">`
+- **Line 344:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 344:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 349:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 349:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-foreground">`
+- **Line 356:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 356:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 361:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-green-600">`
+- **Line 361:42** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<div className="font-display font-bold text-3xl text-green-600">`
+- **Line 368:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 368:43** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<CardTitle className="text-sm font-medium text-muted-foreground">`
+- **Line 373:52** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="font-display font-bold text-3xl text-primary">`
+- ... and 71 more
+
+### app\[locale]\blog\[slug]\page.tsx (28)
+
+- **Line 60:45** — `tailwind-spacing`: `mb-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<h1 className="text-4xl font-bold mb-4">Article non trouvé</h1>`
+- **Line 60:26** — `tailwind-font-size`: `text-4xl`
+  - 💡 Use var(--font-size-4xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl font-bold mb-4">Article non trouvé</h1>`
+- **Line 60:35** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-4xl font-bold mb-4">Article non trouvé</h1>`
+- **Line 61:47** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mb-8">`
+- **Line 74:43** — `tailwind-spacing`: `px-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<article className="max-w-3xl mx-auto px-6 py-16">`
+- **Line 74:48** — `tailwind-spacing`: `py-16`
+  - 💡 Use var(--space-16) or Tailwind config token
+  - Context: `<article className="max-w-3xl mx-auto px-6 py-16">`
+- **Line 75:26** — `tailwind-spacing`: `mb-12`
+  - 💡 Use var(--space-12) or Tailwind config token
+  - Context: `<header className="mb-12">`
+- **Line 77:42** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="flex flex-wrap gap-2 mb-4">`
+- **Line 77:48** — `tailwind-spacing`: `mb-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="flex flex-wrap gap-2 mb-4">`
+- **Line 81:28** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="px-3 py-1 bg-muted rounded-full text-sm text-muted-foreground"`
+- **Line 81:33** — `tailwind-spacing`: `py-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `className="px-3 py-1 bg-muted rounded-full text-sm text-muted-foreground"`
+- **Line 81:47** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `className="px-3 py-1 bg-muted rounded-full text-sm text-muted-foreground"`
+- **Line 81:60** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="px-3 py-1 bg-muted rounded-full text-sm text-muted-foreground"`
+- **Line 88:95** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 88:24** — `tailwind-font-size`: `text-4xl`
+  - 💡 Use var(--font-size-4xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 88:36** — `tailwind-font-size`: `text-5xl`
+  - 💡 Use var(--font-size-5xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 88:48** — `tailwind-font-size`: `text-6xl`
+  - 💡 Use var(--font-size-6xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 88:70** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 91:53** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<p className="text-xl text-muted-foreground mb-8">{post.description}</p>`
+- **Line 91:23** — `tailwind-font-size`: `text-xl`
+  - 💡 Use var(--font-size-xl) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-xl text-muted-foreground mb-8">{post.description}</p>`
+- ... and 8 more
+
+### app\[locale]\blog\page.tsx (32)
+
+- **Line 15:39** — `tailwind-spacing`: `px-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="max-w-7xl mx-auto px-6 py-16">`
+- **Line 15:44** — `tailwind-spacing`: `py-16`
+  - 💡 Use var(--space-16) or Tailwind config token
+  - Context: `<div className="max-w-7xl mx-auto px-6 py-16">`
+- **Line 16:26** — `tailwind-spacing`: `mb-16`
+  - 💡 Use var(--space-16) or Tailwind config token
+  - Context: `<header className="mb-16 text-center">`
+- **Line 17:95** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 17:24** — `tailwind-font-size`: `text-4xl`
+  - 💡 Use var(--font-size-4xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 17:36** — `tailwind-font-size`: `text-5xl`
+  - 💡 Use var(--font-size-5xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 17:48** — `tailwind-font-size`: `text-6xl`
+  - 💡 Use var(--font-size-6xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 17:70** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight mb-6">`
+- **Line 20:23** — `tailwind-font-size`: `text-xl`
+  - 💡 Use var(--font-size-xl) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-xl text-muted-foreground max-w-2xl mx-auto">`
+- **Line 23:42** — `tailwind-spacing`: `mt-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="max-w-md mx-auto mt-8 text-left">`
+- **Line 29:37** — `tailwind-spacing`: `py-16`
+  - 💡 Use var(--space-16) or Tailwind config token
+  - Context: `<div className="text-center py-16">`
+- **Line 30:45** — `tailwind-spacing`: `mb-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<h2 className="text-2xl font-bold mb-4">`
+- **Line 30:26** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h2 className="text-2xl font-bold mb-4">`
+- **Line 30:35** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h2 className="text-2xl font-bold mb-4">`
+- **Line 33:47** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mb-8">`
+- **Line 38:60** — `tailwind-spacing`: `gap-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">`
+- **Line 45:64** — `tailwind-radius`: `rounded-2xl`
+  - 💡 Use var(--radius-2xl) or rounded-[var(--radius-md)]
+  - Context: `<article className="bg-card border border-border rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-primary/50">`
+- **Line 45:126** — `tailwind-shadow`: `shadow-xl`
+  - 💡 Use var(--shadow-xl) or shadow-[var(--shadow-md)]
+  - Context: `<article className="bg-card border border-border rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-primary/50">`
+- **Line 55:33** — `tailwind-spacing`: `p-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="p-6">`
+- **Line 57:52** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="flex flex-wrap gap-2 mb-4">`
+- ... and 12 more
+
+### app\[locale]\components-demo\page.tsx (146)
+
+- **Line 64:103** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="font-display font-bold text-xl md:text-2xl text-foreground flex items-center gap-2"`
+- **Line 64:49** — `tailwind-font-size`: `text-xl`
+  - 💡 Use var(--font-size-xl) or text-[var(--font-size-lg)]
+  - Context: `className="font-display font-bold text-xl md:text-2xl text-foreground flex items-center gap-2"`
+- **Line 64:60** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `className="font-display font-bold text-xl md:text-2xl text-foreground flex items-center gap-2"`
+- **Line 64:39** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `className="font-display font-bold text-xl md:text-2xl text-foreground flex items-center gap-2"`
+- **Line 68:57** — `tailwind-spacing`: `gap-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<nav className="hidden md:flex items-center gap-8">`
+- **Line 71:28** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"`
+- **Line 71:36** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"`
+- **Line 77:28** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="text-sm font-medium text-primary"`
+- **Line 77:36** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `className="text-sm font-medium text-primary"`
+- **Line 85:36** — `tailwind-spacing`: `py-16`
+  - 💡 Use var(--space-16) or Tailwind config token
+  - Context: `<main className="container py-16 sm:py-24 lg:py-32">`
+- **Line 85:45** — `tailwind-spacing`: `py-24`
+  - 💡 Use var(--space-24) or Tailwind config token
+  - Context: `<main className="container py-16 sm:py-24 lg:py-32">`
+- **Line 85:54** — `tailwind-spacing`: `py-32`
+  - 💡 Use var(--space-32) or Tailwind config token
+  - Context: `<main className="container py-16 sm:py-24 lg:py-32">`
+- **Line 87:41** — `tailwind-spacing`: `mb-16`
+  - 💡 Use var(--space-16) or Tailwind config token
+  - Context: `<div className="text-center mb-16">`
+- **Line 88:117** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<h1 className="font-display font-bold tracking-tight text-4xl md:text-5xl lg:text-6xl text-foreground mb-6">`
+- **Line 88:68** — `tailwind-font-size`: `text-4xl`
+  - 💡 Use var(--font-size-4xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="font-display font-bold tracking-tight text-4xl md:text-5xl lg:text-6xl text-foreground mb-6">`
+- **Line 88:80** — `tailwind-font-size`: `text-5xl`
+  - 💡 Use var(--font-size-5xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="font-display font-bold tracking-tight text-4xl md:text-5xl lg:text-6xl text-foreground mb-6">`
+- **Line 88:92** — `tailwind-font-size`: `text-6xl`
+  - 💡 Use var(--font-size-6xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="font-display font-bold tracking-tight text-4xl md:text-5xl lg:text-6xl text-foreground mb-6">`
+- **Line 88:43** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="font-display font-bold tracking-tight text-4xl md:text-5xl lg:text-6xl text-foreground mb-6">`
+- **Line 91:29** — `tailwind-font-size`: `text-lg`
+  - 💡 Use var(--font-size-lg) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-lg text-muted-foreground max-w-2xl mx-auto">`
+- **Line 101:26** — `tailwind-spacing`: `mb-16`
+  - 💡 Use var(--space-16) or Tailwind config token
+  - Context: `className="mb-16 scroll-reveal"`
+- ... and 126 more
+
+### app\[locale]\connexion\ConnexionForm.tsx (52)
+
+- **Line 52:79** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12">`
+- **Line 52:84** — `tailwind-spacing`: `py-12`
+  - 💡 Use var(--space-12) or Tailwind config token
+  - Context: `<div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12">`
+- **Line 54:66** — `tailwind-spacing`: `p-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="bg-card border border-border rounded-2xl p-8 shadow-sm">`
+- **Line 54:54** — `tailwind-radius`: `rounded-2xl`
+  - 💡 Use var(--radius-2xl) or rounded-[var(--radius-md)]
+  - Context: `<div className="bg-card border border-border rounded-2xl p-8 shadow-sm">`
+- **Line 54:70** — `tailwind-shadow`: `shadow-sm`
+  - 💡 Use var(--shadow-sm) or shadow-[var(--shadow-md)]
+  - Context: `<div className="bg-card border border-border rounded-2xl p-8 shadow-sm">`
+- **Line 55:39** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="text-center mb-8">`
+- **Line 56:28** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-3xl font-display font-bold text-foreground">`
+- **Line 56:50** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-3xl font-display font-bold text-foreground">`
+- **Line 59:49** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mt-2">`
+- **Line 65:29** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 65:34** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 65:70** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 65:94** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 70:52** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<form onSubmit={handleSubmit} className="space-y-6">`
+- **Line 73:29** — `tailwind-spacing`: `space-y-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="space-y-2">`
+- **Line 76:34** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="block text-sm font-medium text-foreground"`
+- **Line 76:42** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `className="block text-sm font-medium text-foreground"`
+- **Line 87:35** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground disabled:opacity-50"`
+- **Line 87:40** — `tailwind-spacing`: `py-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground disabled:opacity-50"`
+- **Line 87:80** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground disabled:opacity-50"`
+- ... and 32 more
+
+### app\[locale]\inscription\InscriptionForm.tsx (55)
+
+- **Line 64:79** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12">`
+- **Line 64:84** — `tailwind-spacing`: `py-12`
+  - 💡 Use var(--space-12) or Tailwind config token
+  - Context: `<div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12">`
+- **Line 66:66** — `tailwind-spacing`: `p-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="bg-card border border-border rounded-2xl p-8 shadow-sm">`
+- **Line 66:54** — `tailwind-radius`: `rounded-2xl`
+  - 💡 Use var(--radius-2xl) or rounded-[var(--radius-md)]
+  - Context: `<div className="bg-card border border-border rounded-2xl p-8 shadow-sm">`
+- **Line 66:70** — `tailwind-shadow`: `shadow-sm`
+  - 💡 Use var(--shadow-sm) or shadow-[var(--shadow-md)]
+  - Context: `<div className="bg-card border border-border rounded-2xl p-8 shadow-sm">`
+- **Line 67:39** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="text-center mb-8">`
+- **Line 68:28** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-3xl font-display font-bold text-foreground">`
+- **Line 68:50** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-3xl font-display font-bold text-foreground">`
+- **Line 71:49** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mt-2">`
+- **Line 77:29** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 77:34** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 77:70** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 77:94** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 82:52** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<form onSubmit={handleSubmit} className="space-y-6">`
+- **Line 85:29** — `tailwind-spacing`: `space-y-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="space-y-2">`
+- **Line 88:34** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="block text-sm font-medium text-foreground"`
+- **Line 88:42** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `className="block text-sm font-medium text-foreground"`
+- **Line 99:35** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground disabled:opacity-50"`
+- **Line 99:40** — `tailwind-spacing`: `py-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground disabled:opacity-50"`
+- **Line 99:80** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground disabled:opacity-50"`
+- ... and 35 more
+
+### app\[locale]\mot-de-passe-oublie\MotDePasseOublieForm.tsx (30)
+
+- **Line 56:79** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12">`
+- **Line 56:84** — `tailwind-spacing`: `py-12`
+  - 💡 Use var(--space-12) or Tailwind config token
+  - Context: `<div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 py-12">`
+- **Line 58:66** — `tailwind-spacing`: `p-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="bg-card border border-border rounded-2xl p-8 shadow-sm">`
+- **Line 58:54** — `tailwind-radius`: `rounded-2xl`
+  - 💡 Use var(--radius-2xl) or rounded-[var(--radius-md)]
+  - Context: `<div className="bg-card border border-border rounded-2xl p-8 shadow-sm">`
+- **Line 58:70** — `tailwind-shadow`: `shadow-sm`
+  - 💡 Use var(--shadow-sm) or shadow-[var(--shadow-md)]
+  - Context: `<div className="bg-card border border-border rounded-2xl p-8 shadow-sm">`
+- **Line 59:39** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="text-center mb-8">`
+- **Line 60:28** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-3xl font-display font-bold text-foreground">`
+- **Line 60:50** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-3xl font-display font-bold text-foreground">`
+- **Line 63:49** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<p className="text-muted-foreground mt-2">`
+- **Line 69:29** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 69:34** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 69:70** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 69:94** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">`
+- **Line 75:29** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">`
+- **Line 75:34** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">`
+- **Line 75:74** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">`
+- **Line 75:100** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">`
+- **Line 80:52** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<form onSubmit={handleSubmit} className="space-y-6">`
+- **Line 83:29** — `tailwind-spacing`: `space-y-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="space-y-2">`
+- **Line 86:34** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="block text-sm font-medium text-foreground"`
+- ... and 10 more
+
+### app\[locale]\onboarding\page.tsx (62)
+
+- **Line 159:39** — `tailwind-spacing`: `space-y-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="text-center space-y-8">`
+- **Line 160:47** — `tailwind-radius`: `rounded-2xl`
+  - 💡 Use var(--radius-2xl) or rounded-[var(--radius-md)]
+  - Context: `<div className="mx-auto w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">`
+- **Line 164:30** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h2 className="text-3xl font-bold font-display">`
+- **Line 164:39** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h2 className="text-3xl font-bold font-display">`
+- **Line 167:29** — `tailwind-spacing`: `mt-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<p className="mt-4 text-lg text-muted-foreground">`
+- **Line 167:34** — `tailwind-font-size`: `text-lg`
+  - 💡 Use var(--font-size-lg) or text-[var(--font-size-lg)]
+  - Context: `<p className="mt-4 text-lg text-muted-foreground">`
+- **Line 171:61** — `tailwind-spacing`: `gap-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">`
+- **Line 191:46** — `tailwind-spacing`: `mb-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="text-3xl mb-2">{feature.icon}</div>`
+- **Line 191:37** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<div className="text-3xl mb-2">{feature.icon}</div>`
+- **Line 192:36** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `<h3 className="font-semibold">{feature.title}</h3>`
+- **Line 193:65** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<p className="text-sm text-muted-foreground mt-1">`
+- **Line 193:35** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-sm text-muted-foreground mt-1">`
+- **Line 205:27** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="space-y-6">`
+- **Line 206:28** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h2 className="text-2xl font-bold font-display">`
+- **Line 206:37** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h2 className="text-2xl font-bold font-display">`
+- **Line 211:29** — `tailwind-spacing`: `space-y-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="space-y-4">`
+- **Line 230:27** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="space-y-6">`
+- **Line 231:28** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h2 className="text-2xl font-bold font-display">`
+- **Line 231:37** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h2 className="text-2xl font-bold font-display">`
+- **Line 238:29** — `tailwind-spacing`: `space-y-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="space-y-4">`
+- ... and 42 more
+
+### app\[locale]\page.tsx (143)
+
+- **Line 97:101** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="font-display font-bold text-xl md:text-2xl text-foreground flex items-center gap-2"`
+- **Line 97:47** — `tailwind-font-size`: `text-xl`
+  - 💡 Use var(--font-size-xl) or text-[var(--font-size-lg)]
+  - Context: `className="font-display font-bold text-xl md:text-2xl text-foreground flex items-center gap-2"`
+- **Line 97:58** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `className="font-display font-bold text-xl md:text-2xl text-foreground flex items-center gap-2"`
+- **Line 97:37** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `className="font-display font-bold text-xl md:text-2xl text-foreground flex items-center gap-2"`
+- **Line 101:55** — `tailwind-spacing`: `gap-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<nav className="hidden md:flex items-center gap-8">`
+- **Line 104:26** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"`
+- **Line 104:34** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"`
+- **Line 110:26** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"`
+- **Line 110:34** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"`
+- **Line 116:61** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"`
+- **Line 116:66** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"`
+- **Line 116:71** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"`
+- **Line 116:82** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"`
+- **Line 116:90** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"`
+- **Line 132:70** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-border/50 mb-8">`
+- **Line 132:76** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-border/50 mb-8">`
+- **Line 132:81** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-border/50 mb-8">`
+- **Line 132:129** — `tailwind-spacing`: `mb-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-border/50 mb-8">`
+- **Line 132:86** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `<div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-border/50 mb-8">`
+- **Line 133:42** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `<span className="w-2 h-2 rounded-full bg-primary animate-pulse" />`
+- ... and 123 more
+
+### components\MDXComponents.tsx (58)
+
+- **Line 24:107** — `tailwind-spacing`: `mb-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight text-foreground mb-6">`
+- **Line 24:20** — `tailwind-font-size`: `text-4xl`
+  - 💡 Use var(--font-size-4xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight text-foreground mb-6">`
+- **Line 24:32** — `tailwind-font-size`: `text-5xl`
+  - 💡 Use var(--font-size-5xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight text-foreground mb-6">`
+- **Line 24:44** — `tailwind-font-size`: `text-6xl`
+  - 💡 Use var(--font-size-6xl) or text-[var(--font-size-lg)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight text-foreground mb-6">`
+- **Line 24:66** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight text-foreground mb-6">`
+- **Line 29:95** — `tailwind-spacing`: `mt-12`
+  - 💡 Use var(--space-12) or Tailwind config token
+  - Context: `<h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight text-foreground mt-12 mb-4 pb-2 border-b border-border">`
+- **Line 29:101** — `tailwind-spacing`: `mb-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight text-foreground mt-12 mb-4 pb-2 border-b border-border">`
+- **Line 29:20** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight text-foreground mt-12 mb-4 pb-2 border-b border-border">`
+- **Line 29:32** — `tailwind-font-size`: `text-4xl`
+  - 💡 Use var(--font-size-4xl) or text-[var(--font-size-lg)]
+  - Context: `<h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight text-foreground mt-12 mb-4 pb-2 border-b border-border">`
+- **Line 29:54** — `tailwind-font-weight`: `font-bold`
+  - 💡 Use var(--font-weight-bold) or font-[var(--font-weight-medium)]
+  - Context: `<h2 className="text-3xl md:text-4xl font-display font-bold tracking-tight text-foreground mt-12 mb-4 pb-2 border-b border-border">`
+- **Line 34:84** — `tailwind-spacing`: `mt-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `<h3 className="text-2xl md:text-3xl font-display font-semibold text-foreground mt-8 mb-3">`
+- **Line 34:89** — `tailwind-spacing`: `mb-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `<h3 className="text-2xl md:text-3xl font-display font-semibold text-foreground mt-8 mb-3">`
+- **Line 34:20** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h3 className="text-2xl md:text-3xl font-display font-semibold text-foreground mt-8 mb-3">`
+- **Line 34:32** — `tailwind-font-size`: `text-3xl`
+  - 💡 Use var(--font-size-3xl) or text-[var(--font-size-lg)]
+  - Context: `<h3 className="text-2xl md:text-3xl font-display font-semibold text-foreground mt-8 mb-3">`
+- **Line 34:54** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `<h3 className="text-2xl md:text-3xl font-display font-semibold text-foreground mt-8 mb-3">`
+- **Line 39:70** — `tailwind-spacing`: `mt-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<h4 className="text-xl md:text-2xl font-semibold text-foreground mt-6 mb-2">`
+- **Line 39:75** — `tailwind-spacing`: `mb-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<h4 className="text-xl md:text-2xl font-semibold text-foreground mt-6 mb-2">`
+- **Line 39:20** — `tailwind-font-size`: `text-xl`
+  - 💡 Use var(--font-size-xl) or text-[var(--font-size-lg)]
+  - Context: `<h4 className="text-xl md:text-2xl font-semibold text-foreground mt-6 mb-2">`
+- **Line 39:31** — `tailwind-font-size`: `text-2xl`
+  - 💡 Use var(--font-size-2xl) or text-[var(--font-size-lg)]
+  - Context: `<h4 className="text-xl md:text-2xl font-semibold text-foreground mt-6 mb-2">`
+- **Line 39:40** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `<h4 className="text-xl md:text-2xl font-semibold text-foreground mt-6 mb-2">`
+- ... and 38 more
+
+### components\forms\ContactForm.tsx (57)
+
+- **Line 174:22** — `tailwind-spacing`: `space-y-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `className={cn("space-y-6", className)}`
+- **Line 177:43** — `tailwind-spacing`: `gap-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `<div className="grid md:grid-cols-2 gap-6">`
+- **Line 179:75** — `tailwind-spacing`: `mb-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<label htmlFor="firstName" className="block text-sm font-medium mb-1">`
+- **Line 179:55** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<label htmlFor="firstName" className="block text-sm font-medium mb-1">`
+- **Line 179:63** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<label htmlFor="firstName" className="block text-sm font-medium mb-1">`
+- **Line 190:32** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className={`w-full px-4 py-3 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${`
+- **Line 190:37** — `tailwind-spacing`: `py-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className={`w-full px-4 py-3 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${`
+- **Line 190:42** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className={`w-full px-4 py-3 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${`
+- **Line 200:26** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `className="mt-1 text-sm text-red-500"`
+- **Line 200:31** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="mt-1 text-sm text-red-500"`
+- **Line 208:74** — `tailwind-spacing`: `mb-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<label htmlFor="lastName" className="block text-sm font-medium mb-1">`
+- **Line 208:54** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<label htmlFor="lastName" className="block text-sm font-medium mb-1">`
+- **Line 208:62** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<label htmlFor="lastName" className="block text-sm font-medium mb-1">`
+- **Line 219:32** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className={`w-full px-4 py-3 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${`
+- **Line 219:37** — `tailwind-spacing`: `py-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className={`w-full px-4 py-3 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${`
+- **Line 219:42** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className={`w-full px-4 py-3 rounded-lg border bg-background focus:ring-2 focus:ring-primary focus:border-transparent transition-all ${`
+- **Line 229:26** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `className="mt-1 text-sm text-red-500"`
+- **Line 229:31** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className="mt-1 text-sm text-red-500"`
+- **Line 239:69** — `tailwind-spacing`: `mb-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<label htmlFor="email" className="block text-sm font-medium mb-1">`
+- **Line 239:49** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<label htmlFor="email" className="block text-sm font-medium mb-1">`
+- ... and 37 more
+
+### components\ui\Search.tsx (20)
+
+- **Line 92:42** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground"`
+- **Line 92:82** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-foreground"`
+- **Line 105:68** — `tailwind-spacing`: `p-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-muted transition-colors"`
+- **Line 128:57** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg max-h-96 overflow-y-auto z-50"`
+- **Line 128:97** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg max-h-96 overflow-y-auto z-50"`
+- **Line 128:108** — `tailwind-shadow`: `shadow-lg`
+  - 💡 Use var(--shadow-lg) or shadow-[var(--shadow-md)]
+  - Context: `className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg max-h-96 overflow-y-auto z-50"`
+- **Line 132:31** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="p-4 text-center text-muted-foreground">`
+- **Line 137:31** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `<div className="p-4 text-center text-muted-foreground">`
+- **Line 142:45** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<ul role="listbox" className="py-2">`
+- **Line 151:40** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className="block px-4 py-3 hover:bg-muted transition-colors"`
+- **Line 151:45** — `tailwind-spacing`: `py-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `className="block px-4 py-3 hover:bg-muted transition-colors"`
+- **Line 153:37** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `<p className="font-medium text-foreground">`
+- **Line 157:69** — `tailwind-spacing`: `mt-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `<p className="text-sm text-muted-foreground mt-1 line-clamp-2">`
+- **Line 157:39** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `<p className="text-sm text-muted-foreground mt-1 line-clamp-2">`
+- **Line 180:20** — `tailwind-spacing`: `p-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `className="p-2 rounded-lg hover:bg-muted transition-colors"`
+- **Line 180:24** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `className="p-2 rounded-lg hover:bg-muted transition-colors"`
+- **Line 199:51** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `<div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-lg shadow-lg p-3 z-50">`
+- **Line 199:117** — `tailwind-spacing`: `p-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `<div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-lg shadow-lg p-3 z-50">`
+- **Line 199:96** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `<div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-lg shadow-lg p-3 z-50">`
+- **Line 199:107** — `tailwind-shadow`: `shadow-lg`
+  - 💡 Use var(--shadow-lg) or shadow-[var(--shadow-md)]
+  - Context: `<div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-lg shadow-lg p-3 z-50">`
+
+### components\ui\avatar.tsx (2)
+
+- **Line 12:57** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `"relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",`
+- **Line 39:55** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `"flex h-full w-full items-center justify-center rounded-full bg-muted",`
+
+### components\ui\badge.tsx (5)
+
+- **Line 6:49** — `tailwind-spacing`: `px-2.5`
+  - 💡 Use var(--space-2.5) or Tailwind config token
+  - Context: `"inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",`
+- **Line 6:56** — `tailwind-spacing`: `py-0.5`
+  - 💡 Use var(--space-0.5) or Tailwind config token
+  - Context: `"inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",`
+- **Line 6:29** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `"inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",`
+- **Line 6:63** — `tailwind-font-size`: `text-xs`
+  - 💡 Use var(--font-size-xs) or text-[var(--font-size-lg)]
+  - Context: `"inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",`
+- **Line 6:71** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `"inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",`
+
+### components\ui\button.tsx (12)
+
+- **Line 7:44** — `tailwind-spacing`: `gap-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",`
+- **Line 7:68** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",`
+- **Line 7:79** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",`
+- **Line 7:87** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",`
+- **Line 22:24** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `default: "h-10 px-4 py-2",`
+- **Line 22:29** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `default: "h-10 px-4 py-2",`
+- **Line 23:29** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `sm: "h-9 rounded-md px-3",`
+- **Line 23:18** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `sm: "h-9 rounded-md px-3",`
+- **Line 24:30** — `tailwind-spacing`: `px-8`
+  - 💡 Use var(--space-8) or Tailwind config token
+  - Context: `lg: "h-11 rounded-md px-8",`
+- **Line 24:19** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `lg: "h-11 rounded-md px-8",`
+- **Line 25:30** — `tailwind-spacing`: `px-10`
+  - 💡 Use var(--space-10) or Tailwind config token
+  - Context: `xl: "h-12 rounded-md px-10",`
+- **Line 25:19** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `xl: "h-12 rounded-md px-10",`
+
+### components\ui\dialog.tsx (10)
+
+- **Line 37:101** — `tailwind-spacing`: `gap-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",`
+- **Line 37:128** — `tailwind-spacing`: `p-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",`
+- **Line 37:507** — `tailwind-radius`: `rounded-lg`
+  - 💡 Use var(--radius-lg) or rounded-[var(--radius-md)]
+  - Context: `"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",`
+- **Line 37:132** — `tailwind-shadow`: `shadow-lg`
+  - 💡 Use var(--shadow-lg) or shadow-[var(--shadow-md)]
+  - Context: `"fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",`
+- **Line 43:64** — `tailwind-radius`: `rounded-sm`
+  - 💡 Use var(--radius-sm) or rounded-[var(--radius-md)]
+  - Context: `<DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">`
+- **Line 58:22** — `tailwind-spacing`: `space-y-1.5`
+  - 💡 Use var(--space-1.5) or Tailwind config token
+  - Context: `"flex flex-col space-y-1.5 text-center sm:text-left",`
+- **Line 72:60** — `tailwind-spacing`: `space-x-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",`
+- **Line 87:8** — `tailwind-font-size`: `text-lg`
+  - 💡 Use var(--font-size-lg) or text-[var(--font-size-lg)]
+  - Context: `"text-lg font-semibold leading-none tracking-tight",`
+- **Line 87:16** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `"text-lg font-semibold leading-none tracking-tight",`
+- **Line 101:20** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className={cn("text-sm text-muted-foreground", className)}`
+
+### components\ui\dropdown-menu.tsx (27)
+
+- **Line 22:64** — `tailwind-spacing`: `px-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",`
+- **Line 22:69** — `tailwind-spacing`: `py-1.5`
+  - 💡 Use var(--space-1.5) or Tailwind config token
+  - Context: `"flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",`
+- **Line 22:53** — `tailwind-radius`: `rounded-sm`
+  - 💡 Use var(--radius-sm) or rounded-[var(--radius-md)]
+  - Context: `"flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",`
+- **Line 22:76** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",`
+- **Line 42:71** — `tailwind-spacing`: `p-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `"z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",`
+- **Line 42:42** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",`
+- **Line 42:99** — `tailwind-shadow`: `shadow-lg`
+  - 💡 Use var(--shadow-lg) or shadow-[var(--shadow-md)]
+  - Context: `"z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",`
+- **Line 60:73** — `tailwind-spacing`: `p-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `"z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",`
+- **Line 60:44** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",`
+- **Line 60:101** — `tailwind-shadow`: `shadow-md`
+  - 💡 Use var(--shadow-md) or shadow-[var(--shadow-md)]
+  - Context: `"z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",`
+- **Line 78:73** — `tailwind-spacing`: `px-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 78:78** — `tailwind-spacing`: `py-1.5`
+  - 💡 Use var(--space-1.5) or Tailwind config token
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 78:62** — `tailwind-radius`: `rounded-sm`
+  - 💡 Use var(--radius-sm) or rounded-[var(--radius-md)]
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 78:85** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 94:73** — `tailwind-spacing`: `py-1.5`
+  - 💡 Use var(--space-1.5) or Tailwind config token
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 94:62** — `tailwind-radius`: `rounded-sm`
+  - 💡 Use var(--radius-sm) or rounded-[var(--radius-md)]
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 94:90** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 118:73** — `tailwind-spacing`: `py-1.5`
+  - 💡 Use var(--space-1.5) or Tailwind config token
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 118:62** — `tailwind-radius`: `rounded-sm`
+  - 💡 Use var(--radius-sm) or rounded-[var(--radius-md)]
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 118:90** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- ... and 7 more
+
+### components\ui\input.tsx (6)
+
+- **Line 12:74** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",`
+- **Line 12:79** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",`
+- **Line 12:29** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",`
+- **Line 12:84** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",`
+- **Line 12:154** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",`
+- **Line 12:167** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",`
+
+### components\ui\label.tsx (2)
+
+- **Line 13:10** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",`
+- **Line 13:18** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",`
+
+### components\ui\pagination.tsx (1)
+
+- **Line 10:40** — `tailwind-spacing`: `gap-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `className={cn("flex items-center gap-1", className)}`
+
+### components\ui\select.tsx (15)
+
+- **Line 10:101** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `"flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>option]:py-2",`
+- **Line 10:106** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>option]:py-2",`
+- **Line 10:301** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>option]:py-2",`
+- **Line 10:56** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>option]:py-2",`
+- **Line 10:111** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>option]:py-2",`
+- **Line 32:60** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",`
+- **Line 32:113** — `tailwind-shadow`: `shadow-md`
+  - 💡 Use var(--shadow-md) or shadow-[var(--shadow-md)]
+  - Context: `"relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",`
+- **Line 51:80** — `tailwind-spacing`: `py-1.5`
+  - 💡 Use var(--space-1.5) or Tailwind config token
+  - Context: `"relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 51:69** — `tailwind-radius`: `rounded-sm`
+  - 💡 Use var(--radius-sm) or rounded-[var(--radius-md)]
+  - Context: `"relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 51:97** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",`
+- **Line 59:36** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `<span className="h-2.5 w-2.5 rounded-full bg-primary" />`
+- **Line 73:99** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `"flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",`
+- **Line 73:104** — `tailwind-spacing`: `py-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",`
+- **Line 73:54** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",`
+- **Line 73:109** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",`
+
+### components\ui\sonner.tsx (14)
+
+- **Line 18:70** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `"fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",`
+- **Line 27:80** — `tailwind-spacing`: `space-x-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `"group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",`
+- **Line 27:124** — `tailwind-spacing`: `p-6`
+  - 💡 Use var(--space-6) or Tailwind config token
+  - Context: `"group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",`
+- **Line 27:106** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",`
+- **Line 27:133** — `tailwind-shadow`: `shadow-lg`
+  - 💡 Use var(--shadow-lg) or shadow-[var(--shadow-md)]
+  - Context: `"group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",`
+- **Line 67:94** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `"inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",`
+- **Line 67:61** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",`
+- **Line 67:99** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",`
+- **Line 67:107** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `"inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",`
+- **Line 82:42** — `tailwind-spacing`: `p-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `"absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",`
+- **Line 82:31** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",`
+- **Line 99:20** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className={cn("text-sm font-semibold", className)}`
+- **Line 99:28** — `tailwind-font-weight`: `font-semibold`
+  - 💡 Use var(--font-weight-semibold) or font-[var(--font-weight-medium)]
+  - Context: `className={cn("text-sm font-semibold", className)}`
+- **Line 111:20** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className={cn("text-sm opacity-90", className)}`
+
+### components\ui\switch.tsx (4)
+
+- **Line 13:70** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `"peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",`
+- **Line 13:111** — `tailwind-shadow`: `shadow-sm`
+  - 💡 Use var(--shadow-sm) or shadow-[var(--shadow-md)]
+  - Context: `"peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",`
+- **Line 21:44** — `tailwind-radius`: `rounded-full`
+  - 💡 Use var(--radius-full) or rounded-[var(--radius-md)]
+  - Context: `"pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0",`
+- **Line 21:71** — `tailwind-shadow`: `shadow-lg`
+  - 💡 Use var(--shadow-lg) or shadow-[var(--shadow-md)]
+  - Context: `"pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0",`
+
+### components\ui\table.tsx (7)
+
+- **Line 11:44** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className={cn("w-full caption-bottom text-sm", className)}`
+- **Line 45:29** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `"border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",`
+- **Line 75:13** — `tailwind-spacing`: `px-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",`
+- **Line 75:41** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",`
+- **Line 89:20** — `tailwind-spacing`: `p-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}`
+- **Line 101:20** — `tailwind-spacing`: `mt-4`
+  - 💡 Use var(--space-4) or Tailwind config token
+  - Context: `className={cn("mt-4 text-sm text-muted-foreground", className)}`
+- **Line 101:25** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `className={cn("mt-4 text-sm text-muted-foreground", className)}`
+
+### components\ui\tabs.tsx (9)
+
+- **Line 16:73** — `tailwind-spacing`: `p-1`
+  - 💡 Use var(--space-1) or Tailwind config token
+  - Context: `"inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",`
+- **Line 16:53** — `tailwind-radius`: `rounded-md`
+  - 💡 Use var(--radius-md) or rounded-[var(--radius-md)]
+  - Context: `"inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",`
+- **Line 31:77** — `tailwind-spacing`: `px-3`
+  - 💡 Use var(--space-3) or Tailwind config token
+  - Context: `"inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",`
+- **Line 31:82** — `tailwind-spacing`: `py-1.5`
+  - 💡 Use var(--space-1.5) or Tailwind config token
+  - Context: `"inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",`
+- **Line 31:66** — `tailwind-radius`: `rounded-sm`
+  - 💡 Use var(--radius-sm) or rounded-[var(--radius-md)]
+  - Context: `"inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",`
+- **Line 31:386** — `tailwind-shadow`: `shadow-sm`
+  - 💡 Use var(--shadow-sm) or shadow-[var(--shadow-md)]
+  - Context: `"inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",`
+- **Line 31:89** — `tailwind-font-size`: `text-sm`
+  - 💡 Use var(--font-size-sm) or text-[var(--font-size-lg)]
+  - Context: `"inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",`
+- **Line 31:97** — `tailwind-font-weight`: `font-medium`
+  - 💡 Use var(--font-weight-medium) or font-[var(--font-weight-medium)]
+  - Context: `"inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",`
+- **Line 46:8** — `tailwind-spacing`: `mt-2`
+  - 💡 Use var(--space-2) or Tailwind config token
+  - Context: `"mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",`
+
+### lib\brevo.ts (28)
+
+- **Line 79:57** — `hex-color`: `#6366f1`
+  - Context: `<div style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 32px; border-radius: 16px 16px 0 0;">`
+- **Line 79:69** — `hex-color`: `#8b5cf6`
+  - Context: `<div style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 32px; border-radius: 16px 16px 0 0;">`
+- **Line 82:33** — `hex-color`: `#1a1a26`
+  - Context: `<div style="background: #1a1a26; padding: 32px; border-radius: 0 0 16px 16px; color: #e2e8f0;">`
+- **Line 82:94** — `hex-color`: `#e2e8f0`
+  - Context: `<div style="background: #1a1a26; padding: 32px; border-radius: 0 0 16px 16px; color: #e2e8f0;">`
+- **Line 85:120** — `hex-color`: `#6366f1`
+  - Context: `<a href="${process.env.NEXT_PUBLIC_APP_URL}/fr/tableau-de-bord" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block;">Accéder au tableau de bord</a>`
+- **Line 85:132** — `hex-color`: `#8b5cf6`
+  - Context: `<a href="${process.env.NEXT_PUBLIC_APP_URL}/fr/tableau-de-bord" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block;">Accéder au tableau de bord</a>`
+- **Line 87:45** — `hex-color`: `#94a3b8`
+  - Context: `<p style="font-size: 14px; color: #94a3b8;">Si tu as des questions, réponds simplement à cet email — on est là pour t'aider.</p>`
+- **Line 106:57** — `hex-color`: `#6366f1`
+  - Context: `<div style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 32px; border-radius: 16px 16px 0 0;">`
+- **Line 106:69** — `hex-color`: `#8b5cf6`
+  - Context: `<div style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 32px; border-radius: 16px 16px 0 0;">`
+- **Line 109:33** — `hex-color`: `#1a1a26`
+  - Context: `<div style="background: #1a1a26; padding: 32px; border-radius: 0 0 16px 16px; color: #e2e8f0;">`
+- **Line 109:94** — `hex-color`: `#e2e8f0`
+  - Context: `<div style="background: #1a1a26; padding: 32px; border-radius: 0 0 16px 16px; color: #e2e8f0;">`
+- **Line 113:80** — `hex-color`: `#6366f1`
+  - Context: `<a href="${invoiceUrl}" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block;">Voir la facture</a>`
+- **Line 113:92** — `hex-color`: `#8b5cf6`
+  - Context: `<a href="${invoiceUrl}" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block;">Voir la facture</a>`
+- **Line 115:45** — `hex-color`: `#94a3b8`
+  - Context: `<p style="font-size: 14px; color: #94a3b8;">Tu peux aussi la retrouver dans ton espace facturation.</p>`
+- **Line 132:57** — `hex-color`: `#6366f1`
+  - Context: `<div style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 32px; border-radius: 16px 16px 0 0;">`
+- **Line 132:69** — `hex-color`: `#8b5cf6`
+  - Context: `<div style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); padding: 32px; border-radius: 16px 16px 0 0;">`
+- **Line 135:33** — `hex-color`: `#1a1a26`
+  - Context: `<div style="background: #1a1a26; padding: 32px; border-radius: 0 0 16px 16px; color: #e2e8f0;">`
+- **Line 135:94** — `hex-color`: `#e2e8f0`
+  - Context: `<div style="background: #1a1a26; padding: 32px; border-radius: 0 0 16px 16px; color: #e2e8f0;">`
+- **Line 138:78** — `hex-color`: `#6366f1`
+  - Context: `<a href="${resetUrl}" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block;">Réinitialiser mon mot de passe</a>`
+- **Line 138:90** — `hex-color`: `#8b5cf6`
+  - Context: `<a href="${resetUrl}" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 14px 32px; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block;">Réinitialiser mon mot de passe</a>`
+- ... and 8 more
+
+---
+
+## Token Inventory Summary
+
+- **Total tokens defined**: 23
+- **Tokens used in components**: 3
+- **Unused tokens**: 23
+
+### Coverage by Category
+
+| Category   | Defined | Used | Coverage |
+| ---------- | ------- | ---- | -------- |
+| other      | 15      | 0    | 0%       |
+| color      | 4       | 0    | 0%       |
+| radius     | 1       | 0    | 0%       |
+| typography | 3       | 0    | 0%       |
+
+### Top Unused Tokens
+
+- `--background` (other)
+- `--foreground` (other)
+- `--card` (other)
+- `--card-foreground` (other)
+- `--popover` (other)
+- `--popover-foreground` (other)
+- `--primary` (other)
+- `--primary-foreground` (other)
+- `--secondary` (other)
+- `--secondary-foreground` (other)
+- `--muted` (other)
+- `--muted-foreground` (other)
+- `--accent` (color)
+- `--accent-foreground` (color)
+- `--destructive` (other)
+- `--destructive-foreground` (other)
+- `--border` (color)
+- `--input` (other)
+- `--ring` (color)
+- `--radius` (radius)
+- ... and 3 more
+
+---
+
+## Recommendations
+
+1. **Fix all hardcoded design values** — Replace with `var(--token-name)` or Tailwind config tokens
+2. **Increase component token coverage** — Currently 3.1%, target 90%
+3. **Clean up unused tokens** — 23 tokens defined but not used (87%)

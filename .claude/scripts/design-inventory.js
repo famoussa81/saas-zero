@@ -157,7 +157,7 @@ function extractTokensFromFile(filepath, patterns) {
 
 // --- Main --------------------------------------------------------------------
 
-function main() {
+async function main() {
   console.log("\n📊 Design Inventory\n");
 
   // 1. Get component files

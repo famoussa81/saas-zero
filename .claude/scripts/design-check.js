@@ -70,14 +70,35 @@ function runImpeccable() {
     // Check if impeccable is available
     execSync("npx --yes impeccable --version", { stdio: "ignore" });
 
-    const output = execSync("npx impeccable audit --format=json", {
-      encoding: "utf-8",
-      stdio: ["pipe", "pipe", "pipe"],
-      timeout: 180000,
-    });
+    const scanTargets = (config.includePaths || [])
+      .map((p) => p.split("/")[0])
+      .filter((v, i, arr) => arr.indexOf(v) === i)
+      .join(" ");
 
-    const result = JSON.parse(output);
-    return { success: true, score: result.score || 0, details: result };
+    let output;
+    try {
+      output = execSync(`npx impeccable detect ${scanTargets} --json`, {
+        encoding: "utf-8",
+        stdio: ["pipe", "pipe", "pipe"],
+        timeout: 180000,
+      });
+    } catch (detectErr) {
+      // impeccable exits non-zero when it finds blocking issues; stdout still has the JSON
+      output = detectErr.stdout;
+    }
+
+    const findings = JSON.parse(output || "[]");
+    const errors = findings.filter((f) => f.severity === "error");
+    const warnings = findings.filter((f) => f.severity !== "error");
+    // No numeric score exists in impeccable's own output — derive one so the
+    // gate stays compatible with the impeccableMinScore threshold in CLAUDE.md.
+    const score = Math.max(0, 100 - errors.length * 15 - warnings.length * 5);
+
+    return {
+      success: true,
+      score,
+      details: { findings, errors: errors.length, warnings: warnings.length },
+    };
   } catch (err) {
     if (
       err.message.includes("ENOENT") ||

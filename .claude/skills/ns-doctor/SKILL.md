@@ -17,8 +17,7 @@ node -v 2>&1; pnpm -v 2>&1
 
 echo "=== CLI ==="
 command -v supabase && supabase --version || echo "supabase MANQUANT"
-command -v wrangler && wrangler --version || echo "wrangler MANQUANT"
-command -v hermes && hermes --version || echo "hermes absent (résidu, optionnel)"
+command -v vercel && vercel --version || echo "vercel MANQUANT (requis pour déploiement)"
 
 echo "=== Env (.env.local) ==="
 [ -f .env.local ] && echo ".env.local présent" || echo ".env.local ABSENT → copier .env.example"
@@ -35,7 +34,7 @@ echo "=== Services (si local) ==="
 | ---------- | -------------------------------------- | ---------------------- |
 | Bloquant   | supabase CLI absent, .env.local absent | installer / copier env |
 | À vérifier | Docker pas lancé pour supabase start   | démarrer Docker        |
-| Cosmétique | hermes absent (résidu)                 | ignore, non requis     |
+| Cosmétique | vercel absent (si déploie via GitHub)  | optionnel, installable |
 
 ## Rapport
 
@@ -44,7 +43,7 @@ Ne jamais inventer un "tout va bien" : si une vérif ne peut pas tourner, le dir
 
 ## Checklist de sortie
 
-- [ ] CLI scrutées (node/pnpm/supabase/wrangler)
+- [ ] CLI scrutées (node/pnpm/supabase/vercel)
 - [ ] .env.local vérifié (présence + clés clés)
 - [ ] Services (supabase local si applicable)
 - [ ] Rapport trié par sévérité

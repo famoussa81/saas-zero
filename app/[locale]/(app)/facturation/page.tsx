@@ -24,7 +24,7 @@ export default async function FacturationPage() {
     );
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

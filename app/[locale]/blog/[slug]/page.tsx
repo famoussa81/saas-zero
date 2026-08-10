@@ -2,10 +2,6 @@ import { Metadata } from "next";
 import { getPostBySlug, getAllPosts } from "@/lib/content";
 import { MDXContent } from "@/components/MDXContent";
 
-interface Props {
-  params: { locale: string; slug: string };
-}
-
 export async function generateStaticParams() {
   const posts = await getAllPosts();
   const params = [];
@@ -79,7 +75,7 @@ export default async function PostPage({
       <header className="mb-12">
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
-            {post.tags.map((tag) => (
+            {post.tags.map((tag: string) => (
               <span
                 key={tag}
                 className="px-3 py-1 bg-muted rounded-full text-sm text-muted-foreground"

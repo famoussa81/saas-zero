@@ -52,7 +52,7 @@ Ou phase par phase :
 /ns-design                    # → design system + tokens + composants
 /ns-build                     # → logique métier + auth + billing + dashboard
 /ns-review                    # → relecture en contexte vierge (REVIEW.md)
-/ns-verify                    # → 13 gates qualité
+/ns-verify                    # → 14 gates qualité
 /ns-deploy                    # → Cloudflare Pages + migrations + webhooks
 ```
 

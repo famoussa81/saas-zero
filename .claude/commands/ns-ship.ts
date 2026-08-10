@@ -42,7 +42,7 @@ const PHASES = [
     name: "verify",
     script: "ns-verify.sh",
     agent: null,
-    desc: "13 Quality Gates",
+    desc: "14 Quality Gates",
   },
   {
     name: "deploy",
@@ -180,9 +180,27 @@ Exemples:
       `    → Produire SPEC.md, ARCHITECTURE-CHOICE.md, DESIGN-CHOICE.md, DISCOVERY.md`,
     );
 
+    // Gate déterministe discovery:check en sortie de phase 1 (bloquant)
+    log("\n🔍 Gate Discovery — discovery:check");
+    const check = spawnSync("node", [".claude/scripts/discovery-check.js"], {
+      cwd: process.cwd(),
+      stdio: "inherit",
+    });
+    if (check.status !== 0) {
+      error(
+        "\n❌ Gate discovery:check échoué (score < 100%) — complète DISCOVERY.md / SPEC.md / ARCHITECTURE-CHOICE.md / DESIGN-CHOICE.md avant la Phase 2.",
+      );
+      log("   Re-lancer: node .claude/scripts/discovery-check.js");
+      process.exit(1);
+    }
+
     // Demander validation humaine
-    log("\n📋 SPEC.md, ARCHITECTURE-CHOICE.md, DESIGN-CHOICE.md générés");
-    log("⚠️  VALIDATION HUMAINE REQUISE — Vérifiez les fichiers et confirmez");
+    log(
+      "\n📋 DISCOVERY.md, SPEC.md, ARCHITECTURE-CHOICE.md, DESIGN-CHOICE.md générés",
+    );
+    log(
+      "  ⚠️  VALIDATION HUMAINE REQUISE — Vérifiez les fichiers et confirmez",
+    );
 
     // En mode non-interactif, on continue; en interactif, on attend
     if (process.stdin.isTTY) {

@@ -1,6 +1,11 @@
+---
+name: saas-project-compliance
+description: Valide le projet contre les 14 quality gates + règles CLAUDE.md + Design Audit. Output : SAAS-DESIGN-REVIEW.md avec verdict VALIDÉ/REFUSÉ.
+---
+
 # Agent: `saas-project-compliance`
 
-> **Rôle** : Valide le projet Zero-Risk SaaS Stack contre les 13 quality gates + CLAUDE.md rules. Output : `SAAS-DESIGN-REVIEW.md` avec verdict VALIDÉ/REFUSÉ.
+> **Rôle** : Valide le projet Zero-Risk SaaS Stack contre les **14 quality gates** + CLAUDE.md rules + **Design Audit**. Output : `SAAS-DESIGN-REVIEW.md` avec verdict VALIDÉ/REFUSÉ.
 
 ---
 
@@ -14,15 +19,69 @@
 
 ## Modes d'Exécution
 
-| Mode        | Trigger  | Description                                     |
-| ----------- | -------- | ----------------------------------------------- |
-| `discovery` | Phase 1  | Génère `DISCOVERY.md` + questions clarification |
-| `scaffold`  | Phase 2  | Valide structure repo, types, config            |
-| `design`    | Phase 3  | Valide tokens, composants, Storybook            |
-| `build`     | Phase 4  | Valide code quality, tests, patterns            |
-| `verify`    | Phase 5  | Lance 13 gates + impeccable audit               |
-| `pre-push`  | Git hook | Validation rapide avant push                    |
-| `full`      | CI/CD    | Audit complet + rapport HTML                    |
+| Mode        | Trigger  | Description                                                                   |
+| ----------- | -------- | ----------------------------------------------------------------------------- |
+| `discovery` | Phase 1  | Interview guidée (skill `ns-discovery`) → 4 fichiers + gate `discovery:check` |
+| `scaffold`  | Phase 2  | Valide structure repo, types, config                                          |
+| `design`    | Phase 3  | Valide tokens, composants, Storybook                                          |
+| `build`     | Phase 4  | Valide code quality, tests, patterns                                          |
+| `verify`    | Phase 5  | Lance 14 gates + impeccable audit                                             |
+| `pre-push`  | Hook git | Validation rapide avant push                                                  |
+| `full`      | CI/CD    | Audit complet + rapport HTML                                                  |
+
+---
+
+## Mode `discovery` — Checklist des décisions obligatoires (dimensions A→H)
+
+> Pour chaque dimension, **au moins une décision documentée avec son raisonnement** dans `DISCOVERY.md`.
+> Sinon le gate `discovery:check` échoue. Utiliser le skill `ns-discovery` pour l'interview guidée.
+
+### B. Discovery Produit
+
+- [ ] Problème : top 3 douleurs + qui les ressent + alternatives actuelles
+- [ ] Personas / ICP : ≥ 1 persona (rôle, douleur, budget, tech-savviness, déclencheur)
+- [ ] Jobs-to-be-done : "Quand [situation], je veux [motivation], afin de [résultat]"
+- [ ] MVP coupé : must-have / should-have / nice-to-have + ce qu'on NE construit PAS en v1
+- [ ] Différenciation : pourquoi ce produit vs l'alternative
+
+### C. Discovery Marché
+
+- [ ] Matrice concurrentielle : 3-5 concurrents (forces/faiblesses/positionnement) + wedge d'entrée
+- [ ] Positionnement : "Pour [cible] qui [besoin], [produit] est une [catégorie] qui [bénéfice]..."
+
+### D. Discovery Business / Monétisation
+
+- [ ] Modèle : abonnement tiers / usage-based / freemium / one-time
+- [ ] Pricing : tiers + prix + features (annuel -20%), nombres obligatoires
+- [ ] Unit economics : ACV, marge brute, churn max, LTV, payback, MRR cible 6 et 12 mois
+
+### E. Conversion & Rétention (doctrine utilisateur)
+
+- [ ] Funnel : attirer → convaincre → rassurer → inscrire → payer → rester + métriques
+- [ ] Onboarding : premier succès en < X min, parcours, emails
+- [ ] Rétention : boucle d'habitude, valeur continue
+
+### F. Discovery Architecture
+
+- [ ] **B2B vs B2C** (choix fondateur — schémas séparés, jamais appliqués ensemble)
+- [ ] Multi-tenant : org/team/user, rôles, invitations
+- [ ] Tables & RLS dérivés des features, services requis (Stripe, Brevo…), env vars
+
+### G. Discovery Design
+
+- [ ] Design system choisi (Linear/Vercel/Stripe/Framer/Custom via skill `design-system`)
+- [ ] Motion tier (Minimal/Moderate/Bold)
+- [ ] Élément signature (le "wow" reconnaissable)
+
+### H. Métriques & Risques
+
+- [ ] North Star metric + KPIs avec cibles numériques
+- [ ] Table des risques (risque, likelihood, impact, mitigation)
+
+### Gate de sortie
+
+- [ ] `pnpm discovery:check` → **score 100%** (fichiers présents, sections, pas de placeholder, pricing nombres, persona, tables, design system, positionnement, unit economics)
+- [ ] Validation humaine explicite → bloquant vers Phase 2
 
 ---
 
@@ -60,32 +119,32 @@
 ### Security (§2)
 
 - [ ] Secrets dans env vars seulement
-- [ ] CSP headers via Cloudflare Workers
+- [ ] CSP headers configurés (Next.js headers / Vercel)
 - [ ] Validation Zod sur TOUS endpoints API
 - [ ] Rate limiting sur auth/billing endpoints
 
 ### Anti-Patterns (§3) — Doit être ZÉRO
 
-| Anti-Pattern                     | Check                                        |
-| -------------------------------- | -------------------------------------------- |
-| Generic AI designs               | `ns-design-system` skill utilisé             |
-| Hardcoded values                 | Grep tokens = 0 résultats                    |
-| Placeholder images               | Assets dans `/public` ou Supabase Storage    |
-| `any` types                      | Grep `any\b` = 0                             |
-| Skipping RLS                     | `supabase test db` = pass                    |
-| Business logic in components     | Server actions / Edge Functions only         |
-| Manual schema edits              | Migrations only                              |
-| Inline styles / arbitrary values | Tokens + utility classes only                |
-| No error boundaries              | React Error Boundary + TanStack Query states |
-| Direct DOM manipulation          | React refs + useEffect cleanup only          |
+| Anti-Pattern                     | Check                                                    |
+| -------------------------------- | -------------------------------------------------------- |
+| Generic AI designs               | `ns-design-system` skill utilisé                         |
+| Hardcoded values                 | Grep tokens = 0 résultats                                |
+| Placeholder images               | Assets dans `/public` ou Supabase Storage                |
+| `any` types                      | Grep `any\b` = 0                                         |
+| Skipping RLS                     | `supabase test db` = pass                                |
+| Business logic in components     | Server actions / Edge Functions only                     |
+| Manual schema edits              | Migrations only                                          |
+| Inline styles / arbitrary values | Tokens + utility classes only                            |
+| No error boundaries              | React Error Boundary + Server Actions / RSC error states |
+| Direct DOM manipulation          | React refs + useEffect cleanup only                      |
 
 ---
 
-### Impeccable Audit Integration (§11)
+### Impeccable Audit Integration (§11) + Design Audit (§11b)
 
-### Checks Impeccable
+### Checks Impeccable + Design
 
-1. **13 Quality Gates** — Tous passent
+1. **14 Quality Gates** — Tous passent (incluant Gate #14 Design Audit)
 2. **ADRs** — Existent pour toutes décisions architecture
 3. **Design Tokens** — Utilisés (pas hardcoded détecté)
 4. **RLS Policies** — Sur chaque table + testées CI
@@ -95,21 +154,31 @@
 8. **Security Headers** — CSP, HSTS configurés
 9. **Bundle Budgets** — Respectés
 10. **Contract Tests** — Matchent OpenAPI spec
+11. **Design Token Coverage** — ≥ 90% composants utilisent tokens
+12. **Design Token Efficiency** — < 50% tokens inutilisés
+13. **Impeccable Semantic Score** — ≥ 95/100
+14. **Zero Hardcoded Values** — 0 violations design-tokens-audit
 
-### Validation Scripts Paths
+### Validation Scripts Paths (Claude Code / Codex)
 
-| Script | Path | Description |
-|--------|------|-------------|
-| Placeholder Check | `.hermes/scripts/placeholder-check.js` | Détecte placeholders FR/EN (lorem, [Ville], etc.) |
-| Stripe Webhook Check | `.hermes/scripts/stripe-webhook-check.js` | Vérifie signature webhook Stripe |
-| Impeccable Audit | `.hermes/scripts/impeccable-audit.js` | Audit conformité complet |
-| Perf Audit | `.hermes/scripts/perf-audit.js` | Performance audit |
-| Supabase Migration Check | `.hermes/scripts/supabase-migration-check.js` | Validation migrations |
+> Toutes les vérifications tournent via le sous-agent `saas-qa-e2e` / gates npm — pas de CLI externe.
+
+| Script            | Commande                                         | Description                                      |
+| ----------------- | ------------------------------------------------ | ------------------------------------------------ |
+| Quality Gates     | `pnpm gates:all`                                 | Les 14 gates déterministes (voir `ns-verify.sh`) |
+| Type/Perf         | `pnpm gate:typecheck` · `pnpm gate:lighthouse`   | TypeScript strict + perf/CWV                     |
+| RLS Policies      | `supabase test db` (CI)                          | Tests RLS pgTAP dans `supabase/tests/database/`  |
+| Placeholder/chien | `grep -rniE "(lorem                              | \\[ville\\]                                      | xxxx)" app/ lib/ content/` | Détecte placeholders FR/EN |
+| Stripe Webhook    | Règles `ns-billing` (signature vérifiée en edge) | Vérification manuelle/agent                      |
+| Design Audit      | `pnpm design:check`                              | 3 sous-gates: hardcoded, coverage, impeccable    |
+| Audit conformité  | `pnpm gates:all` + revue agent                   | Rapport dans `SAAS-DESIGN-REVIEW.md`             |
 
 ### Rapport Output
 
 - `impeccable-report.json` — Machine-readable
 - `impeccable-report.html` — Dashboard human-readable
+- `DESIGN-AUDIT.md` — Design audit human-readable
+- `design-audit.json` — Design audit machine-readable
 - Stockés dans `docs/` / rapport (fichier review) + CI artifact
 
 ---
@@ -125,7 +194,7 @@
 
 - Project: {project-name}
 - Phase: {discovery|scaffold|design|build|verify|pre-push|full}
-- Gates Passed: {X}/13
+- Gates Passed: {X}/14
 - Critical Issues: {count}
 - Warnings: {count}
 
@@ -146,6 +215,7 @@
 - [ ] Security (npm audit + CodeQL)
 - [ ] Accessibility (WCAG 2.1 AA)
 - [ ] API Contracts
+- [ ] Design Audit (Tokens, Coverage, Impeccable)
 
 ### ❌ Failed
 
@@ -161,15 +231,32 @@
 
 ## ADR Compliance
 
-- ADR-001: TanStack Start → **Next.js 14** (deviation documented)
+- ADR-001: Next.js 14 App Router ✓
 - ADR-002: Supabase unified backend ✓
-- ADR-003: Cloudflare Pages + Workers ✓
+- ADR-003: Vercel as hosting ✓
 - ADR-004: Stripe + Brevo ✓
 - ADR-005: B2B multi-tenant → decided at discovery
 - ADR-006: Design system → via ns-design-system skill
 - ADR-007: Motion tier → Moderate
-- ADR-008: 13 deterministic gates ✓
+- ADR-008: 14 deterministic gates ✓
 - ADR-009: Impeccable audit ✓
+
+## Design Audit Details (Gate #14)
+
+### Sub-Gate Results
+
+| Sub-Gate            | Status | Details               |
+| ------------------- | ------ | --------------------- |
+| Hardcoded Values    | ✅/❌  | X violations          |
+| Component Coverage  | ✅/❌  | X% (threshold: 90%)   |
+| Impeccable Semantic | ✅/❌  | X/100 (threshold: 95) |
+
+### Token Inventory
+
+- Defined: X
+- Used: Y
+- Unused: Z
+- Coverage: W%
 
 ## Recommendations
 

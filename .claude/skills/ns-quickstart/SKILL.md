@@ -23,7 +23,7 @@ Au tout début, sur un dossier neuf ou un clone :
 - `node -v` ≥ 20
 - `pnpm -v` ≥ 9
 - `supabase` CLI présent (sinon `npm i -g supabase`)
-- `wrangler` présent (sinon `npm i -g wrangler`)
+- `vercel` présent (sinon `npm i -g vercel`)
 - `.env.local` présent (sinon copier depuis `.env.example` et remplir)
 
 ### 2. Installer + lancer local

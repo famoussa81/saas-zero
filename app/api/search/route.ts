@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getAllPosts, getAllPages, getAllComponents } from "@/lib/content";
+import { getAllPosts, getAllPages } from "@/lib/content";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -9,20 +9,16 @@ export async function GET(request: Request) {
     return NextResponse.json({ results: [] });
   }
 
-  const [posts, pages, components] = await Promise.all([
-    getAllPosts(),
-    getAllPages(),
-    getAllComponents(),
-  ]);
+  const [posts, pages] = await Promise.all([getAllPosts(), getAllPages()]);
 
   const searchTerm = query.toLowerCase();
   const results = [];
 
   // Search posts
-  for (const post of await getAllPosts()) {
+  for (const post of posts) {
     const searchable =
       `${post.title} ${post.description} ${post.tags?.join(" ") || ""} ${post.body.raw}`.toLowerCase();
-    if (searchable.includes(query.toLowerCase())) {
+    if (searchable.includes(searchTerm)) {
       results.push({
         url: `/blog/${post.slug}`,
         title: post.title,
@@ -34,10 +30,10 @@ export async function GET(request: Request) {
   }
 
   // Search pages
-  for (const page of await getAllPages()) {
+  for (const page of pages) {
     const searchable =
       `${page.title} ${page.description} ${page.body.raw}`.toLowerCase();
-    if (searchable.includes(query.toLowerCase())) {
+    if (searchable.includes(searchTerm)) {
       results.push({
         url: `/${page.slug}`,
         title: page.title,

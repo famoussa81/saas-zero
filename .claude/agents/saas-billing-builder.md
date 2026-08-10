@@ -1,3 +1,8 @@
+---
+name: saas-billing-builder
+description: Stripe billing complet — pricing, checkout, portal, webhooks, subscription sync, usage metering, emails Brevo.
+---
+
 # Agent: `saas-billing-builder`
 
 > **Rôle** : Stripe billing complet — pricing, checkout, portal, webhooks, subscription sync, usage metering, Brevo emails.
@@ -272,7 +277,7 @@ export async function handlePaymentMethodAttached(
 ### 8. Subscription Sync (Cron / Manual)
 
 ```typescript
-// workers/sync-subscriptions.ts (Cloudflare Worker Cron)
+// lib/stripe/sync-subscriptions.ts (Cron — Vercel Cron ou server action manuelle)
 export default async function handler() {
   const subscriptions = await stripe.subscriptions.list({ limit: 100 });
 
@@ -415,7 +420,7 @@ await supabase.from('subscriptions').upsert({ ... }, { onConflict: 'stripe_subsc
 ### Server-Side Only
 
 ```typescript
-// STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET → Workers/Server Actions UNIQUEMENT
+// STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET → Server Actions / Route Handlers UNIQUEMENT
 // Jamais dans composants client
 ```
 

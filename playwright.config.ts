@@ -5,19 +5,21 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: [["html", { outputFolder: "playwright-report" }]],
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
+    navigationTimeout: 60000,
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  webServer: {
-    command: "pnpm next:dev",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 180000,
-  },
   // Ignore unit tests (they're in tests/unit)
   testIgnore: ["**/unit/**", "**/visual/**"],
+  webServer: {
+    command: "pnpm next:start",
+    url: "http://localhost:3000/fr",
+    reuseExistingServer: !process.env.CI,
+    cwd: "/c/Users/PC/saas-zero",
+    timeout: 120000,
+  },
 });

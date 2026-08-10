@@ -2,20 +2,20 @@
 
 ## Stack Décisions (actées)
 
-| Layer                | Choix                                              | Raison                                                    |
-| -------------------- | -------------------------------------------------- | --------------------------------------------------------- |
-| Framework            | **Next.js 14 App Router**                          | Code existant fonctionnel, support Cloudflare Pages natif |
-| CMS                  | **content-collections**                            | Successeur maintenu de Contentlayer, même sémantique      |
-| Auth + DB + Realtime | **Supabase** (PostgreSQL + RLS)                    | Free tier généreux, RLS obligatoire, types générés        |
-| Hosting              | **Cloudflare Pages + Workers**                     | Free tier, edge runtime, zero cold-start                  |
-| Billing              | **Stripe**                                         | Subscriptions, checkout, portal, webhooks                 |
-| Email                | **Brevo**                                          | Transactionnel + marketing, templates, free tier          |
-| Design System        | **ship-flow** (shadcn/ui + Radix + Tailwind + CVA) | Déjà en place, beau rendu, accessible                     |
-| Motion               | **Moderate** (Framer Motion / Motion One)          | Animations fluides sans surcharge                         |
-| i18n                 | **next-intl**                                      | [locale] routing, messages JSON, SSR                      |
-| Search               | **Pagefind**                                       | Build-time static search, zero backend                    |
-| Analytics            | **Plausible**                                      | Privacy-friendly, léger                                   |
-| Package Manager      | **pnpm**                                           | Workspaces, fast installs                                 |
+| Layer                | Choix                                              | Raison                                               |
+| -------------------- | -------------------------------------------------- | ---------------------------------------------------- |
+| Framework            | **Next.js 14 App Router**                          | Code existant fonctionnel, support Vercel natif      |
+| CMS                  | **content-collections**                            | Successeur maintenu de Contentlayer, même sémantique |
+| Auth + DB + Realtime | **Supabase** (PostgreSQL + RLS)                    | Free tier généreux, RLS obligatoire, types générés   |
+| Hosting              | **Vercel**                                         | Preview deploys, edge runtime, global CDN            |
+| Billing              | **Stripe**                                         | Subscriptions, checkout, portal, webhooks            |
+| Email                | **Brevo**                                          | Transactionnel + marketing, templates, free tier     |
+| Design System        | **ship-flow** (shadcn/ui + Radix + Tailwind + CVA) | Déjà en place, beau rendu, accessible                |
+| Motion               | **Moderate** (Framer Motion / Motion One)          | Animations fluides sans surcharge                    |
+| i18n                 | **next-intl**                                      | [locale] routing, messages JSON, SSR                 |
+| Search               | **Pagefind**                                       | Build-time static search, zero backend               |
+| Analytics            | **Plausible**                                      | Privacy-friendly, léger                              |
+| Package Manager      | **pnpm**                                           | Workspaces, fast installs                            |
 
 ## Architecture B2B Multi-tenant
 
@@ -38,16 +38,18 @@ subscriptions (id, org_id, stripe_subscription_id, status, price_id, current_per
 api_keys (id, org_id, name, key_hash, last_used_at, expires_at)
 ```
 
-## Pipeline `ns-ship` (6 phases)
+## Pipeline appliqué (`ns-ship`, 6 phases)
 
-1. **Discovery** → SPEC.md + ARCHITECTURE-CHOICE.md + DESIGN-CHOICE.md
-2. **Scaffold** → Repo structure, Supabase link, Cloudflare, deps, env
-3. **Design** → Tokens, composants, Storybook, baselines visuels
-4. **Build** (parallèle) → saas-core + saas-auth + saas-billing + cms + forms + search
-5. **Verify** → 13 gates déterministes
-6. **Deploy** → Supabase migrations + Cloudflare Pages + Stripe/Brevo webhooks
+| Phase       | Description                                                                     | Gate de sortie                |
+| ----------- | ------------------------------------------------------------------------------- | ----------------------------- |
+| **Phase 1** | Discovery → DISCOVERY.md + SPEC.md + ARCHITECTURE-CHOICE.md + DESIGN-CHOICE.md  | `discovery:check` = 100%      |
+| **Phase 2** | Scaffold → Repo structure, Supabase link, Vercel, deps, env                     | typecheck + lint              |
+| **Phase 3** | Design → Tokens, composants, Storybook, baselines visuels                       | `design:check`                |
+| **Phase 4** | Build (parallèle) → saas-core + saas-auth + saas-billing + cms + forms + search | unit tests + typecheck + lint |
+| **Phase 5** | Verify → 14 gates déterministes                                                 | `gates:all`                   |
+| **Phase 6** | Deploy → Supabase migrations + Vercel + Stripe/Brevo webhooks                   | smoke tests preview           |
 
-## Environment Variables (requises)
+## Env vars (requises)
 
 ```bash
 SUPABASE_URL=
@@ -60,8 +62,7 @@ STRIPE_WEBHOOK_SECRET=
 BREVO_API_KEY=
 BREVO_SENDER_EMAIL=
 BREVO_SENDER_NAME=
-CLOUDFLARE_ACCOUNT_ID=
-CLOUDFLARE_API_TOKEN=
+VERCEL_TOKEN=
 ```
 
 ---

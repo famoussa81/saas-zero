@@ -10,7 +10,7 @@ interface SearchResult {
   excerpt?: string;
 }
 
-export function Search({ className }: { className?: string }) {
+export function Search({ className: _className }: { className?: string }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +78,7 @@ export function Search({ className }: { className?: string }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setIsOpen(true)}
-            onBlur={(e) => {
+            onBlur={() => {
               // Delay to allow click on results
               setTimeout(() => setIsOpen(false), 200);
             }}
@@ -172,33 +172,34 @@ export function Search({ className }: { className?: string }) {
 
 export function SearchButton({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  // Similar implementation but as a button that opens a modal/dropdown
-  // Simplified version for header integration
 
   return (
-    <button
-      onClick={() => setIsOpen(!isOpen)}
-      className="p-2 rounded-lg hover:bg-muted transition-colors"
-      aria-label="Rechercher"
-      aria-expanded={isOpen}
-    >
-      <svg
-        className="w-5 h-5 text-muted-foreground"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
+    <div className={cn("relative", className)}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="p-2 rounded-lg hover:bg-muted transition-colors"
+        aria-label="Rechercher"
+        aria-expanded={isOpen}
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-        />
-      </svg>
-    </button>
+        <svg
+          className="w-5 h-5 text-muted-foreground"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </button>
+      {isOpen && (
+        <div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-lg shadow-lg p-3 z-50">
+          <Search />
+        </div>
+      )}
+    </div>
   );
 }

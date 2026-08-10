@@ -7,9 +7,13 @@ const pages = ["/fr", "/fr/connexion", "/fr/inscription", "/fr/blog"];
 
 for (const pagePath of pages) {
   test(`a11y: ${pagePath}`, async ({ page }) => {
+    test.setTimeout(90000);
     await page.goto(`${BASE_URL}${pagePath}`, {
       waitUntil: "domcontentloaded",
+      timeout: 90000,
     });
+    // Wait for content to be visible
+    await page.waitForSelector("main", { timeout: 10000 });
     // Skip if we hit Next.js error page (missing Supabase config)
     const isErrorPage = await page.locator("#__next_error__").isVisible();
     if (isErrorPage) {

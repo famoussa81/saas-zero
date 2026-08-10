@@ -1,0 +1,32 @@
+﻿{
+  "minComponentTokenCoverage": 90,
+  "maxUnusedTokenRatio": 0.5,
+  "impeccableMinScore": 95,
+  "failOnHardcodedValues": true,
+  "runImpeccable": true,
+  "includePaths": [
+    "src/components/**/*.tsx",
+    "src/app/**/*.tsx",
+    "src/lib/**/*.ts"
+  ],
+  "excludePaths": [
+    "**/*.stories.tsx",
+    "**/*.test.tsx",
+    "**/tokens/**",
+    "**/build/**",
+    "**/*.d.ts"
+  ],
+  "allowedHardcoded": [
+    "transparent",
+    "currentColor",
+    "inherit",
+    "initial",
+    "unset"
+  ],
+  "tokenPaths": [
+    "tokens/**/*.json",
+    "src/lib/design-tokens.ts",
+    "src/styles/tokens.css",
+    "build/css/variables.css"
+  ]
+}

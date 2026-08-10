@@ -50,6 +50,37 @@
 | **Technical Proficiency** | [High / Medium / Low] |
 | **Geography** | [Global / US/EU only / Specific regions] |
 
+### 3.1 Personas / ICP (condensé depuis DISCOVERY.md)
+
+| Champ | Persona 1 | Persona 2 |
+|-------|-----------|-----------|
+| **Rôle** | [ex: Freelance développeur] | [ex: Lead d'équipe 5-15] |
+| **Douleur principale** | [la douleur] | [la douleur] |
+| **Budget** | [ex: 10-50$/mois] | [ex: 100-500$/mois] |
+| **Tech-savviness** | [Haute/Moyenne/Basse] | [Haute/Moyenne/Basse] |
+| **Déclencheur d'achat** | [ce qui le fait payer] | [ce qui le fait payer] |
+| **ICP (idéal ou non)** | [ICP / pas ICP] | [ICP / pas ICP] |
+
+### 3.2 Positionnement (1 phrase)
+
+> **Pour [cible] qui [besoin], [produit] est une [catégorie] qui [bénéfice]. Contrairement à [alternative], [différenciateur].**
+
+### 3.3 Funnel Conversion & Rétention (doctrine utilisateur)
+
+> *Attirer avec le wow → convaincre avec la qualité → rassurer avec le zéro bug.*
+> *S'inscrire → payer → RESTER.*
+
+| Étape | Ce qui convertit | Métrique cible |
+|-------|------------------|----------------|
+| Attirer | Hero wow, élément signature, preuve sociale | [ex: 5000 visiteurs/mois] |
+| Convaincre | Landing bénéfices, démo, tarifs clairs | [ex: taux scroll profond 30%] |
+| Rassurer | Preuve sociale, garanties, sécurité | [ex: 20 avis clients types] |
+| S'inscrire | Onboarding guidé, friction minimale | [ex: 10% signups] |
+| Payer | Pricing clair, essai, self-service | [ex: 5% free→paid] |
+| Rester | Valeur continue, habitude, notifications | [ex: rétention M3 ≥ 60%] |
+
+**Onboarding** : premier succès en < [X] min. Parcours : [étapes].
+
 ---
 
 ## 4. Core Features (MVP Scope)
@@ -65,6 +96,18 @@
 
 ### 4.3 Nice-to-Have Features (P2)
 1. [Feature 6] — [Description]
+
+### 4.4 MVP coupé — ce qu'on NE construit PAS en v1
+
+> **Le "20% qui compte"** (killer-saas) : couper explicitement ce qui n'est PAS nécessaire au lancement.
+> Chaque ligne retirée = temps + bugs + coûts évités. Le différé part en P2 ou en question ouverte.
+
+| Coupé en v1 | Pourquoi on ne le construit pas | Quand revenir dessus |
+|-------------|---------------------------------|----------------------|
+| [ex: SSO/SAML] | Aucun prospect enterprise en pré-lancement | Dès 1re demande enterprise |
+| [ex: Mobile apps natives] | PWA responsive suffit pour valider le besoin | Dès rétention M1 > 30% |
+| [ex: Feature X avancée] | Le problème de base n'est pas encore validé | Après 50 clients payants |
+| [Feature différée] | [raison] | [condition] |
 
 ---
 
@@ -188,6 +231,18 @@
 - [ ] **Zapier/Make** — Automation
 - [ ] **Custom API** — Webhooks + API keys
 
+### 10.4 Métriques de Succès & KPIs (condensé depuis DISCOVERY.md)
+
+| Type | Métrique | Cible |
+|------|----------|-------|
+| **North Star** | [ex: tâches complétées/semaine] | [ex: 5/semaine par utilisateur actif] |
+| **Acquisition** | [ex: trafic organique/mois] | [cible] |
+| **Activation** | [ex: % signups atteignant le 1er succès] | [cible] |
+| **Rétention** | [ex: rétention M3] | [cible] |
+| **Revenu** | MRR à 6 mois / 12 mois | [ex: 3k$ / 10k$] |
+| **Unit economics** | ACV / churn max / LTV / payback | [ex: 348$ / 3% / 1160$ / >3x] |
+| **Qualité** | Bugs critiques | 0 |
+
 ---
 
 ## 11. Pages & Routes (MVP)
@@ -217,7 +272,7 @@
 ## 12. Acceptance Criteria (Definition of Done)
 
 - [ ] All P0 features implemented and tested
-- [ ] 13 quality gates pass (typecheck, lint, test, e2e, visual, lighthouse, bundle, cwv, hydration, rls, security, accessibility, contracts)
+- [ ] 14 quality gates pass (typecheck, lint, test, e2e, visual, lighthouse, bundle, cwv, hydration, rls, security, accessibility, contracts, design)
 - [ ] Visual regression baselines committed
 - [ ] Playwright E2E: Auth flow, Billing flow, Core journey all pass
 - [ ] Accessibility: WCAG 2.1 AA, axe-core 0 violations

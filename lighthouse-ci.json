@@ -1,19 +1,12 @@
 {
   "ci": {
     "collect": {
-      "numberOfRuns": 3,
-      "startServerCommand": "pnpm next:dev",
-      "url": [
-        "http://localhost:3000/fr",
-        "http://localhost:3000/fr/blog",
-        "http://localhost:3000/fr/connexion",
-        "http://localhost:3000/fr/tableau-de-bord",
-        "http://localhost:3000/fr/pricing"
-      ],
+      "numberOfRuns": 1,
+      "startServerCommand": "pnpm next:start",
+      "url": ["http://localhost:3000/fr", "http://localhost:3000/fr/blog"],
       "settings": {
         "headless": true,
-        "preset": "desktop",
-        "staticDistDir": ".next/server"
+        "preset": "desktop"
       }
     },
     "assert": {

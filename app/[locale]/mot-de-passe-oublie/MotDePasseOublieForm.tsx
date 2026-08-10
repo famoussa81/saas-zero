@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { useTranslations } from "next-intl";
 
@@ -19,9 +18,7 @@ export function MotDePasseOublieForm({
   error,
   message,
 }: MotDePasseOublieFormProps) {
-  const messages = useTranslations("auth");
   const commonMessages = useTranslations("common");
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState(error || "");
   const [successMessage, setSuccessMessage] = useState(message || "");

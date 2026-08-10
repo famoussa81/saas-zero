@@ -11,7 +11,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -19,14 +19,13 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./src/*"],
       "@/lib/*": ["./lib/*"],
-      "@/components/*": ["./components/*"],
+      "@/components/*": ["./src/components/*", "./components/*"],
       "@/hooks/*": ["./hooks/*"],
       "@/app/*": ["./app/*"],
       "@/styles/*": ["./src/styles/*"]
     },
-    "baseUrl": ".",
     "types": [
       "node",
       "vitest/globals",
@@ -40,7 +39,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".content-collections/**/*.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules", "tests", "supabase/functions"]
 }

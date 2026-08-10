@@ -1,4 +1,4 @@
-# `/ns-ship` — Pipeline Unifié SaaS-Zero (Next.js 14 + Supabase + Cloudflare)
+﻿# `/ns-ship` — Pipeline Unifié SaaS-Zero (Next.js 14 + Supabase + Vercel)
 
 > **Unique commande** pour aller de l'idée au SaaS déployé.
 > Six phases, gates déterministes, agents parallèles, zéro décision humaine après le lancement.
@@ -13,38 +13,47 @@
 
 ---
 
-## Phase 1 — Discovery (15-30 min)
+## Phase 1 — Discovery (10-15 min)
 
-**Objectif** : Produire `SPEC.md` + `ARCHITECTURE-CHOICE.md` + `DESIGN-CHOICE.md` validés.
+**Objectif** : Produire `DISCOVERY.md` + `SPEC.md` + `ARCHITECTURE-CHOICE.md` + `DESIGN-CHOICE.md`, validés par le gate `discovery:check` (100%) + validation humaine.
 
 ### Étapes
 
-1. **Clarification produit** (agent `saas-project-compliance` mode discovery)
-   - B2B vs B2C → détermine RLS, dashboard, billing
-   - Design system → `ns-design-system` skill (palette, ambiance, élément signature — inspiré Linear/Vercel/Stripe/Framer ou Custom)
-   - Motion tier → Minimal / Moderate / Bold
-   - Features core → liste priorisée (MVP vs v2)
+1. **Interview guidée** (skill `ns-discovery` — une question à la fois, follow-ups adaptatifs)
+   - **A Capture du brief** : l'idée, le public, le problème, le résultat voulu
+   - **B Discovery Produit** : problème, personas/ICP, JTBD, MVP coupé, différenciation
+   - **C Discovery Marché** : matrice concurrentielle, wedge, positionnement
+   - **D Discovery Business** : modèle, pricing, unit economics (ACV, churn, LTV, MRR)
+   - **E Conversion & Rétention** : funnel, onboarding, boucle d'habitude
+   - **F Discovery Architecture** : B2B/B2C, multi-tenant, tables/RLS, services, env vars
+   - **G Discovery Design** : design system, motion tier, élément signature
+   - **H Métriques & Risques** : North Star, KPIs, table des risques
 
-2. **Génération specs**
-   - `SPEC.md` : vision, public, features MVP, non-fonctionnels, gates, deployment
-   - `ARCHITECTURE-CHOICE.md` : stack, tables, env vars, pipeline
-   - `DESIGN-CHOICE.md` : tokens, composants, motion, a11y
+2. **Génération specs** (depuis les templates — aucun placeholder non résolu)
+   - `DISCOVERY.md` : carnet de bord des décisions + raisonnement + impact traceability
+   - `SPEC.md` : contrat exécutable (identité, business, audience+personas, positionnement, funnel, features MVP, auth, billing, email, design, technique, routes, gates, risques)
+   - `ARCHITECTURE-CHOICE.md` : 10 ADRs (Next.js 14 + Supabase + Vercel + Stripe + Brevo), impact traceability, env vars
+   - `DESIGN-CHOICE.md` : constitution design (philosophie, élément signature, conversion design, tokens, motion, a11y)
 
-3. **Gate Discovery** : Validation humaine obligatoire (PR ou prompt)
-   - `cat SPEC.md ARCHITECTURE-CHOICE.md DESIGN-CHOICE.md` → **Approuver / Modifier**
+3. **Gate Discovery** (déterministe)
+   - `pnpm discovery:check` → **score 100% obligatoire** (fichiers, sections, pas de placeholder, pricing nombres, persona, tables, design system, positionnement, unit economics)
+   - Sorties : `DISCOVERY-CHECK.md` + `discovery-check.json`
+
+4. **Validation humaine** obligatoire → **bloquant vers Phase 2** si < 100% ou non approuvé
 
 ### Sortie
 
-- `SPEC.md` ✓
-- `ARCHITECTURE-CHOICE.md` ✓
-- `DESIGN-CHOICE.md` ✓
-- `DISCOVERY.md` (log complet)
+- `DISCOVERY.md` ✓ (carnet de bord)
+- `SPEC.md` ✓ (contrat)
+- `ARCHITECTURE-CHOICE.md` ✓ (ADRs)
+- `DESIGN-CHOICE.md` ✓ (design)
+- `DISCOVERY-CHECK.md` ✓ (gate score)
 
 ---
 
 ## Phase 2 — Scaffold (5-10 min)
 
-**Objectif** : Repo prêt à coder — structure, deps, Supabase, Cloudflare, env.
+**Objectif** : Repo prêt à coder — structure, deps, Supabase, Vercel, env.
 
 ### Agents parallèles
 
@@ -96,6 +105,45 @@ pnpm typecheck && pnpm lint
 
 ---
 
+## Phase 3.5 — Design Check (5-10 min) ⭐ NOUVEAU
+
+**Objectif** : Audit design déterministe — tokens, couverture, Impeccable. Gate #14.
+
+### Scripts exécutés
+
+```bash
+# 1. Media sourcing — images réelles pour toutes les pages SPEC.md
+node .claude/scripts/media-fetcher.js \
+  --keywords="dashboard,analytics,team,collaboration,finance,hero,saas landing,onboarding,settings" \
+  --output=public/assets/images \
+  --count=20 \
+  --theme=saas
+
+# 2. Design Audit Gate (#14)
+pnpm design:check
+```
+
+### Ce que `design:check` valide (3 sous-gates)
+
+| Sous-gate                     | Script                   | Critère                                                                                     |
+| ----------------------------- | ------------------------ | ------------------------------------------------------------------------------------------- |
+| **3.5.1 Hardcoded Values**    | `design-tokens-audit.js` | **0** valeurs hardcodées (hex, rgb, tailwind arbitrary, spacing, radius, shadow, font-size) |
+| **3.5.2 Component Coverage**  | `design-inventory.js`    | **≥ 90%** des composants utilisent au moins 1 token                                         |
+| **3.5.3 Impeccable Semantic** | `impeccable audit`       | **Score ≥ 95** (accessibilité, contraste, HTML sémantique, motion)                          |
+
+### Livrables
+
+- `public/assets/images/` — images réelles + `manifest.json` + `attribution.md`
+- `DESIGN-AUDIT.md` — rapport lisible (gates, violations, inventaire, recommandations)
+- `design-audit.json` — rapport machine pour CI
+
+### Gate Design Check
+
+- **Tous les 3 sous-gates passent** = ✓
+- **Un seul échoue** = ❌ stop, fix, re-run
+
+---
+
 ## Phase 4 — Build (30-60 min)
 
 **Objectif** : Logique métier, API, billing, CMS, forms, search — agents en parallèle.
@@ -141,7 +189,7 @@ graph LR
 - Checkout : `/api/billing/checkout` → Stripe Checkout Session → redirect
 - Success/Cancel pages : `/facturation/succes`, `/facturation/annule`
 - Customer Portal : `/api/billing/portal` → Stripe Billing Portal → redirect
-- Webhook handler : `workers/stripe-webhook.ts` (Cloudflare Worker)
+- Webhook handler : `app/api/webhooks/stripe/route.ts` (Next.js Route Handler)
   - `checkout.session.completed` → create subscription record
   - `invoice.paid` → update subscription, email receipt
   - `customer.subscription.updated` → sync status, plan, period
@@ -179,7 +227,7 @@ graph LR
 
 ## Phase 5 — Verify (10-20 min)
 
-**Objectif** : 13 gates déterministes — zéro jugement subjectif.
+**Objectif** : 14 gates déterministes — zéro jugement subjectif.
 
 ### Exécution
 
@@ -189,7 +237,7 @@ graph LR
 pnpm gates:all
 ```
 
-### 13 Gates (scripts dans `package.json`)
+### 14 Gates (scripts dans `package.json`)
 
 | #   | Gate                 | Commande                                               | Critère                          |
 | --- | -------------------- | ------------------------------------------------------ | -------------------------------- |
@@ -206,10 +254,11 @@ pnpm gates:all
 | 11  | `gate:security`      | `npm audit --audit-level=high` + `codeql`              | 0 critical/high                  |
 | 12  | `gate:accessibility` | `axe-core`                                             | WCAG 2.1 AA                      |
 | 13  | `gate:contracts`     | `pact` / OpenAPI                                       | Contracts match spec             |
+| 14  | `gate:design`        | `pnpm design:check`                                    | Tokens, couverture, Impeccable   |
 
 ### Gate Verify
 
-- **Tous les 13 passent** = ✓
+- **Tous les 14 passent** = ✓
 - **Un seul échoue** = ❌ stop, fix, re-run
 
 ---
@@ -226,18 +275,18 @@ pnpm gates:all
    supabase db push --project-ref $SUPABASE_PROD_REF
    ```
 
-2. **Cloudflare Pages**
+2. **Vercel**
 
    ```bash
-   wrangler pages deploy --project-name=$PROJECT --branch=main
+   vercel --prod
    ```
 
 3. **Stripe Webhooks** (auto via CLI ou dashboard)
-   - Endpoint : `https://$PROJECT.pages.dev/api/webhooks/stripe`
+   - Endpoint : `https://$PROJECT.vercel.app/api/webhooks/stripe`
    - Events : `checkout.session.completed`, `invoice.paid`, `customer.subscription.updated`, `customer.subscription.deleted`, `payment_method.attached`
 
 4. **Brevo Webhooks**
-   - Endpoint : `https://$PROJECT.pages.dev/api/webhooks/brevo`
+   - Endpoint : `https://$PROJECT.vercel.app/api/webhooks/brevo`
    - Events : `delivered`, `opened`, `clicked`, `bounced`, `unsubscribed`
 
 5. **Smoke Tests** (Playwright sur preview URL)
@@ -259,13 +308,13 @@ pnpm gates:all
 .claude/
 ├── commands/
 │   ├── ns-ship.md          # CE FICHIER - pipeline principal (6 phases)
-│   ├── ns-verify.sh        # Script 13 gates (Phase 5)
+│   ├── ns-verify.sh        # Script 14 gates (Phase 5)
 │   ├── ns-deploy.sh        # Deploy script (Phase 6)
 │   ├── ns-discovery.md     # Phase 1 : Discovery & Specs
 │   ├── ns-scaffold.md      # Phase 2 : Scaffold Repo & Infra
 │   ├── ns-design.md        # Phase 3 : Design System
 │   ├── ns-build.md         # Phase 4 : Build (parallel agents)
-│   ├── ns-qa.md            # Phase 5 : Verify (13 gates)
+│   ├── ns-qa.md            # Phase 5 : Verify (14 gates)
 │   └── ns-deploy.md        # Phase 6 : Deploy Production
 ├── agents/
 │   ├── saas-core-builder.md
@@ -309,9 +358,10 @@ BREVO_API_KEY=
 BREVO_SENDER_EMAIL=
 BREVO_SENDER_NAME=
 
-# Cloudflare
-CLOUDFLARE_ACCOUNT_ID=
-CLOUDFLARE_API_TOKEN=
+# Vercel
+VERCEL_TOKEN=
+VERCEL_ORG_ID=
+VERCEL_PROJECT_ID=
 
 # Feature Flags
 ENABLE_MFA=true
@@ -327,10 +377,12 @@ SSO_PROVIDERS=google,github
 # 1. Lancer le pipeline
 /ns-ship "SaaS de gestion de projets pour agences : projets, tâches, équipe, facturation temps, client portal"
 
-# 2. Phase 1 - Discovery (interactif)
-#    → Questions : B2B, design=Linear, motion=Moderate, features=[projects, tasks, team, billing, clients]
-#    → Génère SPEC.md, ARCHITECTURE-CHOICE.md, DESIGN-CHOICE.md
-#    → Gate: validation humaine
+# 2. Phase 1 - Discovery (interactif, 10-15 min)
+#    → Interview guidée (skill ns-discovery) : B2B, persona, concurrence, pricing,
+#      unit economics, funnel, design=Linear, motion=Moderate, élément signature,
+#      features=[projects, tasks, team, billing, clients] + MVP coupé
+#    → Génère DISCOVERY.md, SPEC.md, ARCHITECTURE-CHOICE.md, DESIGN-CHOICE.md
+#    → Gate: pnpm discovery:check (100%) + validation humaine
 
 # 3. Phase 2 - Scaffold (auto)
 #    → Repo structuré, Supabase linké, types générés
@@ -345,12 +397,12 @@ SSO_PROVIDERS=google,github
 #    → Gates: typecheck, lint, test
 
 # 6. Phase 5 - Verify (auto)
-#    → 13 gates déterministes
+#    → 14 gates déterministes
 #    → Tous passent = ✓
 
 # 7. Phase 6 - Deploy (auto)
-#    → Migrations, Cloudflare, Stripe/Brevo webhooks, smoke tests
-#    → SaaS live sur https://xxx.pages.dev
+#    → Migrations, Vercel, Stripe/Brevo webhooks, smoke tests
+#    → SaaS live sur https://xxx.vercel.app
 
 # Total: ~1-2h pour un SaaS complet MVP
 ```

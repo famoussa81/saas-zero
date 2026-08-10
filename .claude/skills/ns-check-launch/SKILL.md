@@ -12,7 +12,7 @@ description: Émettre un verdict de lancement evidence-backed (prêt à lancer o
 
 | Domaine        | Vérif                            | Preuve                     |
 | -------------- | -------------------------------- | -------------------------- |
-| Qualité        | `pnpm gates:all`                 | 13 gates passent           |
+| Qualité        | `pnpm gates:all`                 | 14 gates passent           |
 | Chargement     | `k6 run tests/load/scenario.js`  | tient le pic, p95 < seuil  |
 | Monitoring     | Sentry branché + DSN             | les erreurs sont visibles  |
 | Auth / billing | E2E auth + Stripe                | les flux critiques passent |

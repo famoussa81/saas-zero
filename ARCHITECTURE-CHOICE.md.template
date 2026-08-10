@@ -1,6 +1,46 @@
 # ARCHITECTURE-CHOICE.md — Architecture Decision Record Template
 
 > **Instructions**: Document every significant architectural decision using this template. Each ADR is immutable once merged — create a new ADR to supersede. Store in `docs/architecture/adr-XXX-title.md`.
+>
+> **Stack verrouillé (2026)**: Next.js 14 + Supabase + Cloudflare Pages/Workers + Stripe + Brevo. Toute nouvelle ADR doit être cohérente avec ce socle — jamais de retour à TanStack/Convex.
+
+---
+
+## 0. Impact Traceability (feature → tables / RLS / pages / gates)
+
+> **Rempli depuis DISCOVERY.md** (section Impact Traceability). Chaque feature du MVP mappe ses artefacts concrets.
+> C'est le pont Discovery → Scaffold : l'agent `saas-core-builder` lit cette table pour générer les migrations et les routes.
+
+| Feature (MVP) | Tables / RLS | Pages / Routes | Gates impactés |
+|---------------|--------------|----------------|----------------|
+| [Auth & onboarding] | `profiles`, `auth.users` — RLS `auth.uid()` | `/auth/*`, `/onboarding` | typecheck, e2e, accessibility |
+| [Organisation B2B] | `orgs`, `org_members`, `invites` — RLS org | `/org/[slug]/*` | rls, e2e, security |
+| [Feature produit 1] | `table1`, `table2` — RLS | `/dashboard`, `/app/*` | test, e2e |
+| [Billing] | `stripe_customers`, `subscriptions` — RLS | `/billing`, `/settings/billing` | e2e, security, contracts |
+| [Email] | `email_queue` | — | test |
+
+---
+
+## 0bis. Checklist Env Vars dérivées (à compléter)
+
+> Chaque ligne découle d'une décision d'architecture. À recopier dans `.env.example` au scaffold.
+
+| Variable | Source (ADR / décision) | Server-only | Exemple |
+|----------|--------------------------|-------------|---------|
+| `SUPABASE_URL` | ADR-002 Supabase | — | `https://xxx.supabase.co` |
+| `SUPABASE_ANON_KEY` | ADR-002 | — | `eyJ...` |
+| `SUPABASE_SERVICE_ROLE_KEY` | ADR-002 | ✅ | `sb_secret_...` |
+| `SUPABASE_DB_URL` | ADR-009 migrations | ✅ | `postgresql://...` |
+| `STRIPE_SECRET_KEY` | ADR-004 | ✅ | `sk_live_...` |
+| `STRIPE_PUBLISHABLE_KEY` | ADR-004 | — | `pk_live_...` |
+| `STRIPE_WEBHOOK_SECRET` | ADR-004 | ✅ | `whsec_...` |
+| `BREVO_API_KEY` | ADR-005 | ✅ | `xkeysib-...` |
+| `BREVO_SENDER_EMAIL` / `_NAME` | ADR-005 | — | `hello@x.com` / `X` |
+| `CLOUDFLARE_ACCOUNT_ID` | ADR-003 | ✅ | `abc123` |
+| `CLOUDFLARE_API_TOKEN` | ADR-003 | ✅ | `...` |
+| `SENTRY_DSN` | ADR-010 | — | `https://...@ingest.sentry.io/...` |
+| `NEXT_PUBLIC_APP_URL` | [décision produit] | — | `https://app.x.com` |
+| [toute autre var produit] | [décision] | [✅/—] | [exemple] |
 
 ---
 
@@ -66,7 +106,7 @@
 
 ## 3. Core Architecture Decisions (Pre-filled for Zero-Risk SaaS Stack)
 
-### ADR-001: Frontend Framework — TanStack Start
+### ADR-001: Frontend Framework — Next.js 14 (App Router)
 
 **Status**: Accepted
 **Date**: [YYYY-MM-DD]
@@ -76,49 +116,49 @@
 Need a React-based full-stack framework with:
 - File-based routing
 - Server-side rendering (SSR) + client-side navigation
-- Type-safe API layer
+- Server Actions / Route Handlers for type-safe data access
 - Good developer experience
 - Deployable to Cloudflare Pages
 
 #### Decision
-Use **TanStack Start** (v1.x) as the primary frontend framework.
+Use **Next.js 14** (App Router) as the primary frontend framework.
 
 #### Consequences
 **Positive**:
-- Built on TanStack Router (type-safe, nested routes, loaders)
-- TanStack Query integrated for server state
-- Vite-based, fast HMR
-- Cloudflare Pages adapter available
-- React Server Components (RSC) support via Vinxi
-- Full-stack type safety with Zod + tRPC-style procedures
+- Mature ecosystem, huge community, massive third-party integration surface
+- App Router: Server Components (RSC) native, Server Actions, Route Handlers
+- `next.config.js` + Cloudflare adapter for edge runtime
+- React Server Components by default — less client JS
+- Middleware for auth/session edge cases
+- Next.js stable, well-documented, hiring-friendly
 
 **Negative**:
-- Newer ecosystem (smaller community than Next.js)
-- Fewer third-party integrations
-- RSC still maturing in Vinxi/TanStack Start
+- Historically Vercel-centric (lock-in pressure) — mitigé par le build `output: 'server'` + adapter Cloudflare
+- Middleware runtime différencié (Node vs Edge) — attention aux APIs Node dans le middleware
+- RSC data-fetching model a une courbe d'apprentissage (fetch en Server Components vs client)
 
 **Neutral**:
-- Learning curve for team unfamiliar with TanStack ecosystem
+- TanStack Query reste utilisable pour la state server-side (voir ADR-008)
 
 #### Alternatives Considered
 | Alternative | Pros | Cons | Why Not Chosen |
 |-------------|------|------|----------------|
-| Next.js 14+ (App Router) | Mature, huge ecosystem, RSC native | Vercel lock-in, heavier, middleware complexity on Cloudflare | Cloudflare Pages deployment friction |
-| Remix v2 | Strong web standards, nested routes | Shopify ownership uncertainty, no RSC yet | TanStack Router superior type safety |
-| Astro + React Islands | Great performance, multi-framework | Not a full app framework, limited SSR patterns | Need full SSR app, not content site |
-| Hono + React | Lightweight, Cloudflare-native | No file routing, manual SSR setup | Higher DX cost |
+| TanStack Start | Router type-safe, Vite | Écosystème jeune, RSC immature (Vinxi), communauté réduite | Décision stack verrouillée 2026 (mémoire) |
+| Remix v2 | Web standards, nested routes | Shopify ownership uncertainty, pas de RSC natif | Next.js App Router supérieur pour RSC |
+| Astro + React Islands | Performance, multi-framework | Pas un framework full-app SSR | Besoin d'une vraie app SSR |
+| Hono + React | Léger, Cloudflare-native | Pas de file routing, setup SSR manuel | Coût DX trop élevé |
 
 #### Implementation Notes
-- Use `@tanstack/start` with `@tanstack/react-router`, `@tanstack/react-query`
-- Configure `vite.config.ts` with `cloudflarePages()` adapter
-- Define routes in `routes/` directory with `.tsx` files
-- Use `createServerFn()` for type-safe server functions (RPC style)
-- Integrate with Supabase via server functions (not client-side)
+- `app/` directory (App Router), `layout.tsx` + `page.tsx` par route
+- Server Actions (`"use server"`) pour mutations type-safe
+- Route Handlers (`app/api/.../route.ts`) pour API REST + webhooks
+- `next.config.js` : `output: 'server'` pour le runtime Node → adapter Cloudflare au build
+- Intégration Supabase côté serveur via Server Components / Actions (jamais client-only)
 
 #### Validation Criteria
-- [ ] Cold start < 500ms on Cloudflare Pages
-- [ ] TypeScript errors catch route param mismatches
-- [ ] Server functions work in preview + production
+- [ ] Cold start < 500ms sur Cloudflare Pages
+- [ ] TypeScript catch les erreurs de route params
+- [ ] Server Actions fonctionnent en preview + production
 - [ ] Bundle size < 200KB gzipped (initial JS)
 
 ---
@@ -166,9 +206,9 @@ Use **Supabase** as the primary backend platform (PostgreSQL + Auth + Realtime +
 | Cloudflare D1 + Custom | Native Workers integration | SQLite limitations, no auth/realtime | Not production-ready for auth |
 
 #### Implementation Notes
-- Use Supabase JS client in TanStack Start server functions (not browser)
+- Use Supabase JS client in Next.js Server Actions / Route Handlers (not browser)
 - Enable RLS on all tables; policies reference `auth.uid()`
-- Use `supabase.auth.getUser()` in server functions for session validation
+- Use `supabase.auth.getUser()` in server actions for session validation
 - Connection pooling via Supavisor (built-in) — use `pooler.supabase.com:6543`
 - Migrations via Supabase CLI (`supabase db push` / migration files)
 - Storage buckets for user uploads; signed URLs for private files
@@ -190,7 +230,7 @@ Use **Supabase** as the primary backend platform (PostgreSQL + Auth + Realtime +
 Need hosting with:
 - Global edge network (low latency)
 - Zero-config deployments from Git
-- Support for TanStack Start (Vite + SSR)
+- Support for Next.js (SSR + edge)
 - Free tier for development
 - Custom domains, SSL, headers
 
@@ -207,14 +247,14 @@ Deploy to **Cloudflare Pages** with **Cloudflare Workers** for edge functions.
 - `wrangler` CLI for local dev (`wrangler pages dev`)
 
 **Negative**:
-- **No Node.js APIs** — must use Web Standards (Fetch, Streams, Crypto)
+- **No Node.js APIs** on Workers — must use Web Standards (Fetch, Streams, Crypto)
 - No `fs`, `path`, `process` — polyfills needed for some packages
 - 10ms CPU limit per request (free), 30ms (paid)
 - 128MB memory limit
 - No long-running processes (use Queues/Durable Objects)
 
 **Neutral**:
-- TanStack Start Cloudflare adapter handles most incompatibilities
+- Next.js `output: 'server'` + adapter Cloudflare gère la plupart des incompatibilités
 - Supabase JS client works (uses Fetch)
 
 #### Alternatives Considered
@@ -227,7 +267,7 @@ Deploy to **Cloudflare Pages** with **Cloudflare Workers** for edge functions.
 
 #### Implementation Notes
 - `wrangler.toml` config for Pages + Functions
-- `output: 'server'` in TanStack Start config (SSR)
+- `next.config.js` : `output: 'server'`, build via `@opennextjs/cloudflare` ou adapter équivalent
 - Edge-compatible dependencies only — audit with `wrangler pages dev`
 - Use `@cloudflare/kv-asset-handler` for static assets if needed
 - Custom domain via Cloudflare Registrar or CNAME
@@ -286,12 +326,12 @@ Use **Stripe** for all payments, subscriptions, and billing.
 | Custom + Adyen/Checkout.com | Lower fees at scale | Massive engineering investment | Not at scale yet |
 
 #### Implementation Notes
-- **Server-only**: Stripe secret key only in Cloudflare Workers (env vars)
+- **Server-only**: Stripe secret key only in Cloudflare Workers / server (env vars)
 - **Client**: Stripe.js + Elements / Checkout Session redirect
-- **Webhooks**: `stripe/webhooks` endpoint in TanStack Start server function
+- **Webhooks**: `app/api/webhooks/stripe/route.ts` Route Handler
 - **Idempotency**: Use `stripe-webhook-secret` + event `id` dedup in Supabase
 - **Sync**: Webhook → Supabase `subscriptions` table (RLS-protected)
-- **Portal**: `/billing/portal` server function → `stripe.billingPortal.sessions.create()`
+- **Portal**: `/billing/portal` server action → `stripe.billingPortal.sessions.create()`
 
 #### Validation Criteria
 - [ ] Checkout → success → subscription active in DB
@@ -344,7 +384,7 @@ Use **Brevo** for transactional email.
 | AWS SES | Cheap at scale | Complex setup, poor DX, no templates | Team velocity |
 
 #### Implementation Notes
-- Server function `sendEmail({ to, templateId, params })`
+- Server action `sendEmail({ to, templateId, params })`
 - Store templates in Brevo; reference by ID
 - Supabase Auth email config → Brevo SMTP
 - Webhook endpoint for bounce/complaint suppression list sync
@@ -370,7 +410,7 @@ Need auth with:
 - RLS integration
 
 #### Decision
-**Supabase Auth** as identity provider. **Server-side session validation** in TanStack Start server functions (not client-side).
+**Supabase Auth** as identity provider. **Server-side session validation** in Next.js Server Actions / middleware (not client-side).
 
 #### Consequences
 **Positive**:
@@ -382,21 +422,21 @@ Need auth with:
 
 **Negative**:
 - Extra network hop (Worker → Supabase Auth) per request
-- Must handle session expiry/refresh in server functions
+- Must handle session expiry/refresh in server actions
 - Cookies must be set securely (HttpOnly, Secure, SameSite)
 
 **Neutral**:
 - Use `@supabase/ssr` package for cookie-based session handling
 
 #### Implementation Notes
-- `createServerClient()` in TanStack Start middleware/loader
+- `createServerClient()` in Server Actions / middleware / Server Components
 - Cookies: `sb-<project>-auth-token` (access + refresh)
-- Server function wrapper: `getUser()` → throws if invalid
+- Server action wrapper: `getUser()` → throws if invalid
 - RLS policies: `auth.uid() = user_id`
 - OAuth: Configure redirect URLs in Supabase + provider dashboards
 
 #### Validation Criteria
-- [ ] Unauthenticated requests blocked at server function level
+- [ ] Unauthenticated requests blocked at server action level
 - [ ] RLS prevents cross-user data access
 - [ ] OAuth flow works (GitHub, Google)
 - [ ] MFA enrollment + challenge works
@@ -404,7 +444,7 @@ Need auth with:
 
 ---
 
-### ADR-007: API Layer — TanStack Start Server Functions (RPC)
+### ADR-007: API Layer — Next.js Server Actions + Route Handlers (RPC)
 
 **Status**: Accepted
 **Date**: [YYYY-MM-DD]
@@ -416,41 +456,50 @@ Need type-safe API between frontend and backend without:
 - Separate backend deployment
 
 #### Decision
-Use **TanStack Start Server Functions** (`createServerFn`) as the primary API layer — RPC-style, type-safe, co-located with routes.
+Use **Next.js Server Actions** (`"use server"`) as the primary mutation layer (RPC-style, co-located) + **Route Handlers** (`app/api/.../route.ts`) pour les endpoints externes (webhooks, API publique). Validation d'entrée avec **Zod** sur chaque action/route.
 
 #### Consequences
 **Positive**:
-- End-to-end TypeScript types (input/output validated with Zod)
-- Runs on Cloudflare Workers (edge)
-- Automatic request/response serialization
+- End-to-end TypeScript types (inputs validated with Zod)
+- RSC-native — pas de fetch client pour les mutations
 - Middleware support (auth, rate limit, logging)
 - No separate API gateway needed
 
 **Negative**:
-- Tight coupling (frontend imports server functions directly)
-- Not a public API — external consumers need REST wrapper
-- Testing requires mocking or integration test setup
+- Server Actions ne sont pas une API publique — consumers externes passent par Route Handlers
+- Tests require mocking ou setup d'intégration
+- Attention aux re-renders / progressive enhancement
 
 **Neutral**:
-- Public API (if needed) built as separate Hono/Express app on Workers
+- API publique (si nécessaire) buildée comme Route Handlers séparés
 
 #### Implementation Notes
 ```typescript
-// server-functions/get-user.ts
-export const getUser = createServerFn({ method: 'GET' })
-  .validator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
-  .handler(async ({ data }) => {
-    const user = await getUserFromDb(data.id);
-    return user;
-  });
+// app/actions/get-user.ts
+"use server";
+import { z } from "zod";
+import { createClient } from "@/lib/supabase/server";
 
-// Component usage
-const { data: user } = useQuery({ queryKey: ['user', id], queryFn: () => getUser({ id }) });
+const schema = z.object({ id: z.string().uuid() });
+
+export async function getUser(input: unknown) {
+  const { id } = schema.parse(input);
+  const supabase = createClient();
+  const { data, error } = await supabase.from("profiles").select("*").eq("id", id).single();
+  if (error) throw error;
+  return data;
+}
+
+// Route Handler : app/api/webhooks/stripe/route.ts
+import { NextRequest, NextResponse } from "next/server";
+export async function POST(req: NextRequest) {
+  // verify webhook signature, process event, return 200
+}
 ```
 
 #### Validation Criteria
 - [ ] TypeScript catches input/output mismatches at compile time
-- [ ] Server functions deploy to Cloudflare Workers
+- [ ] Server Actions + Route Handlers deploy to Cloudflare Pages
 - [ ] Middleware runs on every call (auth, rate limit)
 - [ ] Error serialization works (Zod errors → client)
 
@@ -468,7 +517,7 @@ Need to manage:
 - Global config (theme, feature flags)
 
 #### Decision
-- **Server state**: TanStack Query (built into TanStack Start)
+- **Server state**: TanStack Query (React Query) pour les pages client interactives
 - **Client UI state**: React Context + `useReducer` (lightweight)
 - **Global config**: React Context (theme, user preferences)
 - **No**: Redux, Zustand, Jotai, Signals
@@ -485,7 +534,7 @@ Need to manage:
 - No devtools for client state (unlike Redux/Zustand)
 
 #### Implementation Notes
-- `QueryClientProvider` at app root (TanStack Start default)
+- `QueryClientProvider` at app root (React Query default)
 - `queryClient.invalidateQueries({ queryKey: ['projects'] })` after mutations
 - Client state contexts: `UIStateProvider`, `ThemeProvider`
 - Persist client preferences to localStorage + sync to Supabase on login
@@ -512,7 +561,7 @@ Need:
 #### Decision
 - **Migrations**: Supabase CLI (`supabase migration new`, `supabase db push`)
 - **Type generation**: `supabase gen types typescript` → `database.types.ts`
-- **Runtime validation**: Zod schemas mirroring DB (shared with server functions)
+- **Runtime validation**: Zod schemas mirroring DB (shared with server actions)
 - **ORM**: **None** — raw SQL via Supabase client (PostgREST) or Postgres.js for complex queries
 
 #### Consequences
@@ -531,7 +580,7 @@ Need:
 #### Implementation Notes
 - `supabase/migrations/` in repo (committed)
 - CI runs `supabase db reset --linked` on test DB
-- Zod schemas in `shared/schemas/` (imported by server functions + client)
+- Zod schemas in `shared/schemas/` (imported by server actions + client)
 - Use `supabase.from('table').select()` for simple queries
 - Use `postgres` (Postgres.js) for complex reporting queries
 
@@ -556,7 +605,7 @@ Need:
 - Alerting
 
 #### Decision
-- **Errors**: Sentry (React + Cloudflare Workers SDKs)
+- **Errors**: Sentry (React + Next.js SDK)
 - **Logs**: Cloudflare Workers Logs (real-time tail, Logpush to R2/S3)
 - **Metrics**: Cloudflare Workers Analytics + custom Sentry metrics
 - **Uptime**: Better Uptime / UptimeRobot (external)
@@ -574,10 +623,10 @@ Need:
 - No distributed tracing (yet)
 
 #### Implementation Notes
-- `@sentry/react` + `@sentry/cloudflare` (Wrangler integration)
+- `@sentry/nextjs` + instrumentation
 - `wrangler.toml` → `sentry.upload_source_maps`
 - Logpush: Workers → R2 bucket → Athena/ClickHouse for analysis
-- Custom spans for server function duration
+- Custom spans for server action duration
 
 #### Validation Criteria
 - [ ] Errors appear in Sentry with stack traces
@@ -619,12 +668,12 @@ Need:
 ```mermaid
 graph TB
     subgraph Client["Browser"]
-        UI[TanStack Start App]
+        UI[Next.js App]
     end
 
     subgraph Edge["Cloudflare Edge Network"]
-        Pages[Cloudflare Pages<br/>TanStack Start SSR]
-        Functions[Server Functions<br/>RPC API]
+        Pages[Cloudflare Pages<br/>Next.js SSR]
+        Functions[Server Actions + Route Handlers]
         Workers[Cloudflare Workers<br/>Cron, Queues, Webhooks]
     end
 
@@ -642,7 +691,7 @@ graph TB
     end
 
     UI -->|HTTPS| Pages
-    Pages -->|SSR| Functions
+    Pages -->|SSR / Server Actions| Functions
     Functions -->|PostgREST| Postgres
     Functions -->|JWT Verification| Auth
     Functions -->|Webhooks| Stripe
@@ -661,25 +710,25 @@ graph TB
 
 | Area | Decision | Key Config |
 |------|----------|------------|
-| **Framework** | TanStack Start | `@tanstack/start`, `vite.config.ts` |
-| **Router** | TanStack Router | File-based, type-safe |
-| **Data Fetching** | TanStack Query | Server functions + `useQuery` |
+| **Framework** | Next.js 14 (App Router) | `app/`, Server Actions, Route Handlers |
+| **Routing** | Next.js App Router | File-based, layout.tsx/page.tsx |
+| **Data Fetching** | Server Components + TanStack Query | RSC fetch + `useQuery` pour interactif |
 | **Database** | Supabase (PostgreSQL) | RLS, Migrations via CLI |
 | **Auth** | Supabase Auth | SSR cookies, OAuth, MFA |
 | **Hosting** | Cloudflare Pages | `wrangler.toml`, edge runtime |
 | **Payments** | Stripe | Checkout, Billing, Portal |
 | **Email** | Brevo | Templates, Webhooks, SMTP |
-| **Error Tracking** | Sentry | React + Workers SDK |
+| **Error Tracking** | Sentry | Next.js SDK |
 | **Logs** | Cloudflare Logs + Logpush | R2 storage |
 | **Styling** | Tailwind CSS + CSS Variables | Design tokens → Tailwind config |
 | **Components** | shadcn/ui (Radix primitives) | CVA variants |
-| **Forms** | React Hook Form + Zod | Server function validators |
+| **Forms** | React Hook Form + Zod | Server Action validators |
 | **Testing** | Vitest (unit), Playwright (e2e) | CI on every PR |
 | **CI/CD** | GitHub Actions → Cloudflare Pages | Preview on PR, prod on main |
 
 ---
 
-> **Template Version**: 1.0  
-> **Last Updated**: [Date]  
-> **Owner**: [Tech Lead / Architect]  
+> **Template Version**: 1.1
+> **Last Updated**: [Date]
+> **Owner**: [Tech Lead / Architect]
 > **Review Cadence**: Per major decision or quarterly

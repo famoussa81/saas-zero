@@ -1,6 +1,6 @@
 # =============================================================================
-# GitHub Actions - Production Deployment
-# Zero-Risk SaaS Stack: TanStack Start + Supabase + Cloudflare Pages + Stripe + Brevo
+# GitHub Actions - Production Deployment (Vercel)
+# saas-zero: Next.js 14 + Supabase + Vercel + Stripe + Brevo
 # Manual trigger + push to main with manual approval required
 # =============================================================================
 
@@ -10,34 +10,32 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Target environment'
+        description: "Target environment"
         required: true
-        default: 'production'
+        default: "production"
         type: choice
         options:
           - production
           - staging
       skip_smoke_tests:
-        description: 'Skip smoke tests (emergency only)'
+        description: "Skip smoke tests (emergency only)"
         required: false
         default: false
         type: boolean
       force_deploy:
-        description: 'Force deploy even if CI failed'
+        description: "Force deploy even if CI failed"
         required: false
         default: false
         type: boolean
   push:
     branches: [main]
     paths:
-      - 'workers/**'
-      - 'supabase/migrations/**'
-      - '.github/workflows/deploy.yml'
+      - "supabase/migrations/**"
+      - ".github/workflows/deploy.yml"
 
 env:
-  NODE_VERSION: '20'
-  PNPM_VERSION: '9'
-  WRANGLER_VERSION: '3'
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9"
 
 concurrency:
   group: deploy-${{ github.ref }}-${{ github.event.inputs.environment || 'production' }}
@@ -45,8 +43,6 @@ concurrency:
 
 permissions:
   contents: read
-  id-token: write
-  pages: write
   deployments: write
 
 jobs:
@@ -68,10 +64,9 @@ jobs:
       - name: Check CI status
         id: check
         run: |
-          # Check if the latest CI run for this SHA passed
           CI_STATUS=$(gh run list --commit ${{ github.sha }} --workflow=CI --limit=1 --json conclusion --jq '.[0].conclusion')
           echo "CI Status: $CI_STATUS"
-          
+
           if [ "${{ github.event.inputs.force_deploy }}" = "true" ]; then
             echo "Force deploy enabled - skipping CI check"
             echo "ci_passed=true" >> $GITHUB_OUTPUT
@@ -88,15 +83,16 @@ jobs:
       - name: Verify required secrets
         run: |
           REQUIRED_SECRETS=(
-            "CLOUDFLARE_API_TOKEN"
-            "CLOUDFLARE_ACCOUNT_ID"
+            "VERCEL_TOKEN"
+            "VERCEL_ORG_ID"
+            "VERCEL_PROJECT_ID"
             "SUPABASE_ACCESS_TOKEN"
             "SUPABASE_PROJECT_REF"
             "STRIPE_SECRET_KEY"
             "STRIPE_WEBHOOK_SECRET"
             "BREVO_API_KEY"
           )
-          
+
           for secret in "${REQUIRED_SECRETS[@]}"; do
             if [ -z "${{ secrets[$secret] }}" ]; then
               echo "❌ Missing required secret: $secret"
@@ -126,72 +122,10 @@ jobs:
         shell: bash
 
   # ===========================================================================
-  # DEPLOY WORKERS - Cloudflare Workers deployment
+  # DEPLOY VERCELL - Production deployment
   # ===========================================================================
-  deploy-workers:
-    name: Deploy Workers
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: [pre-deploy-check, approval]
-    if: ${{ needs.pre-deploy-check.outputs.ci_passed == 'true' }}
-    environment: production
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-        working-directory: ./workers
-
-      - name: Build workers
-        run: pnpm run build
-        working-directory: ./workers
-
-      - name: Install Wrangler
-        run: npm install -g wrangler@${{ env.WRANGLER_VERSION }}
-
-      - name: Deploy to Cloudflare Workers
-        run: |
-          wrangler deploy --env production
-        working-directory: ./workers
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
-
-      - name: Verify deployment
-        run: |
-          sleep 5
-          WORKER_URL=$(wrangler deployments list --env production --json | jq -r '.[0].url')
-          echo "Worker deployed to: $WORKER_URL"
-          
-          # Health check
-          curl -f "$WORKER_URL/health" || {
-            echo "❌ Health check failed"
-            exit 1
-          }
-          echo "✅ Workers deployment verified"
-
-  # ===========================================================================
-  # DEPLOY PAGES - Cloudflare Pages deployment
-  # ===========================================================================
-  deploy-pages:
-    name: Deploy Pages
+  deploy-vercel:
+    name: Deploy to Vercel
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: [pre-deploy-check, approval]
@@ -210,38 +144,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: ./test-project
 
-      - name: Build for Pages
-        run: pnpm run build
-        working-directory: ./test-project
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+      - name: Deploy to Vercel (Production)
+        uses: amondnet/vercel-action@v20
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: saas-app
-          directory: ./test-project/dist
-          branch: main
-          env: production
-
-      - name: Verify Pages deployment
-        run: |
-          PAGES_URL=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects/saas-app/deployments" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" | jq -r '.result[0].url')
-          echo "Pages deployed to: $PAGES_URL"
-          
-          # Health check
-          curl -f "$PAGES_URL" || {
-            echo "❌ Pages health check failed"
-            exit 1
-          }
-          echo "✅ Pages deployment verified"
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: "--prod"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-comment: false
 
   # ===========================================================================
   # DEPLOY SUPABASE - Database migrations
@@ -281,104 +197,6 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
-      - name: Generate and commit updated types
-        run: |
-          supabase gen types typescript --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} > ./workers/database.types.ts
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-
-      - name: Commit type changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: update database types after migration [skip ci]"
-          file_pattern: workers/database.types.ts
-          branch: ${{ github.head_ref || github.ref_name }}
-
-  # ===========================================================================
-  # UPDATE STRIPE WEBHOOK - Configure webhook endpoints
-  # ===========================================================================
-  update-stripe-webhook:
-    name: Update Stripe Webhook
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: [deploy-workers, deploy-supabase]
-    if: ${{ needs.pre-deploy-check.outputs.ci_passed == 'true' }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Get worker URL
-        id: worker-url
-        run: |
-          WORKER_URL=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/workers/scripts/stripe-webhook" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" | jq -r '.result.url')
-          echo "url=$WORKER_URL" >> $GITHUB_OUTPUT
-
-      - name: Update Stripe webhook endpoint
-        run: |
-          WEBHOOK_URL="${{ steps.worker-url.outputs.url }}/api/webhooks/stripe"
-          echo "Updating Stripe webhook to: $WEBHOOK_URL"
-          
-          # Update via Stripe CLI or API
-          stripe webhook_endpoints update ${{ secrets.STRIPE_WEBHOOK_ENDPOINT_ID }} \
-            --url="$WEBHOOK_URL" \
-            --enabled-events="checkout.session.completed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted,invoice.payment_succeeded,invoice.payment_failed"
-        env:
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-
-      - name: Verify webhook endpoint
-        run: |
-          stripe webhook_endpoints list --limit=5
-        env:
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-
-  # ===========================================================================
-  # VERIFY BREVO DOMAIN - Email domain verification
-  # ===========================================================================
-  verify-brevo-domain:
-    name: Verify Brevo Domain
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: [deploy-workers]
-    if: ${{ needs.pre-deploy-check.outputs.ci_passed == 'true' }}
-    steps:
-      - name: Verify Brevo domain configuration
-        run: |
-          echo "Verifying Brevo domain configuration..."
-          
-          # Check domain status via Brevo API
-          DOMAIN_STATUS=$(curl -s -X GET "https://api.brevo.com/v3/senders/domains" \
-            -H "api-key: ${{ secrets.BREVO_API_KEY }}" \
-            -H "accept: application/json" | jq -r '.domains[] | select(.domain=="your-domain.com") | .status')
-          
-          echo "Domain status: $DOMAIN_STATUS"
-          
-          if [ "$DOMAIN_STATUS" != "active" ]; then
-            echo "⚠️ Domain not verified. Please verify DNS records in Brevo dashboard."
-            echo "Required records:"
-            echo "  - DKIM: brevo._domainkey.your-domain.com"
-            echo "  - SPF: v=spf1 include:spf.brevo.com ~all"
-            echo "  - DMARC: v=DMARC1; p=quarantine; rua=mailto:dmarc@your-domain.com"
-          else
-            echo "✅ Brevo domain verified and active"
-          fi
-
-      - name: Test email sending
-        run: |
-          echo "Sending test email via Brevo worker..."
-          
-          WORKER_URL=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/workers/scripts/brevo-email" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" | jq -r '.result.url')
-          
-          curl -s -X POST "$WORKER_URL/api/email/send" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "to": "test@your-domain.com",
-              "subject": "Deployment Test",
-              "htmlContent": "<p>This is a test email from the deployment pipeline.</p>",
-              "tags": ["deployment", "test"]
-            }' || echo "⚠️ Test email failed (may be expected if domain not verified)"
-
   # ===========================================================================
   # SMOKE TESTS - Post-deployment verification
   # ===========================================================================
@@ -386,7 +204,7 @@ jobs:
     name: Post-Deploy Smoke Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [deploy-workers, deploy-pages, deploy-supabase, update-stripe-webhook, verify-brevo-domain]
+    needs: [deploy-vercel, deploy-supabase]
     if: ${{ needs.pre-deploy-check.outputs.ci_passed == 'true' && github.event.inputs.skip_smoke_tests != 'true' }}
     steps:
       - name: Checkout repository
@@ -401,50 +219,26 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: ./workers
 
-      - name: Run smoke tests against production
+      - name: Verify production URL
         run: |
-          pnpm test:smoke -- --env=production
-        working-directory: ./workers
-        env:
-          PRODUCTION_API_URL: ${{ steps.worker-url.outputs.url }}
-          PRODUCTION_PAGES_URL: ${{ steps.pages-url.outputs.url }}
+          PROD_URL="https://${{ secrets.VERCEL_PROJECT_ID }}.vercel.app"
+          echo "Production URL: $PROD_URL"
 
-      - name: Verify health endpoints
-        run: |
-          WORKER_URL="${{ steps.worker-url.outputs.url }}"
-          
-          # Health check
-          curl -f "$WORKER_URL/health" | jq '.'
-          
-          # Supabase connectivity
-          curl -f "$WORKER_URL/health/supabase" | jq '.'
-          
-          # Stripe connectivity
-          curl -f "$WORKER_URL/health/stripe" | jq '.'
-          
-          # Brevo connectivity
-          curl -f "$WORKER_URL/health/brevo" | jq '.'
-
-      - name: Verify critical user flows
-        run: |
-          PAGES_URL="${{ steps.pages-url.outputs.url }}"
-          
           # Home page
-          curl -f "$PAGES_URL" -o /dev/null -w "%{http_code}" | grep -q "200"
-          
+          curl -f "$PROD_URL" -o /dev/null -w "%{http_code}" | grep -q "200"
+          echo "✅ Home page OK"
+
           # Auth pages
-          curl -f "$PAGES_URL/login" -o /dev/null -w "%{http_code}" | grep -q "200"
-          curl -f "$PAGES_URL/signup" -o /dev/null -w "%{http_code}" | grep -q "200"
-          
-          # Dashboard (should redirect to login)
-          curl -f "$PAGES_URL/dashboard" -o /dev/null -w "%{http_code}" | grep -q "302"
-          
+          curl -f "$PROD_URL/fr/connexion" -o /dev/null -w "%{http_code}" | grep -q "200"
+          echo "✅ Login page OK"
+          curl -f "$PROD_URL/fr/inscription" -o /dev/null -w "%{http_code}" | grep -q "200"
+          echo "✅ Signup page OK"
+
           echo "✅ All critical user flows verified"
 
   # ===========================================================================
@@ -479,49 +273,13 @@ jobs:
           echo "**Timestamp:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
           echo ""
           echo "### Deployed Components"
-          echo "- ✅ Cloudflare Workers"
-          echo "- ✅ Cloudflare Pages"
+          echo "- ✅ Vercel (Next.js)"
           echo "- ✅ Supabase Migrations"
-          echo "- ✅ Stripe Webhook"
-          echo "- ✅ Brevo Domain"
           echo ""
           echo "### Smoke Tests"
           echo "${{ needs.smoke-tests.result == 'success' && '✅ Passed' || '❌ Failed' }}"
           echo ""
           echo "[View Workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-
-      - name: Send Slack notification
-        if: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          payload: |
-            {
-              "text": "${{ steps.status.outputs.message }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ steps.status.outputs.message }}\n*Commit:* ${{ needs.pre-deploy-check.outputs.sha }}\n*Environment:* ${{ github.event.inputs.environment || 'production' }}\n*Triggered by:* ${{ github.actor }}"
-                  }
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Workflow"
-                      },
-                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                    }
-                  ]
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Fail if deployment failed
         if: ${{ steps.status.outputs.status == 'failure' }}

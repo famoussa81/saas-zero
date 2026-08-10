@@ -5,28 +5,31 @@ import {
   allPosts,
   allPages,
   allComponents,
-} from "@/.content-collections/generated";
+} from "../src/lib/content/generated";
 
 export type { Post, Page, Component };
 
 export async function getAllPosts(): Promise<Post[]> {
   return allPosts
-    .filter((post) => !post.draft)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    .filter((post: Post) => !post.draft)
+    .sort(
+      (a: Post, b: Post) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  return allPosts.find((post) => post.slug === slug) || null;
+  return allPosts.find((post: Post) => post.slug === slug) || null;
 }
 
 export async function getAllPages(): Promise<Page[]> {
   return allPages
-    .filter((page) => !page.hidden)
-    .sort((a, b) => a.order - b.order);
+    .filter((page: Page) => !page.hidden)
+    .sort((a: Page, b: Page) => a.order - b.order);
 }
 
 export async function getPageBySlug(slug: string): Promise<Page | null> {
-  return allPages.find((page) => page.slug === slug) || null;
+  return allPages.find((page: Page) => page.slug === slug) || null;
 }
 
 export async function getAllComponents(): Promise<Component[]> {
@@ -36,7 +39,7 @@ export async function getAllComponents(): Promise<Component[]> {
 export async function getComponentBySlug(
   slug: string,
 ): Promise<Component | null> {
-  return allComponents.find((c) => c.slug === slug) || null;
+  return allComponents.find((c: Component) => c.slug === slug) || null;
 }
 
 export async function getAllContent() {

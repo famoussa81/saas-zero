@@ -1,8 +1,8 @@
-# Zero-Risk SaaS Stack
+﻿# Zero-Risk SaaS Stack
 
 > **Ship with confidence. Verify before deploy. Zero risk, maximum velocity.**
 
-A complete, production-ready SaaS starter built on the **Zero-Risk methodology** — where every feature is verified locally before it touches production, every deployment is gated by 13 quality checks, and the developer experience is optimized for flow, not friction.
+A complete, production-ready SaaS starter built on the **Zero-Risk methodology** — where every feature is verified locally before it touches production, every deployment is gated by 14 quality checks, and the developer experience is optimized for flow, not friction.
 
 ---
 
@@ -13,7 +13,7 @@ A complete, production-ready SaaS starter built on the **Zero-Risk methodology**
 3. [Architecture Overview](#-architecture-overview)
 4. [Commands Reference](#-commands-reference)
 5. [Design System Selection](#-design-system-selection)
-6. [Quality Gates (13 Gates)](#-quality-gates-13-gates)
+6. [Quality Gates (14 Gates)](#-quality-gates-14-gates)
 7. [CI/CD Pipeline](#-cicd-pipeline)
 8. [Deployment Guide](#-deployment-guide)
 9. [Troubleshooting](#-troubleshooting)
@@ -51,7 +51,7 @@ Traditional SaaS development follows a linear path: **code → push → pray**. 
 
 | Principle                | Description                                                           |
 | ------------------------ | --------------------------------------------------------------------- |
-| **Verify Before Ship**   | No code reaches production without passing 13 quality gates locally   |
+| **Verify Before Ship**   | No code reaches production without passing 14 quality gates locally   |
 | **Local-First DX**       | All verification runs on your machine — no CI wait times for feedback |
 | **Fail Fast, Fail Loud** | Errors surface immediately with actionable diagnostics                |
 | **One Command**          | `/ns-ship`, `/ns-verify`, `/ns-ship-deploy` — that's all you need     |
@@ -63,7 +63,7 @@ Traditional SaaS development follows a linear path: **code → push → pray**. 
 | -------------- | --------------------- | -------------------------------------------------------------------------------------------- |
 | **Framework**  | Next.js 14            | Full-stack React with App Router file-based routing, SSR, server actions, and type-safe APIs |
 | **Database**   | Supabase (PostgreSQL) | Auth, realtime, storage, edge functions                                                      |
-| **Deployment** | Cloudflare Pages      | Global edge network, instant rollbacks, zero-config                                          |
+| **Deployment** | Vercel                | Preview deploys, instant rollbacks, edge network, zero-config                                |
 | **Payments**   | Stripe                | Subscriptions, checkout, billing portal, webhooks                                            |
 | **Email**      | Brevo (Sendinblue)    | Transactional & marketing emails, templates                                                  |
 | **Styling**    | Your Choice           | shadcn/ui, Radix, Tailwind, or bring your own                                                |
@@ -82,7 +82,7 @@ git >= 2.40.0
 
 # Optional but recommended
 gh CLI (for GitHub integration)
-wrangler CLI (for Cloudflare)
+vercel CLI (for Vercel deploys)
 supabase CLI (for local dev)
 ```
 
@@ -90,7 +90,7 @@ supabase CLI (for local dev)
 
 ```bash
 # Clone and bootstrap in one go
-npx create-zero-risk-saas my-app --design-system=shadcn --database=supabase --deploy=cloudflare
+npx create-zero-risk-saas my-app --design-system=shadcn --database=supabase --deploy=vercel
 
 # Or if you already have the repo
 cd my-app
@@ -133,7 +133,7 @@ pnpm dev
 │        │                   │                   │                     │
 │        ▼                   ▼                   ▼                     │
 │  ┌─────────────────────────────────────────────────────────────┐    │
-│  │                    TANSTACK START                           │    │
+│  │                    NEXT.JS 14                            │    │
 │  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐       │    │
 │  │  │ Routes   │ │  API     │ │  Middle  │ │  Auth    │       │    │
 │  │  │ (File)   │ │  Routes  │ │  ware    │ │  (Supa)  │       │    │
@@ -142,7 +142,7 @@ pnpm dev
 │        │                   │                   │                     │
 │        ▼                   ▼                   ▼                     │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌──────────┐   │
-│  │  Supabase   │  │  Stripe     │  │  Brevo      │  │Cloudflare│   │
+│  │  Supabase   │  │  Stripe     │  │  Brevo      │  │  Vercel  │   │
 │  │  (DB/Auth)  │  │  (Payments) │  │  (Email)    │  │  (Edge)  │   │
 │  └─────────────┘  └─────────────┘  └─────────────┘  └──────────┘   │
 │                                                                        │
@@ -261,7 +261,7 @@ $ pnpm ns:ship "add team settings page with role management"
 ### `/ns-verify` — Quality Gates
 
 ```bash
-# Run all 13 gates
+# Run all 14 gates
 pnpm ns:verify
 
 # Run specific gates
@@ -274,7 +274,7 @@ pnpm ns:verify --watch
 pnpm ns:verify --ci
 ```
 
-**The 13 Gates (see [Quality Gates](#-quality-gates-13-gates) for details):**
+**The 14 Gates (see [Quality Gates](#-quality-gates-14-gates) for details):**
 
 | #   | Gate              | Command                   | Time |
 | --- | ----------------- | ------------------------- | ---- |
@@ -291,6 +291,7 @@ pnpm ns:verify --ci
 | 11  | Dependency Check  | `depcheck`                | ~2s  |
 | 12  | Schema Validation | `supabase db diff`        | ~3s  |
 | 13  | Smoke Tests       | `pnpm test:smoke`         | ~10s |
+| 14  | Design Audit      | `pnpm design:check`       | ~5s  |
 
 ### `/ns-ship-deploy` — Deploy
 
@@ -318,14 +319,14 @@ pnpm ns:ship-deploy production --canary=10       # 10% canary release
 staging deploy:
   1. /ns-verify (all gates must pass)
   2. Build production bundle
-  3. Deploy to Cloudflare Pages preview URL
+  3. Deploy to Vercel preview URL
   4. Run smoke tests against preview
   5. Post preview URL to PR/comment
 
 production deploy:
   1. /ns-verify (all gates must pass)
   2. Create deployment tag (v1.2.0)
-  3. Deploy to Cloudflare Pages production
+  3. Deploy to Vercel production
   4. Run smoke tests against production
   5. Verify Stripe webhooks
   6. Send deployment notification (Slack/Email)
@@ -419,9 +420,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
 ---
 
-## ✅ Quality Gates (13 Gates)
+## ✅ Quality Gates (14 Gates)
 
-Every commit must pass all 13 gates before merging. Gates run in parallel where possible.
+Every commit must pass all 14 gates before merging. Gates run in parallel where possible.
 
 ### Gate Details
 
@@ -716,16 +717,13 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm build
 
-      - name: Deploy to Cloudflare Pages (Preview)
-        uses: cloudflare/pages-action@v1
+      - name: Deploy to Vercel (Preview)
+        uses: amondnet/vercel-action@v20
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: my-app-staging
-          directory: dist
-          branch: develop
-        env:
-          WRANGLER_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          github-comment: false
 
   deploy-production:
     name: Deploy to Production
@@ -756,17 +754,16 @@ jobs:
           git tag "v$VERSION"
           git push origin "v$VERSION"
 
-      - name: Deploy to Cloudflare Pages (Production)
-        uses: cloudflare/pages-action@v1
+      - name: Deploy to Vercel (Production)
+        uses: amondnet/vercel-action@v20
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: my-app
-          directory: dist
-          branch: main
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          production: true
 
       - name: Run Smoke Tests
-        run: pnpm test:smoke --url=https://my-app.pages.dev
+        run: pnpm test:smoke --url=https://${{ secrets.VERCEL_PROJECT_ID }}.vercel.app
 
       - name: Notify Deployment
         run: |
@@ -781,7 +778,7 @@ jobs:
 │                         CI/CD PIPELINE                              │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                     │
-│   Push/PR ──▶ [Verify: 13 Gates] ──▶ Pass? ──▶ No ──▶ ❌ Block     │
+│   Push/PR ──▶ [Verify: 14 Gates] ──▶ Pass? ──▶ No ──▶ ❌ Block     │
 │                    │                         │                     │
 │                    │ Yes                     │                     │
 │                    ▼                         ▼                     │
@@ -822,7 +819,7 @@ jobs:
 
 # Core
 NODE_ENV=production
-NEXT_PUBLIC_APP_URL=https://my-app.pages.dev
+NEXT_PUBLIC_APP_URL=https://my-app.vercel.app
 NEXT_PUBLIC_APP_NAME="My SaaS"
 
 # Supabase
@@ -842,10 +839,10 @@ BREVO_API_KEY=xkeysib-...
 BREVO_SENDER_EMAIL=noreply@myapp.com
 BREVO_SENDER_NAME="My App"
 
-# Cloudflare
-CLOUDFLARE_ACCOUNT_ID=...
-CLOUDFLARE_API_TOKEN=...
-CLOUDFLARE_PAGES_PROJECT=my-app
+# Vercel
+VERCEL_TOKEN=...
+VERCEL_ORG_ID=...
+VERCEL_PROJECT_ID=...
 
 # Optional: Analytics, Error Tracking
 NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
@@ -885,7 +882,7 @@ supabase gen types typescript --local > src/types/supabase.ts
 #    - Monthly subscription
 #    - Yearly subscription
 # 4. Set up webhook endpoint
-#    - URL: https://my-app.pages.dev/api/stripe/webhook
+#    - URL: https://my-app.vercel.app/api/stripe/webhook
 #    - Events: checkout.session.completed, customer.subscription.*, invoice.payment_failed
 # 5. Configure Customer Portal
 # 6. Test with Stripe CLI
@@ -909,25 +906,25 @@ curl -X POST https://api.brevo.com/v3/smtp/email \
   -d '{"to":[{"email":"test@example.com"}],"templateId":1}'
 ```
 
-### Cloudflare Pages Setup
+### Vercel Setup
 
 ```bash
-# 1. Install Wrangler
-npm install -g wrangler
+# 1. Install Vercel CLI
+npm install -g vercel
 
 # 2. Login
-wrangler login
+vercel login
 
-# 3. Create Pages project
-wrangler pages project create my-app --production-branch=main
+# 3. Link project
+vercel link
 
 # 4. Configure build
+# Framework preset: Next.js (auto-detected)
 # Build command: pnpm build
-# Output directory: dist
-# Node version: 20
+# Output directory: .next
 
-# 5. Add environment variables in Cloudflare Dashboard
-# Pages > my-app > Settings > Environment variables
+# 5. Add environment variables in Vercel Dashboard
+# Project > Settings > Environment Variables
 
 # 6. Custom domain (optional)
 # Pages > my-app > Custom domains > Add domain
@@ -961,7 +958,7 @@ pnpm ns:ship-deploy list
 ```bash
 # Automated smoke tests run after every deploy
 # Manual verification checklist:
-# ☐ Health endpoint: https://my-app.pages.dev/api/health
+# ☐ Health endpoint: https://my-app.vercel.app/api/health
 # ☐ Home page loads
 # ☐ Sign up flow works
 # ☐ Sign in flow works
@@ -984,7 +981,7 @@ pnpm ns:ship-deploy list
 | **Supabase types out of sync**   | Type errors on `supabase.from('table')`        | Schema changed but types not regenerated               | `supabase db reset && supabase gen types typescript --local > src/types/supabase.ts`   |
 | **Stripe webhook fails**         | 400/500 on `/api/stripe/webhook`               | Wrong webhook secret or missing events                 | Verify `STRIPE_WEBHOOK_SECRET` matches Stripe Dashboard; check event selection         |
 | **Brevo emails not sending**     | No emails received, no errors in logs          | Unverified sender domain or template ID wrong          | Verify domain in Brevo; check template IDs in `src/lib/email/templates.ts`             |
-| **Cloudflare deploy fails**      | "Build failed" in Pages dashboard              | Build command wrong or env vars missing                | Check `package.json` build script; verify all env vars in Pages settings               |
+| **Vercel deploy fails**          | "Build failed" in Vercel dashboard             | Build command wrong or env vars missing                | Check `package.json` build script; verify all env vars in Vercel settings              |
 | **Hydration mismatch**           | "Text content does not match" in console       | Server/client render difference (date, random, window) | Use `useEffect` for client-only code; `suppressHydrationWarning` for known differences |
 | **RLS policy blocks query**      | "Row level security policy violation"          | Missing or incorrect RLS policy                        | Check `supabase/policies/`; ensure `auth.uid()` matches user                           |
 | **Bundle size exceeded**         | `bundlesize` gate fails                        | Large dependency added                                 | Run `pnpm analyze` to visualize; consider dynamic import or lighter alternative        |
@@ -1156,7 +1153,7 @@ SOFTWARE.
 
 - **Next.js** — For the framework, routing, and server components
 - **Supabase** — For the best PostgreSQL platform
-- **Cloudflare** — For the edge network that makes deployment instant
+- **Vercel** — For the edge network that makes deployment instant
 - **Stripe** — For payment infrastructure that just works
 - **Brevo** — For reliable email delivery
 - **shadcn/ui** — For beautiful, accessible components

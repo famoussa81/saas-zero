@@ -1,3 +1,8 @@
+---
+name: saas-qa-e2e
+description: Playwright E2E pour 3 flux critiques SaaS (Auth, Billing, Core Journey) + responsive, accessibilité, visual regression.
+---
+
 # Agent: `saas-qa-e2e`
 
 > **Rôle** : Playwright E2E tests pour 3 flux critiques SaaS (Auth, Billing, Core Journey) + responsive, accessibilité, visual regression.

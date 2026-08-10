@@ -25,7 +25,7 @@ crée un SaaS complet et beau (wow, zéro bug, rétention) de A à Z.
 6. **Dashboard** : stats (tâches faites, actives, par membre), activité récente.
 7. **Billing** : 3 plans (Free/Pro/Entreprise), Stripe : abonnement + portail + webhooks.
 8. **Admin** : vue users + abonnements, stats internes.
-9. **Qualité** : 13 gates + review + fail-closed + k6 + Sentry.
+9. **Qualité** : 14 gates + review + fail-closed + k6 + Sentry.
 
 ### Out of scope (v2+)
 
@@ -44,10 +44,10 @@ crée un SaaS complet et beau (wow, zéro bug, rétention) de A à Z.
 | Sécurité      | CSP, HSTS, rate limiting sur auth/billing        |
 | i18n          | optionnel (fr/en, YAGNI par défaut)              |
 
-## Quality Gates (13)
+## Quality Gates (14)
 
 1. typecheck 2. lint 3. test 4. e2e 5. visual 6. lighthouse 7. bundle 8. cwv
-2. hydration 10. rls 11. security 12. accessibility 13. contracts
+2. hydration 10. rls 11. security 12. accessibility 13. contracts 14. design
 
 ## Déploiement
 

@@ -1,3 +1,8 @@
+---
+name: saas-perf-auditor
+description: Lighthouse CI, bundle analysis, Core Web Vitals, hydration checks — gates de performance déterministes.
+---
+
 # Agent: `saas-perf-auditor`
 
 > **Rôle** : Lighthouse CI, bundle analysis, Core Web Vitals, hydration checks — performance gates déterministes.

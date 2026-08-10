@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { MDXRemote } from "next-mdx-remote/rsc";
 
 // =============================================================================
 // MDX component map — Basic HTML element overrides for CMS content
@@ -156,11 +156,15 @@ export const components: Record<
 };
 
 export function MDXComponents({
+  source,
   components: overrides,
-  ...props
 }: {
+  source: string;
   components?: Record<string, React.ComponentType<MDXComponentProps>>;
-  children: React.ReactNode;
 }) {
-  return <div className="prose prose-slate max-w-none">{props.children}</div>;
+  return (
+    <div className="prose prose-slate max-w-none">
+      <MDXRemote source={source} components={{ ...components, ...overrides }} />
+    </div>
+  );
 }

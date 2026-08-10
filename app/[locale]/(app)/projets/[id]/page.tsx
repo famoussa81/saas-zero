@@ -39,7 +39,7 @@ export default async function ProjectDetailPage({ params }: Props) {
     );
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

@@ -1,8 +1,8 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export function createClient() {
-  const cookieStore = cookies();
+export async function createClient() {
+  const cookieStore = await cookies();
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -12,18 +12,7 @@ export function createClient() {
         get(key: string) {
           return cookieStore.get(key)?.value;
         },
-        set(
-          key: string,
-          value: string,
-          options: {
-            maxAge?: number;
-            domain?: string;
-            path?: string;
-            sameSite?: "lax" | "strict" | "none";
-            secure?: boolean;
-            httpOnly?: boolean;
-          },
-        ) {
+        set(key: string, value: string, options: CookieOptions) {
           try {
             cookieStore.set(key, value, options);
           } catch {
@@ -31,17 +20,7 @@ export function createClient() {
             // when middleware refreshes the session.
           }
         },
-        remove(
-          key: string,
-          options: {
-            maxAge?: number;
-            domain?: string;
-            path?: string;
-            sameSite?: "lax" | "strict" | "none";
-            secure?: boolean;
-            httpOnly?: boolean;
-          },
-        ) {
+        remove(key: string, options: CookieOptions) {
           try {
             cookieStore.set(key, "", { ...options, maxAge: 0 });
           } catch {

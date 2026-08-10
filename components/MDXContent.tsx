@@ -1,7 +1,7 @@
 "use client";
 
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { components } from "@/components/MDXComponents";
+import { components } from "./MDXComponents";
 
 interface MDXContentProps {
   source: string;

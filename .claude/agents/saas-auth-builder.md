@@ -1,3 +1,8 @@
+---
+name: saas-auth-builder
+description: Auth flows complets — Supabase Auth, RLS policies, organisations/teams, MFA, SSO, invitations, sessions.
+---
+
 # Agent: `saas-auth-builder`
 
 > **Rôle** : Auth flows complets, Supabase Auth, RLS policies, organisations/teams, MFA, SSO, invitations, sessions.

@@ -11,7 +11,7 @@
 | ----------------------------------------------- | ------------------- | ------------------------------------------------------------------------ |
 | **Framework**                                   | Next.js 14          | App Router, SSR, file-based routing, Vite, server actions                |
 | **Database + Auth + Realtime + Edge + Storage** | Supabase            | PostgreSQL, Row Level Security (RLS) mandatory                           |
-| **Hosting + Edge Runtime**                      | Cloudflare Pages    | Workers runtime, zero cold-starts, global CDN                            |
+| **Hosting + Edge Runtime**                      | Vercel              | Edge runtime, preview deploys, global CDN                                |
 | **Billing**                                     | Stripe              | Subscriptions, one-time, usage-based, webhooks                           |
 | **Email**                                       | Brevo (Sendinblue)  | Transactional + marketing, templates, webhooks                           |
 | **Design System**                               | Chosen at discovery | Linear, Vercel, Stripe, Framer, or Custom (via `ns-design-system` skill) |
@@ -53,7 +53,7 @@
 ### Security
 
 - **No secrets in code** — all via environment variables.
-- **CSP headers** configured via Cloudflare Workers.
+- **CSP headers configured via Next.js headers / Vercel.
 - **Input validation** with Zod on every API endpoint.
 - **Rate limiting** on auth and billing endpoints.
 
@@ -82,14 +82,14 @@ All architectural decisions are recorded as **ADRs** in `/docs/adr/`.
 
 | ADR   | Title                                                           | Status   |
 | ----- | --------------------------------------------------------------- | -------- |
-| `001` | Next.js 14 over TanStack Start                                  | Accepted |
+| `001` | Next.js 14 as framework                                         | Accepted |
 | `002` | Supabase as unified backend                                     | Accepted |
-| `003` | Cloudflare Pages + Workers runtime                              | Accepted |
+| `003` | Vercel + Workers runtime                                        | Accepted |
 | `004` | Stripe for billing + Brevo for email                            | Accepted |
 | `005` | B2B (Organizations) vs B2C (Single user) — decided at discovery | Pending  |
 | `006` | Design system selection via `ns-design-system`                  | Pending  |
 | `007` | Motion tier system (Minimal/Moderate/Bold)                      | Accepted |
-| `008` | 13 deterministic quality gates (scripts, not LLM judgment)      | Accepted |
+| `008` | 14 deterministic quality gates (scripts, not LLM judgment)      | Accepted |
 | `009` | Impeccable audit integration for compliance                     | Accepted |
 
 > **To create a new ADR**: `npm run adr:new "Title"` → edit `/docs/adr/NNN-title.md` → commit.
@@ -133,11 +133,11 @@ The **only** way to ship features. Six phases, each with deterministic gates.
 
 - `saas-qa-e2e` → Playwright E2E: auth, billing, core flows
 - `saas-perf-auditor` → Lighthouse CI, bundle analysis, Core Web Vitals
-- **Gate**: All 13 quality gates pass (see §10)
+- **Gate**: All 14 quality gates pass (see §10)
 
 ### Phase 6: Deploy (5 min)
 
-- `wrangler pages deploy` → Cloudflare Pages
+- `vercel --prod`
 - Supabase migrations applied via GitHub Actions
 - Stripe/Brevo webhooks updated
 - **Gate**: Smoke tests on preview URL pass
@@ -149,7 +149,7 @@ The **only** way to ship features. Six phases, each with deterministic gates.
 | Command           | Description                         | Aliases            |
 | ----------------- | ----------------------------------- | ------------------ |
 | `/ns-ship "desc"` | Full discovery → deploy pipeline    | `/ship`            |
-| `/ns-verify`      | Run all 13 quality gates locally    | `/verify`, `/gate` |
+| `/ns-verify`      | Run all 14 quality gates locally    | `/verify`, `/gate` |
 | `/ns-ship-deploy` | Deploy only (assumes verify passed) | `/deploy`          |
 | `/ns-discovery`   | Run discovery phase only            |                    |
 | `/ns-scaffold`    | Run scaffold phase only             |                    |
@@ -224,9 +224,9 @@ BREVO_API_KEY=
 BREVO_SENDER_EMAIL=
 BREVO_SENDER_NAME=
 
-# Cloudflare
-CLOUDFLARE_ACCOUNT_ID=
-CLOUDFLARE_API_TOKEN=               # For wrangler deploy
+# Vercel
+# VERCEL_ORG_ID= (Vercel project org ID)
+VERCEL_TOKEN=...          # For vercel deploy
 ```
 
 ### Optional / Feature Flags
@@ -293,14 +293,14 @@ npm run supabase:start
 # Apply migrations locally
 npm run supabase:migrate:up
 
-# Cloudflare Workers dev (Wrangler)
-npm run wrangler:dev
+# Vercel Workers dev (Wrangler)
+npx vercel dev
 
-# Deploy to Cloudflare Pages preview
+# Deploy to Vercel preview
 npm run deploy:preview
 ```
 
-### Quality Gates (13 Gates)
+### Quality Gates (14 Gates)
 
 ```bash
 # Run all gates (called by /ns-verify)
@@ -320,6 +320,7 @@ npm run gate:rls            # 10. RLS policies tested (supabase test)
 npm run gate:security       # 11. npm audit + SAST (CodeQL)
 npm run gate:accessibility  # 12. axe-core WCAG 2.1 AA
 npm run gate:contracts      # 13. API contract tests (Pact/OpenAPI)
+npm run gate:design         # 14. Design audit (tokens, coverage, Impeccable)
 ```
 
 ### Database
@@ -345,10 +346,10 @@ supabase gen types typescript --project-id <ref> > src/lib/db/types.ts
 /ns-ship-deploy
 
 # Preview deploy only
-wrangler pages deploy --project-name=<project> --branch=preview
+vercel --preview
 
 # Production deploy
-wrangler pages deploy --project-name=<project> --branch=main
+vercel --prod
 ```
 
 ---
@@ -365,7 +366,7 @@ wrangler pages deploy --project-name=<project> --branch=main
 
 ### What Impeccable Checks
 
-- All 13 quality gates pass
+- All 14 quality gates pass
 - ADRs exist for all architectural decisions
 - Design tokens used (no hardcoded values detected)
 - RLS policies on every table + tested
@@ -472,7 +473,7 @@ npm run prepare  # Runs husky install
 │   ├── e2e/                # Playwright E2E tests
 │   ├── visual/             # Visual regression baselines
 │   └── contracts/          # API contract tests
-├── wrangler.toml           # Cloudflare Workers/Pages config
+├── vercel.json             # Vercel config (headers, redirects, rewrites)
 ├── package.json
 ├── tsconfig.json
 ├── eslint.config.js
@@ -518,6 +519,6 @@ Tâche : 'Implémenter le flux d'invitation d'équipe avec RLS'."
 
 **Last Updated**: 2026-08-02
 **Version**: 1.0.0
-**Maintainers**: Solo founder + Hermes agents
+**Maintainers**: Solo founder + Claude Code agents
 
 > This file is the **constitution** of the project. All agents, CI, and developers MUST follow it. Changes require ADR + human approval.

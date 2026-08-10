@@ -1,21 +1,11 @@
 import { Metadata } from "next";
-import { getPostBySlug } from "@/lib/content";
-import { MDXComponents } from "@/components/MDXComponents";
-
-interface Props {
-  params: { locale: string; slug: string };
-}
 
 export async function generateStaticParams() {
   // This will be populated by the catch-all route
   return [];
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   // This is a catch-all for pages not in the content layer
   return {
     title: "Page non trouvée",

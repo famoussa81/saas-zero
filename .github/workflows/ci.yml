@@ -276,7 +276,13 @@ jobs:
         with:
           version: latest
 
-      - name: Run RLS Tests
+      - name: Start local Supabase stack (Docker)
+        run: supabase start
+
+      - name: Apply migrations + seed to test DB
+        run: supabase db reset
+
+      - name: Run RLS Tests (pgTAP)
         run: pnpm gate:rls
 
   # Job 9: Deploy Preview (on PR)
@@ -287,9 +293,6 @@ jobs:
     needs:
       [quality, build, e2e, visual, lighthouse, security, accessibility, rls]
     if: github.event_name == 'pull_request'
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -314,8 +317,14 @@ jobs:
           name: nextjs-build
           path: .next/
 
-      - name: Deploy to Cloudflare Pages Preview
-        run: wrangler pages deploy --project-name=saas-zero --branch=preview
+      - name: Deploy to Vercel Preview
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-comment: true
 
   # Job 10: Deploy Production (on merge to main)
   deploy-production:
@@ -326,8 +335,6 @@ jobs:
       [quality, build, e2e, visual, lighthouse, security, accessibility, rls]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_PROD_REF: ${{ secrets.SUPABASE_PROD_REF }}
       STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
@@ -358,8 +365,15 @@ jobs:
       - name: Supabase Migrations
         run: supabase db push --project-ref ${{ secrets.SUPABASE_PROD_REF }}
 
-      - name: Deploy to Cloudflare Pages Production
-        run: wrangler pages deploy --project-name=saas-zero --branch=main
+      - name: Deploy to Vercel Production
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: "--prod"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-comment: false
 
       - name: Smoke Tests
         run: pnpm test:e2e -- --config=playwright.smoke.config.ts

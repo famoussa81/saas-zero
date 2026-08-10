@@ -8,7 +8,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# 13 Quality Gates (matching ns-ship.md Phase 5)
+# 14 Quality Gates (matching ns-ship.md Phase 5)
 GATES=(
   "typecheck:TypeScript strict"
   "lint:ESLint + Prettier"
@@ -23,6 +23,7 @@ GATES=(
   "security:npm audit + CodeQL SAST"
   "accessibility:axe-core WCAG 2.1 AA"
   "contracts:API contract tests"
+  "design:Design audit (tokens, coverage, Impeccable)"
 )
 
 SELECTED_GATES=()
@@ -119,7 +120,7 @@ done
 
 echo ""
 if [[ ${#FAILED[@]} -eq 0 ]]; then
-  echo -e "${GREEN}All 13 quality gates passed! 🎉${NC}"
+  echo -e "${GREEN}All 14 quality gates passed! 🎉${NC}"
   exit 0
 else
   echo -e "${RED}${#FAILED[@]} gate(s) failed.${NC}"

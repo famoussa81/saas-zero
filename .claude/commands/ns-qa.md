@@ -1,6 +1,6 @@
-# `/ns-qa` — Phase 5 : Verify (Quality Gates)
+﻿# `/ns-qa` — Phase 5 : Verify (Quality Gates)
 
-> **Objectif** : 13 gates déterministes — zéro jugement subjectif, tout par scripts.
+> **Objectif** : 14 gates déterministes — zéro jugement subjectif, tout par scripts.
 
 ---
 
@@ -42,7 +42,7 @@ pnpm gate:contracts
 
 ---
 
-## 13 Gates (Scripts dans `package.json`)
+## 14 Gates (Scripts dans `package.json`)
 
 | #   | Gate                 | Commande                                               | Critère de Succès                   |
 | --- | -------------------- | ------------------------------------------------------ | ----------------------------------- |
@@ -59,6 +59,7 @@ pnpm gate:contracts
 | 11  | `gate:security`      | `npm audit --audit-level=high` + `codeql`              | 0 critical/high vulnerabilities     |
 | 12  | `gate:accessibility` | `axe-core`                                             | WCAG 2.1 AA                         |
 | 13  | `gate:contracts`     | `pact` / OpenAPI                                       | Contracts matchent spec             |
+| 14  | `gate:design`        | `pnpm design:check`                                    | Tokens, couverture, Impeccable ≥ 95 |
 
 ---
 
@@ -150,7 +151,7 @@ pnpm gate:contracts
 
 | Résultat                | Action                          |
 | ----------------------- | ------------------------------- |
-| **Tous les 13 passent** | ✓ → Phase 6 Deploy              |
+| **Tous les 14 passent** | ✓ → Phase 6 Deploy              |
 | **Un seul échoue**      | ❌ STOP → Fix → Re-run `/ns-qa` |
 
 **Pas de "presque", pas de "waiver" — gates sont déterministes.**
@@ -191,8 +192,9 @@ pnpm gate:contracts
 ✓ Security (npm audit + CodeQL)
 ✓ Accessibility (axe-core WCAG 2.1 AA)
 ✓ API contract tests
+✓ Design audit (tokens, coverage, Impeccable)
 
-All 13 quality gates passed! 🎉
+All 14 quality gates passed! 🎉
 ```
 
 ---

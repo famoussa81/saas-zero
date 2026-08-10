@@ -6,14 +6,14 @@
 .DESCRIPTION
     This script installs and configures:
     - Node.js 20+ (check only, uses existing if present)
-    - Hermes CLI
-    - Required Hermes skills for SaaS development
     - Supabase CLI
     - Cloudflare Wrangler
     - Stripe CLI
     - Project structure (.claude, .github, supabase, workers)
     - .env.example template
     - Git initialization
+
+    Claude Code skills/agents ship with the repo (.claude/) — no external install.
 
     Idempotent: Can be run multiple times safely.
     Handles SmartScreen and ExecutionPolicy warnings.
@@ -68,22 +68,6 @@ $Colors = @{
     Dim     = "`e[2m"
 }
 
-# Required Hermes skills
-$RequiredSkills = @(
-    'plan',
-    'subagent-driven-development',
-    'test-driven-development',
-    'requesting-code-review',
-    'site-qa',
-    'systematic-debugging',
-    'writing-plans',
-    'ckm:design-system',
-    'ckm:ui-styling',
-    'ckm:brand',
-    'popular-web-designs',
-    'architecture-diagram'
-)
-
 # Project directories to create
 $ProjectDirs = @(
     '.claude\skills',
@@ -108,9 +92,9 @@ $CliTools = @{
         CheckCommand = 'npm --version'
         InstallHint = 'Installed with Node.js'
     }
-    'hermes' = @{
-        CheckCommand = 'hermes --version'
-        InstallHint = 'pip install hermes-agent or see https://hermes-agent.nousresearch.com/docs'
+    'claude' = @{
+        CheckCommand = 'claude --version'
+        InstallHint = 'Install Claude Code — see https://docs.anthropic.com/en/docs/claude-code'
     }
     'supabase' = @{
         CheckCommand = 'supabase --version'
@@ -300,39 +284,6 @@ function Check-Prerequisites {
     }
     
     return $allOk
-}
-
-function Install-HermesSkills {
-    Write-Section "Installing Hermes Skills"
-    
-    $installed = 0
-    $skipped = 0
-    $failed = 0
-    
-    foreach ($skill in $RequiredSkills) {
-        Write-Log "Checking skill: $skill..." -Level 'Debug'
-        
-        $skillList = hermes skills list 2>$null
-        if ($skillList -and $skillList -match [regex]::Escape($skill)) {
-            Write-Log "Skill already installed: $skill" -Level 'Success'
-            $skipped++
-            continue
-        }
-        
-        Invoke-DryRunOrReal "Install skill: $skill" {
-            $result = hermes skill install $skill 2>&1
-            if ($LASTEXITCODE -eq 0) {
-                Write-Log "Installed skill: $skill" -Level 'Success'
-                $installed++
-            } else {
-                Write-Log "Failed to install skill: $skill - $result" -Level 'Error'
-                $failed++
-            }
-        } -Force:$true
-    }
-    
-    Write-Log "Skills: $installed installed, $skipped skipped, $failed failed" -Level 'Info'
-    return $failed -eq 0
 }
 
 function Install-SupabaseCLI {
@@ -615,7 +566,7 @@ function Verify-Installation {
     $checks = @(
         @{ Name = 'Node.js'; Cmd = 'node --version'; MinVer = '20.0.0' }
         @{ Name = 'npm'; Cmd = 'npm --version'; MinVer = '10.0.0' }
-        @{ Name = 'Hermes'; Cmd = 'hermes --version' }
+        @{ Name = 'Claude Code'; Cmd = 'claude --version' }
         @{ Name = 'Supabase CLI'; Cmd = 'supabase --version' }
         @{ Name = 'Wrangler'; Cmd = 'wrangler --version' }
         @{ Name = 'Stripe CLI'; Cmd = 'stripe --version' }
@@ -648,26 +599,9 @@ function Verify-Installation {
     }
     
     Write-Log "" -Level 'Info'
-    Write-Log "Verifying Hermes skills..." -Level 'Info'
-    $skillList = hermes skills list 2>$null
-    $skillPassed = 0
-    $skillFailed = 0
-    
-    foreach ($skill in $RequiredSkills) {
-        if ($skillList -match [regex]::Escape($skill)) {
-            Write-Log "  Skill: $skill ✓" -Level 'Success'
-            $skillPassed++
-        } else {
-            Write-Log "  Skill: $skill ✗" -Level 'Error'
-            $skillFailed++
-        }
-    }
-    
-    Write-Log "" -Level 'Info'
     Write-Log "CLI Tools: $passed passed, $failed failed" -Level 'Info'
-    Write-Log "Hermes Skills: $skillPassed passed, $skillFailed failed" -Level 'Info'
-    
-    return ($failed -eq 0 -and $skillFailed -eq 0)
+
+    return ($failed -eq 0)
 }
 
 # ============================================================================
@@ -693,7 +627,6 @@ function Main {
     
     $steps = @(
         @{ Name = 'Prerequisites'; Fn = { Check-Prerequisites } }
-        @{ Name = 'Hermes Skills'; Fn = { Install-HermesSkills } }
         @{ Name = 'Supabase CLI'; Fn = { Install-SupabaseCLI } }
         @{ Name = 'Cloudflare Wrangler'; Fn = { Install-Wrangler } }
         @{ Name = 'Stripe CLI'; Fn = { Install-StripeCLI } }

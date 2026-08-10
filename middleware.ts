@@ -1,4 +1,4 @@
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 function getLocale(request: NextRequest): string {
@@ -39,31 +39,10 @@ export async function updateSession(request: NextRequest) {
         get(key: string) {
           return request.cookies.get(key)?.value;
         },
-        set(
-          key: string,
-          value: string,
-          options: {
-            maxAge?: number;
-            domain?: string;
-            path?: string;
-            sameSite?: "lax" | "strict" | "none";
-            secure?: boolean;
-            httpOnly?: boolean;
-          },
-        ) {
+        set(key: string, value: string, options: CookieOptions) {
           supabaseResponse.cookies.set(key, value, options);
         },
-        remove(
-          key: string,
-          options: {
-            maxAge?: number;
-            domain?: string;
-            path?: string;
-            sameSite?: "lax" | "strict" | "none";
-            secure?: boolean;
-            httpOnly?: boolean;
-          },
-        ) {
+        remove(key: string, options: CookieOptions) {
           supabaseResponse.cookies.set(key, "", { ...options, maxAge: 0 });
         },
       },

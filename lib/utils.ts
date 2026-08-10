@@ -33,7 +33,8 @@ export function formatReadingTime(minutes: number): string {
 
 export function truncate(str: string, length: number): string {
   if (str.length <= length) return str;
-  return str.slice(0, length).trim() + "...";
+  if (length <= 3) return str.slice(0, length);
+  return str.slice(0, length - 3).trim() + "...";
 }
 
 export function slugify(str: string): string {

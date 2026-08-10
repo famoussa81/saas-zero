@@ -15,13 +15,13 @@ fi
 echo "🗄️  Applying Supabase migrations..."
 supabase db push --project-ref $SUPABASE_PROD_REF
 
-# 3. Cloudflare Pages deploy
-echo "☁️  Deploying to Cloudflare Pages..."
-wrangler pages deploy --project-name=saas-zero --branch=main
+# 3. Vercel deploy
+echo "▲  Deploying to Vercel..."
+npx vercel --prod
 
 # 4. Smoke tests
 echo "🧪 Running smoke tests..."
 pnpm test:e2e -- --config=playwright.smoke.config.ts
 
 echo "✅ Deploy complete! 🎉"
-echo "🌐 Live at: https://saas-zero.pages.dev"
+echo "🌐 Live at: https://saas-zero.vercel.app"

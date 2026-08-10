@@ -31,6 +31,36 @@ Select 3-5 that define the voice:
 - [ ] **Component tokens** — Per-component overrides (e.g., `button-primary-bg`)
 - [ ] **Mode-aware tokens** — Light/dark/auto variants built into token structure
 
+### 1.4 Élément Signature (le "wow" reconnaissable)
+
+> **Doctrine utilisateur** : *attirer avec le wow → convaincre avec la qualité → rassurer avec le zéro bug.*
+> L'élément signature est l'élément **reconnaissable au premier regard** qui distingue le produit du générique AI. C'est lui qui attire et pousse à l'achat.
+
+| Champ | Définition |
+|-------|------------|
+| **Quoi** | [ex: un terminal animé qui "tape" les features, un blob gradient signature, une mascotte] |
+| **Où** | [ex: hero de la landing, onboarding, empty states, page 404] |
+| **Pourquoi il marque** | [ex: il incarne la promesse "zéro configuration" en 1 seconde] |
+| **Motion associée** | [tier Minimal/Moderate/Bold + durée] |
+| **Ne PAS faire** | [ex: copier le style d'un concurrent, générique AI, clipart] |
+
+**Critère d'acceptation** : un visiteur identifie la marque en < 3 secondes sans lire le logo.
+
+### 1.5 Conversion Design (les armes de la doctrine utilisateur)
+
+> Chaque page marketing doit servir le funnel : **attirer → convaincre → rassurer → inscrire → payer → rester**.
+
+| Arme de conversion | Où | Principe |
+|--------------------|-----|----------|
+| **Hero wow** | Landing top | La promesse + l'élément signature, sans scroll |
+| **Preuve sociale** | Sous le hero, pricing | Logos, avis, chiffres (rétention, MRR, users) |
+| **Bénéfices > features** | Sections features | "Gagne 5h/semaine" > "Export CSV" |
+| **CTA sans ambiguïté** | Hero, nav, pricing | 1 action par écran, verbe d'action ("Commencer gratuitement") |
+| **Zéro bug visible** | Toute l'app | Performance + absence d'erreurs = rassurance implicite |
+| **Pricing rassurant** | /pricing | Toggle mensuel/annuel (-20%), FAQ, garantie |
+
+**Doctrine zéro-bug** : un bug visible à l'inscription détruit la rassurance. Gates quality = partie intégrante de la conversion.
+
 ---
 
 ## 2. Color System

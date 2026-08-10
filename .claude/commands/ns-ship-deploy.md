@@ -9,15 +9,17 @@ aliases: [deploy]
 Deploys to production. **Assumes `/ns-verify` passed.**
 
 ## Prerequisites
-- All 13 quality gates pass (`npm run gates:all`)
+
+- All 14 quality gates pass (`pnpm gates:all`)
 - Production secrets configured in environment
 - Manual confirmation required before production deploy
 
 ## Steps
 
 ### 1. Confirm Production Deploy
+
 ```bash
-echo "⚠️  PRODUCTION DEPLOY - This will deploy to live Cloudflare Pages + Supabase production"
+echo "⚠️  PRODUCTION DEPLOY - This will deploy to live Vercel + Supabase production"
 read -p "Type 'deploy' to confirm: " confirm
 if [ "$confirm" != "deploy" ]; then
   echo "❌ Aborted"
@@ -25,26 +27,30 @@ if [ "$confirm" != "deploy" ]; then
 fi
 ```
 
-### 2. Deploy to Cloudflare Pages (Production)
+### 2. Deploy to Vercel (Production)
+
 ```bash
-wrangler pages deploy --project-name=<PROJECT_NAME> --branch=main --env=production
+npx vercel --prod
 ```
 
 ### 3. Apply Supabase Migrations to Production
+
 ```bash
 supabase db push --linked
 ```
 
 ### 4. Update Stripe Webhook URL to Production Domain
+
 ```bash
-# Get production domain from Cloudflare Pages deployment
-PROD_URL=$(wrangler pages deployment list --project-name=<PROJECT_NAME> --env=production --json | jq -r '.[0].url')
+# Get production domain from Vercel deployment
+PROD_URL=${NEXT_PUBLIC_APP_URL:-"https://<projet>.vercel.app"}
 
 # Update Stripe webhook endpoint
 stripe webhook_endpoints update <WEBHOOK_ENDPOINT_ID> --url="${PROD_URL}/api/stripe/webhook"
 ```
 
 ### 5. Update Brevo Webhook URL (if needed)
+
 ```bash
 # Update Brevo webhook to production domain
 curl -X PUT "https://api.brevo.com/v3/webhooks/<WEBHOOK_ID>" \
@@ -54,6 +60,7 @@ curl -X PUT "https://api.brevo.com/v3/webhooks/<WEBHOOK_ID>" \
 ```
 
 ### 6. Run Smoke Tests on Production URL
+
 ```bash
 # Health check
 curl -f "${PROD_URL}/api/health" || exit 1
@@ -66,6 +73,7 @@ npx playwright test tests/e2e/smoke/production-billing.spec.ts --project=chromiu
 ```
 
 ### 7. Tag Release in Git
+
 ```bash
 VERSION=$(node -p "require('./package.json').version")
 git tag -a "v${VERSION}" -m "Release v${VERSION}"
@@ -73,6 +81,7 @@ git push origin "v${VERSION}"
 ```
 
 ## Environment Variables Required (Production)
+
 ```bash
 # Supabase Production
 SUPABASE_URL=
@@ -90,12 +99,13 @@ BREVO_API_KEY=
 BREVO_SENDER_EMAIL=
 BREVO_SENDER_NAME=
 
-# Cloudflare Production
-CLOUDFLARE_ACCOUNT_ID=
-CLOUDFLARE_API_TOKEN=
+# Vercel Production
+VERCEL_TOKEN=
+NEXT_PUBLIC_APP_URL=https://<projet>.vercel.app
 ```
 
 ## Usage
+
 ```bash
 /ns-ship-deploy
 # or
@@ -103,7 +113,8 @@ CLOUDFLARE_API_TOKEN=
 ```
 
 ## Notes
+
 - This command should ONLY be run after `/ns-verify` passes all gates
-- Production secrets must be configured in Cloudflare Pages dashboard AND local environment
+- Production secrets must be configured in Vercel dashboard (Project → Settings → Environment Variables) AND local environment
 - Stripe/Brevo webhook IDs must be known/configured beforehand
-- Rollback: `wrangler pages deployment rollback --project-name=<PROJECT_NAME> --env=production`
+- Rollback: `npx vercel ls` → Dashboard → Deployments → ⋯ → Promote previous deployment

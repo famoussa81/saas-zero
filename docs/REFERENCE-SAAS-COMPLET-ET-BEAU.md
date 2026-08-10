@@ -45,7 +45,7 @@
 
 ### G. Qualité (le "zéro bug")
 
-- 13 gates + review en contexte vierge (isolation) + fail-closed
+- 14 gates + review en contexte vierge (isolation) + fail-closed
 - k6 (charge) + Sentry (erreurs prod)
 
 ---

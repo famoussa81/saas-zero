@@ -388,6 +388,6 @@ supabase functions deploy contact
 - **Rate limiting**: Implement rate limiting at Edge Function level
 - **Validation**: Server-side validation on all fields
 - **CSRF**: Use CSRF tokens for form submissions
-- **Rate limiting**: Implement at Edge/Cloudflare level
+- **Rate limiting**: Implement at Edge/Vercel level
 - **Spam protection**: Add honeypot field or reCAPTCHA
 - **Sanitization**: Sanitize all user inputs before storage

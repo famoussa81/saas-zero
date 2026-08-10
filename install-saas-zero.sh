@@ -2,8 +2,8 @@
 # =============================================================================
 # install-saas-zero.sh - One-click installer for Zero-Risk SaaS Stack
 # =============================================================================
-# Installs: Node.js 20+ check, Hermes CLI, required Hermes skills,
-#           Supabase CLI, Cloudflare Wrangler, Stripe CLI
+# Installs: Node.js 20+ check, Supabase CLI, Cloudflare Wrangler, Stripe CLI
+# Claude Code skills/agents ship with the repo (.claude/) — no external install.
 # Sets up project structure and initializes git
 # Cross-platform: macOS, Linux, WSL
 # Idempotent: safe to run multiple times
@@ -25,21 +25,6 @@ readonly NC='\033[0m' # No Color
 
 # Configuration
 readonly REQUIRED_NODE_VERSION="20"
-readonly HERMES_SKILLS=(
-    "plan"
-    "subagent-driven-development"
-    "test-driven-development"
-    "requesting-code-review"
-    "site-qa"
-    "systematic-debugging"
-    "writing-plans"
-    "ckm:design-system"
-    "ckm:ui-styling"
-    "ckm:brand"
-    "popular-web-designs"
-    "architecture-diagram"
-)
-
 readonly PROJECT_DIRS=(
     ".claude/skills"
     ".claude/agents"
@@ -54,7 +39,6 @@ readonly PROJECT_DIRS=(
 # Flags
 DRY_RUN=false
 VERBOSE=false
-SKIP_HERMES=false
 SKIP_CLI_TOOLS=false
 SKIP_PROJECT=false
 SKIP_GIT=false
@@ -100,7 +84,6 @@ One-click installer for Zero-Risk SaaS Stack (TanStack Start + Supabase + Cloudf
 OPTIONS:
     --dry-run           Show what would be done without executing
     --verbose           Enable verbose/debug output
-    --skip-hermes       Skip Hermes CLI and skills installation
     --skip-cli-tools    Skip Supabase, Wrangler, Stripe CLI installation
     --skip-project      Skip project structure setup
     --skip-git          Skip git initialization
@@ -246,53 +229,6 @@ check_npm() {
     npm_version=$(npm --version)
     log_success "npm $npm_version ✓"
     return 0
-}
-
-install_hermes() {
-    log_step "Installing Hermes CLI"
-    
-    if command_exists hermes; then
-        local hermes_version
-        hermes_version=$(hermes --version 2>/dev/null || echo "unknown")
-        log_success "Hermes CLI already installed ($hermes_version) ✓"
-        return 0
-    fi
-    
-    # Try different installation methods
-    if command_exists npm; then
-        run_cmd "npm install -g @hermes-ai/cli" "Install Hermes CLI via npm"
-        log_success "Hermes CLI installed ✓"
-    else
-        log_error "npm not available, cannot install Hermes CLI"
-        return 1
-    fi
-}
-
-install_hermes_skills() {
-    log_step "Installing Hermes skills"
-    
-    if [[ "$SKIP_HERMES" == "true" ]]; then
-        log_info "Skipping Hermes skills installation (--skip-hermes)"
-        return 0
-    fi
-    
-    if ! command_exists hermes; then
-        log_warning "Hermes CLI not found, skipping skills installation"
-        return 0
-    fi
-    
-    for skill in "${HERMES_SKILLS[@]}"; do
-        log_info "Installing skill: $skill"
-        if [[ "$DRY_RUN" == "true" ]]; then
-            log_info "[DRY-RUN] Would install skill: $skill"
-        else
-            if hermes skill install "$skill" 2>/dev/null; then
-                log_success "Installed skill: $skill ✓"
-            else
-                log_warning "Failed to install skill: $skill (may already exist or not available)"
-            fi
-        fi
-    done
 }
 
 install_supabase_cli() {
@@ -608,9 +544,6 @@ supabase/functions/**/node_modules/
 .wrangler/
 worker-configuration.d.ts
 
-# Hermes
-.hermes/
-
 # Misc
 *.tsbuildinfo
 .eslintcache
@@ -659,13 +592,13 @@ create_readme() {
 | **Hosting** | Cloudflare Pages | Edge hosting + Functions |
 | **Payments** | Stripe | Subscriptions + Checkout |
 | **Email** | Brevo | Transactional emails |
-| **AI Assistant** | Hermes Agent | Development workflow automation |
+| **AI Assistant** | Claude Code | Development workflow automation |
 
 ## 🛠️ Project Structure
 
 ```
 .
-├── .claude/              # Hermes Agent configuration
+├── .claude/              # Claude Code configuration
 │   ├── skills/           # Custom skills
 │   ├── agents/           # Agent definitions
 │   ├── commands/         # Custom commands
@@ -709,20 +642,15 @@ npm run test:e2e         # Run E2E tests
 npm run lint             # Lint code
 ```
 
-## 🔧 Hermes Agent Skills Installed
+## 🤖 Claude Code Skills & Agents
 
-- `plan` — Write implementation plans
-- `subagent-driven-development` — Multi-agent workflows
-- `test-driven-development` — TDD enforcement
-- `requesting-code-review` — Automated code review
-- `site-qa` — Website QA testing
-- `systematic-debugging` — Root cause debugging
-- `writing-plans` — Plan authoring
-- `ckm:design-system` — Design tokens & components
-- `ckm:ui-styling` — UI styling best practices
-- `ckm:brand` — Brand identity
-- `popular-web-designs` — Design system references
-- `architecture-diagram` — Architecture diagrams
+Skills et agents livrés dans `.claude/` — aucun install externe :
+
+- `/ns-ship` — Pipeline discovery → deploy (sous-agents Claude Code)
+- `/ns-verify` — Les 14 quality gates déterministes
+- `/ns-doctor` — Diagnostic de la toolchain (env, CLI, services)
+- `/ns-design` — Design system, tokens, composants
+- Agents `saas-*` — core, auth, billing, ui, qa, perf, compliance
 
 ## 📚 Documentation
 
@@ -731,7 +659,7 @@ npm run lint             # Lint code
 - [Cloudflare Pages](https://pages.cloudflare.com/docs)
 - [Stripe](https://stripe.com/docs)
 - [Brevo](https://developers.brevo.com/)
-- [Hermes Agent](https://hermes-agent.nousresearch.com/docs)
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 
 ## 💰 Cost Breakdown (Monthly)
 
@@ -788,15 +716,15 @@ verify_installation() {
         all_good=false
     fi
     
-    # Check Hermes
-    if command_exists hermes; then
-        local hermes_version
-        hermes_version=$(hermes --version 2>/dev/null || echo "unknown")
-        log_success "Hermes: $hermes_version ✓"
+    # Check Claude Code
+    if command_exists claude; then
+        local claude_version
+        claude_version=$(claude --version 2>/dev/null || echo "unknown")
+        log_success "Claude Code: $claude_version ✓"
     else
-        log_warning "Hermes: NOT INSTALLED (install with: npm install -g @hermes-ai/cli)"
+        log_warning "Claude Code: NOT FOUND (pipelines ns-* ne fonctionneront pas sans lui)"
     fi
-    
+
     # Check Supabase CLI
     if command_exists supabase; then
         local version
@@ -879,10 +807,6 @@ main() {
                 VERBOSE=true
                 shift
                 ;;
-            --skip-hermes)
-                SKIP_HERMES=true
-                shift
-                ;;
             --skip-cli-tools)
                 SKIP_CLI_TOOLS=true
                 shift
@@ -941,9 +865,7 @@ EOF
         exit 1
     fi
     
-    # NOTE: Hermes est un residu de l'ancien projet. L'utilisateur utilise Claude Code ou Codex.
-    # install_hermes || failed=true   # (desactive : hermes non requis)
-    # install_hermes_skills || failed=true
+    # Claude Code skills/agents livrés avec le repo (.claude/) — pas d'installation externe.
     install_cli_tools || failed=true
     setup_project_structure || failed=true
     create_env_example || failed=true

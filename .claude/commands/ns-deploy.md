@@ -14,7 +14,7 @@ pnpm ns:deploy
 ./.claude/commands/ns-deploy.sh
 ```
 
-> **Prérequis ABSOLU** : `/ns-qa` → **Tous les 13 gates passent** ✓
+> **Prérequis ABSOLU** : `/ns-qa` → **Tous les 14 gates passent** ✓
 
 ---
 
@@ -27,7 +27,7 @@ pnpm ns:deploy
 supabase db push --project-ref $SUPABASE_PROD_REF
 ```
 
-**GitHub Action** (`.github/workflows/deploy.yml`) :
+**GitHub Action** (`.github/workflows/ci.yml`) :
 
 ```yaml
 - name: Supabase Migrations
@@ -36,44 +36,54 @@ supabase db push --project-ref $SUPABASE_PROD_REF
     SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 ```
 
-### 2. Cloudflare Pages Deploy
+### 2. Vercel Deploy
 
 ```bash
-# Preview (chaque PR)
-wrangler pages deploy --project-name=saas-zero --branch=preview
+# Preview (chaque PR) — via GitHub Action amondnet/vercel-action
+npx vercel --preview
 
 # Production (merge main)
-wrangler pages deploy --project-name=saas-zero --branch=main
+npx vercel --prod
 ```
 
-**wrangler.toml** :
+**vercel.json** (à la racine) :
 
-```toml
-name = "saas-zero"
-compatibility_date = "2024-01-01"
-pages_build_output_dir = ".next"
-
-[env.production]
-branch = "main"
+```json
+{
+  "framework": "nextjs",
+  "regions": ["fra1"],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}
 ```
+
+Deploys automatiques dans CI : `.github/workflows/ci.yml` → jobs `deploy-preview` (PR) et `deploy-production` (merge main) via `amondnet/vercel-action@v20`.
 
 ### 3. Stripe Webhooks Configuration
 
-**Endpoint** : `https://saas-zero.pages.dev/api/webhooks/stripe`
+**Endpoint** : `https://saas-zero.vercel.app/api/webhooks/stripe`
 
 **Events à configurer** (via Stripe CLI ou Dashboard) :
 
 ```bash
 stripe webhook_endpoints create \
-  --url=https://saas-zero.pages.dev/api/webhooks/stripe \
+  --url=https://saas-zero.vercel.app/api/webhooks/stripe \
   --events=checkout.session.completed,invoice.paid,customer.subscription.updated,customer.subscription.deleted,payment_method.attached
 ```
 
-**Secret** : `STRIPE_WEBHOOK_SECRET` dans Cloudflare Pages env vars
+**Secret** : `STRIPE_WEBHOOK_SECRET` dans les env vars Vercel
 
 ### 4. Brevo Webhooks Configuration
 
-**Endpoint** : `https://saas-zero.pages.dev/api/webhooks/brevo`
+**Endpoint** : `https://saas-zero.vercel.app/api/webhooks/brevo`
 
 **Events** :
 
@@ -81,15 +91,15 @@ stripe webhook_endpoints create \
 
 **Secret** : Configuré dans Brevo dashboard
 
-### 5. Variables d'Environnement Production (Cloudflare Pages)
+### 5. Variables d'Environnement Production (Vercel)
 
-Dans **Cloudflare Dashboard → Pages → saas-zero → Settings → Environment variables** :
+Dans **Vercel Dashboard → Project → Settings → Environment Variables** (ou `npx vercel env add`) :
 
 ```bash
 # Supabase
 SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_ANON_KEY=eyJ...
-SUPABASE_SERVICE_ROLE_KEY=eyJ... (Workers only)
+SUPABASE_SERVICE_ROLE_KEY=eyJ... (server-only)
 SUPABASE_DB_URL=postgresql://...
 
 # Stripe
@@ -101,6 +111,9 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 BREVO_API_KEY=xkeysib-...
 BREVO_SENDER_EMAIL=noreply@votredomaine.com
 BREVO_SENDER_NAME=Votre SaaS
+
+# Vercel
+NEXT_PUBLIC_APP_URL=https://saas-zero.vercel.app
 
 # Feature Flags
 ENABLE_MFA=true
@@ -140,14 +153,14 @@ pnpm test:e2e -- --config=playwright.smoke.config.ts
 
 ## Rollback (Si Échec)
 
-### Cloudflare Pages
+### Vercel
 
 ```bash
-# Lister déploiements
-wrangler pages deployment list --project-name=saas-zero
+# Lister les déploiements
+npx vercel ls
 
-# Rollback vers déploiement précédent
-wrangler pages deployment rollback <deployment-id> --project-name=saas-zero
+# Rollback vers un déploiement précédent (Dashboard → Deployments → ⋯ → Promote)
+npx vercel promote <deployment-url>
 ```
 
 ### Supabase Migrations
@@ -161,16 +174,16 @@ wrangler pages deployment rollback <deployment-id> --project-name=saas-zero
 ### DNS / Custom Domain
 
 ```bash
-# Cloudflare Pages → Custom Domains → saas-zero.pages.dev → votre-domaine.com
-# CNAME vers saas-zero.pages.dev (proxied)
+# Vercel → Project → Settings → Domains → Ajouter votre-domaine.com
+# Vercel fournit les enregistrements DNS (CNAME vers cname.vercel-dns.com)
 ```
 
 ---
 
 ## Checklist Pré-Deploy (Mental)
 
-- [ ] `/ns-qa` → **13/13 gates PASS** ✓
-- [ ] `.env.production` configuré dans Cloudflare Pages
+- [ ] `/ns-qa` → **14/14 gates PASS** ✓
+- [ ] Env vars configurées dans Vercel
 - [ ] `SUPABASE_PROD_REF` correct
 - [ ] Stripe webhook endpoint mis à jour (prod URL)
 - [ ] Brevo webhook endpoint mis à jour (prod URL)
@@ -199,30 +212,30 @@ fi
 echo "🗄️  Applying Supabase migrations..."
 supabase db push --project-ref $SUPABASE_PROD_REF
 
-# 3. Cloudflare Pages deploy
-echo "☁️  Deploying to Cloudflare Pages..."
-wrangler pages deploy --project-name=saas-zero --branch=main
+# 3. Vercel deploy
+echo "▲  Deploying to Vercel..."
+npx vercel --prod
 
 # 4. Smoke tests
 echo "🧪 Running smoke tests..."
 pnpm test:e2e -- --config=playwright.smoke.config.ts
 
 echo "✅ Deploy complete! 🎉"
-echo "🌐 Live at: https://saas-zero.pages.dev"
+echo "🌐 Live at: https://saas-zero.vercel.app"
 ```
 
 ---
 
 ## Monitoring Post-Deploy
 
-| Outil                     | URL                           | Fréquence  |
-| ------------------------- | ----------------------------- | ---------- |
-| **Supabase Dashboard**    | Database → Logs, Auth → Users | Temps réel |
-| **Stripe Dashboard**      | Webhooks → Logs, Payments     | Temps réel |
-| **Brevo Dashboard**       | Transactional → Logs          | Temps réel |
-| **Cloudflare Analytics**  | Pages → Analytics             | Quotidien  |
-| **Plausible**             | plausible.io → votre-domaine  | Quotidien  |
-| **Sentry** (si configuré) | Issues, Performance           | Temps réel |
+| Outil                     | URL                              | Fréquence  |
+| ------------------------- | -------------------------------- | ---------- |
+| **Supabase Dashboard**    | Database → Logs, Auth → Users    | Temps réel |
+| **Stripe Dashboard**      | Webhooks → Logs, Payments        | Temps réel |
+| **Brevo Dashboard**       | Transactional → Logs             | Temps réel |
+| **Vercel Analytics**      | Project → Analytics (Web Vitals) | Temps réel |
+| **Plausible**             | plausible.io → votre-domaine     | Quotidien  |
+| **Sentry** (si configuré) | Issues, Performance              | Temps réel |
 
 ---
 
@@ -230,14 +243,12 @@ echo "🌐 Live at: https://saas-zero.pages.dev"
 
 ```bash
 # Deploy preview seulement
-wrangler pages deploy --project-name=saas-zero --branch=preview
+npx vercel --preview
 
-# Voir logs Cloudflare Workers
-wrangler pages deployment tail --project-name=saas-zero
+# Voir logs production
+npx vercel logs --prod
 
-# Vérifier env vars prod
-wrangler pages secret list --project-name=saas-zero
-
-# Mettre à jour un secret
-wrangler pages secret put STRIPE_WEBHOOK_SECRET --project-name=saas-zero
+# Lister / ajouter env vars
+npx vercel env ls
+npx vercel env add STRIPE_WEBHOOK_SECRET production
 ```

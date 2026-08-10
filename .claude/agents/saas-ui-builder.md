@@ -1,3 +1,8 @@
+---
+name: saas-ui-builder
+description: Design system foundation + composants shadcn/ui étendus pour le SaaS Stack.
+---
+
 # Agent: `saas-ui-builder`
 
 > **Rôle** : Design system foundation + shadcn/ui extended components pour Zero-Risk SaaS Stack.

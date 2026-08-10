@@ -40,12 +40,12 @@
 
 ## ✅ Qualité · le "zéro bug"
 
-| #   | Skill                  | Description                                                                                                                                                  | Domaine        |
-| --- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
-| 11  | `ns-quality-gates`     | Les 13 quality gates déterministes : typecheck, lint, tests, E2E, visual, perf, RLS, sécurité, accessibilité, contracts. **Zéro bug garanti mécaniquement.** | Qualité        |
-| 12  | `ns-load-test`         | Test de charge k6 : l'app tient-elle la charge ? faux positifs, seuils, scénario de pic.                                                                     | Qualité / prod |
-| 13  | `ns-sentry`            | Triage des erreurs de production : classer par coût réel, lire variables, proposer un correctif.                                                             | Qualité / prod |
-| 14  | `ns-visual-regression` | Tests visuels Playwright + pixelmatch : détecter les changements de rendu.                                                                                   | Qualité        |
+| #   | Skill                  | Description                                                                                                                                                                | Domaine        |
+| --- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| 11  | `ns-quality-gates`     | Les 14 quality gates déterministes : typecheck, lint, tests, E2E, visual, perf, RLS, sécurité, accessibilité, contracts, design audit. **Zéro bug garanti mécaniquement.** | Qualité        |
+| 12  | `ns-load-test`         | Test de charge k6 : l'app tient-elle la charge ? faux positifs, seuils, scénario de pic.                                                                                   | Qualité / prod |
+| 13  | `ns-sentry`            | Triage des erreurs de production : classer par coût réel, lire variables, proposer un correctif.                                                                           | Qualité / prod |
+| 14  | `ns-visual-regression` | Tests visuels Playwright + pixelmatch : détecter les changements de rendu.                                                                                                 | Qualité        |
 
 ## 🚀 Équivalents NowStack recréés en gratuit
 

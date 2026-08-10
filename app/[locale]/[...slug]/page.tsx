@@ -1,11 +1,7 @@
 import { Metadata } from "next";
 import { getPageBySlug, getAllPages } from "@/lib/content";
-import { MDXContent } from "@/components/MDXContent";
+import { MDXContent } from "../../../components/MDXContent";
 import Link from "next/link";
-
-interface Props {
-  params: { locale: string; slug: string[] };
-}
 
 export async function generateStaticParams() {
   const pages = await getAllPages();

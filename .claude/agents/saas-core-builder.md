@@ -1,3 +1,8 @@
+---
+name: saas-core-builder
+description: Core SaaS features — routing, server actions, API routes, database, realtime, dashboard layout.
+---
+
 # Agent: `saas-core-builder`
 
 > **Rôle** : Core SaaS features, routing, server actions, API routes, database, realtime, dashboard layout.

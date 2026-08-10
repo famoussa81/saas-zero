@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "execute_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/guard-rail.js"
+          }
+        ]
+      }
+    ]
+  }
+}

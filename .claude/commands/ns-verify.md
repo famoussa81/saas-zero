@@ -1,12 +1,12 @@
 ---
 name: ns-verify
-description: Run all 13 quality gates for the Zero-Risk SaaS Stack
+description: Run all 14 quality gates for the Zero-Risk SaaS Stack
 category: verification
 ---
 
 # ns-verify — Auto-verification Command
 
-Run all 13 quality gates plus additional checks. Exit code 0 = all pass, non-zero = failure with details.
+Run all 14 quality gates plus additional checks. Exit code 0 = all pass, non-zero = failure with details.
 
 ## Usage
 
@@ -20,31 +20,31 @@ Run all 13 quality gates plus additional checks. Exit code 0 = all pass, non-zer
 /ns-verify --gate=all --skip=visual  # skip specific gates
 ```
 
-## Quality Gates (13 Core)
+## Quality Gates (14 Core)
 
-| # | Gate | Command | Description |
-|---|------|---------|-------------|
-| 1 | **typecheck** | `npm run gate:typecheck` | TypeScript strict mode pass |
-| 2 | **lint** | `npm run gate:lint` | ESLint + Prettier pass |
-| 3 | **test** | `npm run gate:test` | Unit tests pass |
-| 4 | **e2e** | `npm run gate:e2e` | Playwright E2E tests pass |
-| 5 | **visual** | `npm run gate:visual` | Visual regression tests pass |
-| 6 | **lighthouse** | `npm run gate:lighthouse` | Lighthouse CI ≥ 90 all categories |
-| 7 | **bundle** | `npm run gate:bundle` | Bundle size < budget |
-| 8 | **cwv** | `npm run gate:cwv` | Core Web Vitals pass |
-| 9 | **hydration** | `npm run gate:hydration` | No hydration mismatches |
-| 10 | **rls** | `npm run gate:rls` | RLS policies tested |
-| 11 | **security** | `npm run gate:security` | npm audit + SAST |
-| 12 | **accessibility** | `npm run gate:accessibility` | axe-core WCAG 2.1 AA |
-| 13 | **contracts** | `npm run gate:contracts` | API contract tests |
+| #   | Gate              | Command                      | Description                                 |
+| --- | ----------------- | ---------------------------- | ------------------------------------------- |
+| 1   | **typecheck**     | `npm run gate:typecheck`     | TypeScript strict mode pass                 |
+| 2   | **lint**          | `npm run gate:lint`          | ESLint + Prettier pass                      |
+| 3   | **test**          | `npm run gate:test`          | Unit tests pass                             |
+| 4   | **e2e**           | `npm run gate:e2e`           | Playwright E2E tests pass                   |
+| 5   | **visual**        | `npm run gate:visual`        | Visual regression tests pass                |
+| 6   | **lighthouse**    | `npm run gate:lighthouse`    | Lighthouse CI ≥ 90 all categories           |
+| 7   | **bundle**        | `npm run gate:bundle`        | Bundle size < budget                        |
+| 8   | **cwv**           | `npm run gate:cwv`           | Core Web Vitals pass                        |
+| 9   | **hydration**     | `npm run gate:hydration`     | No hydration mismatches                     |
+| 10  | **rls**           | `npm run gate:rls`           | RLS policies tested                         |
+| 11  | **security**      | `npm run gate:security`      | npm audit + SAST                            |
+| 12  | **accessibility** | `npm run gate:accessibility` | axe-core WCAG 2.1 AA                        |
+| 14  | **design**        | `npm run gate:design`        | Design audit (tokens, coverage, Impeccable) |
 
 ## Additional Checks
 
-| Check | Command | Description |
-|-------|---------|-------------|
-| **audit** | `npm run check:audit` | Impeccable audit (no high/critical vulns) |
-| **placeholder** | `npm run check:placeholder` | Placeholder content detection |
-| **stripe-webhook** | `npm run check:stripe-webhook` | Stripe webhook signature verification |
+| Check              | Command                        | Description                               |
+| ------------------ | ------------------------------ | ----------------------------------------- |
+| **audit**          | `npm run check:audit`          | Impeccable audit (no high/critical vulns) |
+| **placeholder**    | `npm run check:placeholder`    | Placeholder content detection             |
+| **stripe-webhook** | `npm run check:stripe-webhook` | Stripe webhook signature verification     |
 
 ## Implementation
 
@@ -73,6 +73,7 @@ GATES=(
   "security:npm audit + SAST"
   "accessibility:axe-core WCAG 2.1 AA"
   "contracts:API contracts"
+  "design:Design audit (tokens, coverage, Impeccable)"
 )
 
 ADDITIONAL=(
@@ -245,8 +246,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
       - run: npm ci
       - run: npm run verify:ci
 ```

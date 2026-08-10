@@ -1,5 +1,6 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
 import { compileMDX } from "@content-collections/mdx";
+import { z } from "zod";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import remarkGfm from "remark-gfm";
@@ -8,7 +9,7 @@ const posts = defineCollection({
   name: "posts",
   directory: "content/posts",
   include: "**/*.mdx",
-  schema: (z) => ({
+  schema: z.object({
     title: z.string(),
     description: z.string(),
     date: z.string(),
@@ -44,7 +45,7 @@ const pages = defineCollection({
   name: "pages",
   directory: "content/pages",
   include: "**/*.mdx",
-  schema: (z) => ({
+  schema: z.object({
     title: z.string(),
     description: z.string(),
     heroImage: z.string().optional(),
@@ -73,7 +74,7 @@ const components = defineCollection({
   name: "components",
   directory: "content/components",
   include: "**/*.mdx",
-  schema: (z) => ({
+  schema: z.object({
     title: z.string(),
     description: z.string(),
     category: z.string(),

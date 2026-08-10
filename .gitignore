@@ -10,9 +10,8 @@ build/
 supabase/.temp/
 supabase/.branches/
 
-# Cloudflare
-.wrangler/
-wrangler.toml.local
+# Vercel
+.vercel/
 
 # Environment files (secrets)
 .env
@@ -34,8 +33,6 @@ coverage/
 .vitest/
 
 # Generated / temp (from in-flight migration)
-.hermes-tmp.*
-.hermes-tmp.*/
 .content-collections/
 playwright-visual-report/
 .hyperframes/

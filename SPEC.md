@@ -1,12 +1,34 @@
-# SPEC.md — SaaS-Zero Product Specification
+﻿# SPEC.md — SaaS-Zero Product Specification
 
 ## Vision
 
 **SaaS-Zero** : Starter kit complet pour lancer un SaaS B2B en jours, pas mois.
 
 - Site marketing (landing, blog, CMS) + App SaaS (dashboard, billing, team) en un seul repo
-- 100% gratuit/abordable (Cloudflare + Supabase Free + Stripe + Brevo Free)
+- 100% gratuit/abordable (Vercel + Supabase Free + Stripe + Brevo Free)
 - Pipeline `ns-ship` automatisé : Discovery → Deploy en une commande
+
+## Product Identity
+
+**Nom du produit** : saas-zero — Pipeline SaaS Zero-Risk
+
+**Catégorie** : Pipeline de génération de SaaS (starter kit commandé)
+
+**Promise principale** : lancer un SaaS complet (marketing, auth, billing, design signature) en heures, pas en mois — gratuitement et avec zéro bug.
+
+**Bénéfices clés** :
+
+- Décisions verrouillées en Discovery (B2B/B2C, design system, pricing)
+- 14 gates déterministes = qualité garantie sans jugement LLM
+- Effet wow (élément signature) + conversion design intégrés
+
+## Business Model
+
+**Modèle** : pipeline gratuite et open source ; chaque SaaS produit est monétisable (tiers Stripe).
+
+**Revenus** : 0$ direct (v1) → revenus des SaaS produits via la pipeline.
+
+**Coûts** : infra gratuite (Vercel + Supabase Free + Stripe + Brevo Free).
 
 ## Public Cible
 
@@ -62,6 +84,35 @@
 - **Fields** : title, slug, description, body (MDX), tags, heroImage, date, draft, order
 - **Components MDX** : Hero, FeatureGrid, PricingTable, TestimonialCarousel, FAQ, CTA
 
+## Design
+
+- **Design system** : ship-flow (shadcn/ui + Radix + Tailwind + CVA)
+- **Motion tier** : Modéré à Bold (GSAP + Framer Motion), `prefers-reduced-motion` respecté
+- **Dark mode** : sombre par défaut, toggle clair, persistance localStorage + préférence OS
+- **Élément signature** : check vert émeraude à la complétion + hero kanban parallax
+- **Accessibilité** : WCAG 2.1 AA, axe-core en CI
+
+## Pages / Routes
+
+**Marketing (public)** :
+
+- `/` — landing (hero, features, pricing, testimonials, FAQ, CTA)
+- `/pricing` — 3 tiers, toggle mensuel/annuel
+- `/blog` + `/blog/[slug]` — articles MDX
+- `/contact` — formulaire (edge function)
+
+**Auth (public)** :
+
+- `/[locale]/connexion`, `/[locale]/inscription`, `/[locale]/mot-de-passe-oublie`
+
+**App (protégé, layout `(app)`)** :
+
+- `/dashboard` — stats (mock v1)
+- `/equipe` — membres, invites, rôles
+- `/facturation` — plan, portail Stripe
+- `/reglages` — profil, notifications, sécurité
+- `/projets` — kanban produit (TaskFlow)
+
 ## Non-Functional Requirements
 
 | Requirement       | Target                                            |
@@ -75,7 +126,7 @@
 | **Security**      | CSP, HSTS, rate limiting on auth/billing          |
 | **i18n**          | fr/en complet, fallback fr                        |
 
-## Quality Gates (13 Gates)
+## Quality Gates (14 Gates)
 
 1. `gate:typecheck` — `tsc --noEmit` strict pass
 2. `gate:lint` — ESLint + Prettier zero warnings
@@ -91,10 +142,30 @@
 12. `gate:accessibility` — axe-core WCAG 2.1 AA
 13. `gate:contracts` — API contract tests (OpenAPI)
 
+## Acceptance Criteria
+
+| Critère            | Condition                                                |
+| ------------------ | -------------------------------------------------------- |
+| Discovery complète | `discovery:check` = 100%, 4 fichiers à la racine         |
+| Qualité            | `gates:all` vert (14 gates déterministes)                |
+| Auth               | inscription → connexion → route protégée (E2E vert)      |
+| Billing            | checkout Stripe → webhook → sync DB (E2E vert)           |
+| Design             | `design:check` vert (0 hardcoded, coverage ≥ 90%)        |
+| RLS                | chaque table a des policies testées (`supabase test db`) |
+
+## Risques
+
+| Risque                                           | Mitigation                                              |
+| ------------------------------------------------ | ------------------------------------------------------- |
+| Conflit schémas B2B/B2C                          | Migrations séparées, décision au Discovery, tests pgTAP |
+| Gates non exécutables localement (pas de Docker) | CI exécute `supabase test db`                           |
+| Placeholders design                              | `design:check` + media-fetcher dans la pipeline         |
+| Dépendance à un fournisseur                      | Tous interchangeables (ADR + env vars)                  |
+
 ## Deployment
 
-- **Preview** : `wrangler pages deploy --branch=preview` (chaque PR)
-- **Production** : `wrangler pages deploy --branch=main` (merge main)
+- **Preview** : `vercel --preview` (chaque PR)
+- **Production** : `vercel --prod` (merge main)
 - **Supabase Migrations** : GitHub Action `supabase db push` sur merge main
 - **Stripe/Brevo Webhooks** : Mise à jour URLs via CLI ou dashboard
 

@@ -1,13 +1,21 @@
 import { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { DM_Sans, Syne } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import "@/styles/globals.css";
+import { AnalyticsProvider } from "@/components/providers/AnalyticsProvider";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
+});
+
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 interface Props {
@@ -45,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "A complete SaaS starter kit with Next.js 14, Supabase, Stripe, and more.",
       images: [
         {
-          url: "/images/og-image.jpg",
+          url: "/images/og-image.svg",
           width: 1200,
           height: 630,
           alt: "SaaS Zero",
@@ -57,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: "SaaS Zero",
       description:
         "A complete SaaS starter kit with Next.js 14, Supabase, Stripe, and more.",
-      images: ["/images/og-image.jpg"],
+      images: ["/images/og-image.svg"],
     },
     verification: {
       google: "google-site-verification-code",
@@ -71,7 +79,7 @@ export default async function RootLayout({ children, params }: Props) {
   const messages = await getMessages({ locale });
 
   return (
-    <html lang={locale} className={inter.variable}>
+    <html lang={locale} className={`${dmSans.variable} ${syne.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -80,10 +88,14 @@ export default async function RootLayout({ children, params }: Props) {
           crossOrigin="anonymous"
         />
       </head>
-      <body className="font-body antialiased bg-background text-foreground">
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <main id="main">{children}</main>
-        </NextIntlClientProvider>
+      <body className="font-sans antialiased bg-background text-foreground">
+        <AnalyticsProvider>
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <main id="main" role="main">
+              {children}
+            </main>
+          </NextIntlClientProvider>
+        </AnalyticsProvider>
         <script
           defer
           data-domain="saas-zero.dev"

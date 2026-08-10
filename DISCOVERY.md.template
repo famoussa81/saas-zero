@@ -1,0 +1,184 @@
+# DISCOVERY.md — Décisions & Raisonnement (Carnet de Bord)
+
+> **Généré par le skill `ns-discovery` (Phase 1 Discovery).**
+> Ce document capture le **POURQUOI** de chaque décision produit/business/architecture/design.
+> `SPEC.md` est le contrat exécutable ; `DISCOVERY.md` est le raisonnement qui le justifie.
+
+---
+
+## 1. Header
+
+| Champ | Valeur |
+|-------|--------|
+| **Projet** | [Nom du produit] |
+| **Date** | [YYYY-MM-DD] |
+| **Statut** | [Brouillon / Validé] |
+| **Owner** | [Nom] |
+| **Brief original** | [La description donnée par l'utilisateur] |
+
+---
+
+## 2. Lean Canvas
+
+| Bloc | Contenu |
+|------|---------|
+| **1. Problème** | Top 3 douleurs + alternatives actuelles |
+| **2. Segments clients** | Qui exactement (segments) |
+| **3. Proposition de valeur unique** | L'UVP en une phrase |
+| **4. Solution** | Top 3 features qui résolvent le problème |
+| **5. Canaux** | Comment on atteint les clients (SEO, content, PAID, communities…) |
+| **6. Revenus** | Modèle + sources de revenus |
+| **7. Coûts** | Coûts fixes/variables (infra, SaaS, temps) |
+| **8. Métriques clés** | Les 3-5 métriques qui comptent |
+| **9. Avantage déloyal** | Ce qu'on a et que les autres ne peuvent pas copier facilement |
+
+---
+
+## 3. Personas / ICP
+
+| Champ | Persona 1 | Persona 2 |
+|-------|-----------|-----------|
+| **Rôle** | [ex: Freelance développeur] | [ex: Lead d'équipe 5-15] |
+| **Douleur** | [la douleur principale] | [la douleur principale] |
+| **Budget** | [ex: 10-50$/mois] | [ex: 100-500$/mois] |
+| **Tech-savviness** | [Haute/Moyenne/Basse] | [Haute/Moyenne/Basse] |
+| **Déclencheur d'achat** | [ce qui le pousse à payer] | [ce qui le pousse à payer] |
+| **ICP (idéal ou non)** | [ICP / pas ICP] | [ICP / pas ICP] |
+
+---
+
+## 4. Jobs-to-be-done
+
+- **[Situation]** → quand [contexte], je veux [motivation] afin de [résultat attendu].
+- **[Situation 2]** → quand [contexte], je veux [motivation] afin de [résultat attendu].
+
+---
+
+## 5. Matrice concurrentielle & Positionnement
+
+| Concurrent | Forces | Faiblesses | Positionnement actuel |
+|------------|--------|------------|-----------------------|
+| [Concurrent 1] | [forces] | [faiblesses] | [ce qu'il occupe] |
+| [Concurrent 2] | [forces] | [faiblesses] | [ce qu'il occupe] |
+| [Concurrent 3] | [forces] | [faiblesses] | [ce qu'il occupe] |
+
+**Wedge d'entrée** : [l'angle par lequel on attaque le marché]
+
+**Positionnement** : Pour [cible] qui [besoin], [produit] est une [catégorie] qui [bénéfice]. Contrairement à [alternative], [différenciateur].
+
+---
+
+## 6. Monétisation & Unit Economics
+
+### Modèle & Pricing
+
+| Tier | Prix mensuel | Prix annuel (-20%) | Features incluses |
+|------|-------------|--------------------|-------------------|
+| [Free] | [0$] | [0$] | [features] |
+| [Starter] | [9$] | [90$] | [features] |
+| [Pro] | [29$] | [290$] | [features] |
+| [Enterprise] | [Custom] | [Custom] | [features] |
+
+### Unit Economics
+
+| Métrique | Cible | Justification |
+|----------|-------|---------------|
+| **ACV** (revenu annuel par client) | [ex: 348$] | [raisonnement] |
+| **Marge brute** | [ex: 80%] | [raisonnement] |
+| **Churn max acceptable** | [ex: 3%/mois] | [raisonnement] |
+| **LTV** (durée vie × ACV) | [ex: 1160$] | [raisonnement] |
+| **Payback** (LTV/CAC) | [ex: >3x] | [raisonnement] |
+| **MRR cible à 6 mois** | [ex: 3 000$] | [raisonnement] |
+| **MRR cible à 12 mois** | [ex: 10 000$] | [raisonnement] |
+
+---
+
+## 7. Funnel Conversion & Rétention (doctrine utilisateur)
+
+> *Attirer avec le wow → convaincre avec la qualité → rassurer avec le zéro bug.*
+> *S'inscrire → payer → RESTER.*
+
+| Étape funnel | Ce qui convertit à cette étape | Métrique cible |
+|--------------|--------------------------------|----------------|
+| **Attirer** | Hero wow, élément signature, preuve sociale | [ex: visiteurs/mois] |
+| **Convaincre** | Landing features-bénéfices, démo, tarifs clairs | [ex: taux scroll profond] |
+| **Rassurer** | Preuve sociale, garanties, sécurité, clients types | [ex: signaux de confiance] |
+| **S'inscrire** | Onboarding guidé, friction minimale | [ex: taux d'inscription] |
+| **Payer** | Pricing clair, essai, portail self-service | [ex: free→paid conversion] |
+| **Rester** | Valeur continue, habitude, notifications, emails | [ex: rétention M3] |
+
+**Onboarding** : premier succès en < [X] min. Parcours : [étapes]. Emails : [welcome, activation, nudge].
+
+**Boucle d'habitude** : déclencheur → action → récompense variable → investissement (ex: la tâche se met à jour, l'équipe est notifiée).
+
+---
+
+## 8. Décisions Verrouillées
+
+| Décision | Options considérées | Chois | Raisonnement |
+|----------|---------------------|-------|--------------|
+| [B2B vs B2C] | B2B multi-tenant / B2C single-user | [choix] | [pourquoi] |
+| [Modèle pricing] | [tiers / usage / freemium] | [choix] | [pourquoi] |
+| [Design system] | [Linear/Vercel/Stripe/Framer/Custom] | [choix] | [pourquoi] |
+| [Motion tier] | [Minimal/Moderate/Bold] | [choix] | [pourquoi] |
+| [Auth] | [email+password/magic link/OAuth/MFA] | [choix] | [pourquoi] |
+| [Billing] | [Stripe tiers/portail/webhooks] | [choix] | [pourquoi] |
+| [Email] | [Brevo/Resend…] | [choix] | [pourquoi] |
+| [Autre décision] | [options] | [choix] | [pourquoi] |
+
+---
+
+## 9. Impact Traceability (feature → code / gates)
+
+| Feature (MVP) | Tables / RLS | Pages | Gates impactés |
+|---------------|--------------|-------|----------------|
+| [Auth & onboarding] | [profiles, auth.users] | [/auth, /onboarding] | [typecheck, e2e, a11y] |
+| [Organisation] | [orgs, org_members, invites — RLS org] | [/org/[slug]/*] | [rls, e2e] |
+| [Feature produit 1] | [table1, table2 — RLS] | [route] | [test, e2e] |
+| [Billing] | [stripe_customers, subscriptions] | [/billing, /settings/billing] | [e2e, security] |
+| [Email] | [email_queue] | [—] | [test] |
+
+---
+
+## 10. Métriques de Succès
+
+| Type | Métrique | Cible |
+|------|----------|-------|
+| **North Star** | [ex: tâches complétées/semaine] | [ex: 5/semaine utilisateur actif] |
+| **Acquisition** | [ex: trafic organique/mois] | [cible] |
+| **Activation** | [ex: % signups qui atteignent 1er succès] | [cible] |
+| **Rétention** | [ex: rétention M3] | [cible] |
+| **Revenu** | [ex: MRR] | [cible 6/12 mois] |
+| **Qualité** | [ex: bugs critiques] | [0] |
+
+---
+
+## 11. Risques & Mitigation
+
+| Risque | Likelihood | Impact | Mitigation |
+|--------|------------|--------|------------|
+| [Risque 1] | [H/M/L] | [H/M/L] | [mitigation] |
+| [Risque 2] | [H/M/L] | [H/M/L] | [mitigation] |
+| [Risque 3] | [H/M/L] | [H/M/L] | [mitigation] |
+
+---
+
+## 12. Questions Ouvertes
+
+- [ ] [Question 1 à trancher avant/après build]
+- [ ] [Question 2 — décision différée, pas bloquante]
+
+---
+
+## Validation
+
+| Gate | Statut |
+|------|--------|
+| **Complétude** (`discovery:check`) | [Score X/100] |
+| **Validation humaine** | [Approuvé / Modifier] |
+
+> **Bloquant** : ne pas passer à la Phase 2 (scaffold) sans complétude 100% + approbation humaine.
+
+---
+
+_Généré par le skill `ns-discovery` — Pipeline saas-zero_

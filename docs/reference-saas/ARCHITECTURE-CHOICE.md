@@ -14,7 +14,7 @@
 | Email                          | Brevo                                           | transactionnel + marketing, gratuit  |
 | Vision agent                   | ModLens (Gemini)                                | analyse visuels/screenshots          |
 | Design                         | `ns-design-system` (tokens + élément signature) | non-générique                        |
-| Qualité                        | 13 gates + k6 + Sentry + review                 | zéro bug mécanique                   |
+| Qualité                        | 14 gates + k6 + Sentry + review                 | zéro bug mécanique                   |
 
 ## Architecture B2B (multi-tenant)
 
@@ -50,7 +50,7 @@ Chaque nouvelle table : RLS `organization_id IN (SELECT organization_id FROM org
 2. **Scaffold** → repo structuré, Supabase, env, types
 3. **Design** → tokens + élément signature + composants
 4. **Build** → auth/org + projets/tâches + billing + dashboard + notifications
-5. **Verify** → 13 gates + review
+5. **Verify** → 14 gates + review
 6. **Deploy** → Cloudflare + migrations + webhooks
 
 ## Env Vars (taskflow)

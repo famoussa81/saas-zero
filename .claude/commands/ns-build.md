@@ -124,7 +124,7 @@ graph LR
 
 - `POST /api/billing/portal` → Stripe Billing Portal Session → redirect
 
-**Webhook Handler** (`workers/stripe-webhook.ts`)
+**Webhook Handler** (`app/api/webhooks/stripe/route.ts`)
 
 ```typescript
 // Events gérés :

@@ -1,3 +1,8 @@
+---
+name: design-architect
+description: Génère DESIGN-SPEC.md + ARCHITECTURE-PLAN.md depuis SPEC.md + DESIGN-CHOICE.md + ARCHITECTURE-CHOICE.md.
+---
+
 # Agent: `design-architect`
 
 > **Rôle** : Génère `DESIGN-SPEC.md` + `ARCHITECTURE-PLAN.md` depuis `SPEC.md` + `DESIGN-CHOICE.md` + `ARCHITECTURE-CHOICE.md`.
@@ -264,15 +269,15 @@ app/
 ````
 
 ### State Management
-- **Server State** : TanStack Query (React Query) — cache, invalidation, optimistic updates
+- **Server State** : Server Components + Server Actions (RSC) — pas de client-side cache
 - **Client State** : React Context (theme, locale, user preferences)
 - **Form State** : React Hook Form + Zod
 - **URL State** : Next.js searchParams + router
 
 ### Data Fetching
 - **Server Components** : Direct Supabase queries (RSC)
-- **Client Components** : Server Actions + TanStack Query
-- **Edge Functions** : Webhooks, API routes (Cloudflare Workers)
+- **Client Components** : Server Actions + React Query (mutations)
+- **API Routes** : Route Handlers Next.js (App Router)
 
 ### Realtime
 - Supabase Realtime channels par organisation
@@ -332,8 +337,7 @@ newsletter_subscribers (id, email, confirmed, confirmed_at, created_at) -- exist
 
 ### Hosting
 
-- **Cloudflare Pages** : Next.js 14 static + SSR
-- **Cloudflare Workers** : Edge Functions (webhooks, email, health)
+- **Vercel** : Next.js 14 static + SSR, Route Handlers (webhooks, email, health), edge runtime
 - **Supabase** : PostgreSQL + Auth + Realtime + Storage
 - **Stripe** : Billing + Checkout + Portal + Webhooks
 - **Brevo** : Transactional + Marketing emails

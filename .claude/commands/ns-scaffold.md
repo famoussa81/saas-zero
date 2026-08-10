@@ -1,6 +1,6 @@
 # `/ns-scaffold` — Phase 2 : Scaffold Repo & Infrastructure
 
-> **Objectif** : Repo prêt à coder — structure, deps, Supabase, Cloudflare, env, types.
+> **Objectif** : Repo prêt à coder — structure, deps, Supabase, Vercel, env, types.
 
 ---
 
@@ -92,10 +92,12 @@ saas-zero/
 ├── supabase/
 │   ├── migrations/
 │   └── config.toml
-├── workers/
-│   ├── stripe-webhook.ts
-│   ├── brevo-email.ts
-│   └── health-check.ts
+├── app/
+│   └── api/
+│       ├── webhooks/
+│       │   ├── stripe/
+│       │   └── brevo/
+│       └── health/
 ├── tests/
 │   ├── unit/
 │   ├── e2e/
@@ -132,27 +134,30 @@ pnpm supabase:gen:types
 
 ---
 
-## Cloudflare Pages Setup
+## Vercel Setup
 
-### `wrangler.toml`
+### `vercel.json`
 
-```toml
-name = "saas-zero"
-compatibility_date = "2024-01-01"
-pages_build_output_dir = ".next"
-
-[env.preview]
-branch = "preview"
-
-[env.production]
-branch = "main"
+```json
+{
+  "framework": "nextjs",
+  "regions": ["fra1"],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000" }
+      ]
+    }
+  ]
+}
 ```
 
-### Workers (Edge Functions)
+### Route Handlers (App Router)
 
-- `workers/stripe-webhook.ts` — Stripe webhooks
-- `workers/brevo-email.ts` — Email transactionnel
-- `workers/health-check.ts` — Health check endpoint
+- `app/api/webhooks/stripe/route.ts` — Stripe webhooks
+- `app/api/webhooks/brevo/route.ts` — Email transactionnel
+- `app/api/health/route.ts` — Health check endpoint
 
 ---
 
@@ -177,9 +182,10 @@ BREVO_API_KEY=
 BREVO_SENDER_EMAIL=
 BREVO_SENDER_NAME=
 
-# Cloudflare
-CLOUDFLARE_ACCOUNT_ID=
-CLOUDFLARE_API_TOKEN=
+# Vercel
+VERCEL_TOKEN=
+VERCEL_ORG_ID=
+VERCEL_PROJECT_ID=
 
 # Feature Flags
 ENABLE_MFA=true

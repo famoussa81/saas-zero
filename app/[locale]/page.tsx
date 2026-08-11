@@ -1,14 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import {
-  ArrowRight,
-  Check,
-  Zap,
-  Shield,
-  BarChart3,
-  Users,
-  Globe,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Script from "next/script";
 import {
   OrganizationJsonLd,
@@ -17,6 +9,7 @@ import {
 } from "@/components/ui/JsonLd";
 import { PipelineHero } from "@/components/marketing/PipelineHero";
 import { PipelineTimeline } from "@/components/marketing/PipelineTimeline";
+import { FeatureGrid } from "@/components/marketing/FeatureGrid";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -27,42 +20,42 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const features = [
   {
-    icon: Shield,
+    icon: "shield" as const,
     title: "Authentification complète",
     description:
       "Supabase Auth avec email/password, OAuth, MFA, magic links. RLS activé sur toutes les tables.",
     benefit: "Sécurité enterprise dès le jour 1",
   },
   {
-    icon: Zap,
+    icon: "zap" as const,
     title: "Billing Stripe natif",
     description:
       "Abonnements, paiements uniques, portail client, webhooks, gestion des factures.",
     benefit: "Monétisation prête en minutes",
   },
   {
-    icon: BarChart3,
+    icon: "barChart" as const,
     title: "Dashboard temps réel",
     description:
       "Interface admin avec paramètres, facturation, équipe, analytics en temps réel.",
     benefit: "Visibilité totale sur votre business",
   },
   {
-    icon: Users,
+    icon: "users" as const,
     title: "Gestion d'équipe B2B",
     description:
       "Organisations, invitations, rôles, permissions granulaires, audit logs.",
     benefit: "Collaboration sans friction",
   },
   {
-    icon: Globe,
+    icon: "globe" as const,
     title: "i18n & SEO optimisés",
     description:
       "Next-intl, sitemap, JSON-LD, Open Graph, Pagefind search, performance 90+.",
     benefit: "Visibilité mondiale automatique",
   },
   {
-    icon: Check,
+    icon: "check" as const,
     title: "Quality gates intégrés",
     description:
       "14 gates déterministes : typecheck, lint, tests, a11y, visual regression, perf, design.",
@@ -255,32 +248,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {features.map((feature, index) => (
-                <article
-                  key={feature.title}
-                  className="scroll-reveal scroll-reveal-delay-{index + 1} group relative p-6 md:p-8 bg-card/50 border border-border/50 rounded-2xl hover-lift glass transition-all duration-300 hover:border-primary/20"
-                  data-testid={`feature-${index}`}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl pointer-events-none" />
-                  <div className="relative z-10">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                      <feature.icon className="w-6 h-6" />
-                    </div>
-                    <h3 className="font-display font-bold text-xl text-foreground mb-3">
-                      {feature.title}
-                    </h3>
-                    <p className="text-muted-foreground mb-4 leading-relaxed">
-                      {feature.description}
-                    </p>
-                    <div className="flex items-center gap-2 text-sm font-medium text-primary">
-                      <Check className="w-4 h-4 shrink-0" />
-                      <span>{feature.benefit}</span>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <FeatureGrid features={features} />
           </div>
         </section>
 

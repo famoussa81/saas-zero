@@ -501,7 +501,6 @@
         "accent",
         "background",
         "border",
-        "card",
         "font-size-2xl",
         "font-size-3xl",
         "font-size-4xl",
@@ -518,12 +517,10 @@
         "muted",
         "primary",
         "radius",
-        "radius-2xl",
         "radius-3xl",
-        "radius-full",
-        "radius-xl"
+        "radius-full"
       ],
-      "tokenCount": 24,
+      "tokenCount": 21,
       "hasTokens": true
     },
     {
@@ -914,5 +911,5 @@
       "definedIn": ["src\\styles\\globals.css"]
     }
   ],
-  "timestamp": "2026-08-11T00:05:25.866Z"
+  "timestamp": "2026-08-11T00:38:38.005Z"
 }

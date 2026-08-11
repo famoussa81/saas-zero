@@ -1,0 +1,25 @@
+{
+  "_comment": "Historique des directions artistiques produites par la pipeline. Sert à garantir qu'un nouveau projet ne reprend pas la direction d'un précédent (voir skill ns-design-direction, section Anti-répétition). Une nouvelle direction ne doit partager avec une entrée existante ni la famille d'accent (±30 degrés de teinte), ni la fonte display, ni le concept d'élément signature.",
+  "directions": [
+    {
+      "project": "saas-zero",
+      "date": "2026-08-11",
+      "accent": "#6d5bd0",
+      "accentHue": 255,
+      "accentSecondary": "#f5a524",
+      "displayFont": "Syne",
+      "bodyFont": "DM Sans",
+      "signature": "Terminal qui exécute la vraie commande du produit (/ns-ship) et déroule ses 6 phases en boucle",
+      "mood": "technique, précis, confiant",
+      "motionTier": "moderate",
+      "sections": {
+        "hero": "A-demo-vivante",
+        "proof": "B-metriques",
+        "features": "A-grille-cartes",
+        "howItWorks": "A-timeline-verticale",
+        "pricing": "A-cartes-cote-a-cote",
+        "cta": "A-bloc-contraste"
+      }
+    }
+  ]
+}

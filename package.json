@@ -43,7 +43,7 @@
     "gate:rls": "supabase test db",
     "gate:security": "pnpm audit --audit-level=high && (npx codeql database analyze --format=sarif-latest --output=codeql-results.sarif codeql-db 2>/dev/null || echo 'CodeQL not configured, skipping')",
     "gate:accessibility": "npx playwright test --config=playwright.a11y.config.ts",
-    "gate:load": "k6 run tests/load/scenario.js 2>/dev/null || echo 'k6 not installed, skipping load test'",
+    "gate:load": "node .claude/scripts/run-load-test.js",
     "gate:sentry": "node -e \"const e=process.env; ['SENTRY_DSN'].forEach(k=>{if(!e[k]){console.warn('SENTRY_DSN not set, skipping');process.exit(0)}}); console.log('SENTRY_DSN configured')\"",
     "gate:contracts": "vitest run tests/contracts",
     "gate:design": "pnpm design:check",

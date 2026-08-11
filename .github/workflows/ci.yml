@@ -13,7 +13,7 @@ env:
 jobs:
   # Job 1: Typecheck + Lint (fast, runs first)
   quality:
-    name: Quality Gates (1-3)
+    name: Quality Gates (1-3, 14)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -45,6 +45,26 @@ jobs:
 
       - name: Unit Tests (Gate 3)
         run: pnpm gate:test
+
+      # Discovery et Design tournaient dans gates:all en local mais n'étaient
+      # enforcés nulle part en CI — une régression de design pouvait donc
+      # passer en production sans être vue.
+      - name: Discovery completeness
+        run: pnpm discovery:check
+
+      - name: Design Audit (Gate 14)
+        run: pnpm design:check
+
+      - name: Upload design audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: design-audit
+          path: |
+            DESIGN-AUDIT.md
+            design-audit.json
+            design-tokens-audit.json
+          retention-days: 14
 
   # Job 2: Build verification
   build:

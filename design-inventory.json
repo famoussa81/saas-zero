@@ -1,7 +1,7 @@
 {
   "components": {
-    "total": 41,
-    "usingTokens": 40,
+    "total": 42,
+    "usingTokens": 41,
     "violations": 1,
     "coverage": "97.6%",
     "skippedNoStylingSurface": 10
@@ -708,6 +708,20 @@
       "hasTokens": true
     },
     {
+      "path": "components\\ui\\empty-state.tsx",
+      "tokensUsed": [
+        "border",
+        "font-size-lg",
+        "font-size-sm",
+        "font-weight-bold",
+        "foreground",
+        "muted",
+        "radius-xl"
+      ],
+      "tokenCount": 7,
+      "hasTokens": true
+    },
+    {
       "path": "components\\ui\\input.tsx",
       "tokensUsed": [
         "background",
@@ -914,5 +928,5 @@
       "definedIn": ["src\\styles\\globals.css"]
     }
   ],
-  "timestamp": "2026-08-11T13:59:47.743Z"
+  "timestamp": "2026-08-11T14:12:03.828Z"
 }

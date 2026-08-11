@@ -1,6 +1,6 @@
 {
   "overallPass": true,
-  "timestamp": "2026-08-11T12:31:27.435Z",
+  "timestamp": "2026-08-11T13:53:00.438Z",
   "gates": {
     "hardcodedValues": {
       "pass": false,
@@ -20,7 +20,7 @@
     },
     "impeccable": {
       "pass": true,
-      "score": 95,
+      "score": 100,
       "threshold": 95,
       "skipped": false
     }
@@ -29,7 +29,7 @@
     "tokensAudit": {
       "violations": [],
       "filesScanned": 61,
-      "timestamp": "2026-08-11T12:30:59.076Z"
+      "timestamp": "2026-08-11T13:52:33.129Z"
     },
     "inventory": {
       "components": {
@@ -947,24 +947,12 @@
           "definedIn": ["src\\styles\\globals.css"]
         }
       ],
-      "timestamp": "2026-08-11T12:30:59.292Z"
+      "timestamp": "2026-08-11T13:52:33.379Z"
     },
     "impeccable": {
-      "findings": [
-        {
-          "antipattern": "side-tab",
-          "name": "Side-tab accent border",
-          "description": "Thick colored border on one side of a card — the most recognizable tell of AI-generated UIs. Use a subtler accent or remove it entirely.",
-          "severity": "warning",
-          "category": "slop",
-          "file": "C:\\Users\\PC\\saas-zero\\components\\MDXComponents.tsx",
-          "line": 69,
-          "snippet": "border-l-4",
-          "importedBy": ["MDXContent.tsx"]
-        }
-      ],
+      "findings": [],
       "errors": 0,
-      "warnings": 1
+      "warnings": 0
     }
   }
 }

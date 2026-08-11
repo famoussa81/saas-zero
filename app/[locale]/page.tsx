@@ -124,11 +124,10 @@ export default function HomePage() {
       <WebsiteJsonLd />
       <SoftwareApplicationJsonLd />
 
-      {/* Signature animated orbs */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="signature-orb signature-orb-1" />
-        <div className="signature-orb signature-orb-2" />
-        <div className="signature-orb signature-orb-3" />
+      {/* Fond de précision (grille + halo unique) — voir globals.css */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[900px] overflow-hidden">
+        <div className="precision-glow" />
+        <div className="precision-grid" />
       </div>
 
       <header className="relative z-10 border-b border-border/50 glass sticky top-0">

@@ -135,61 +135,48 @@
     }
   }
 
-  /* Signature element - animated gradient orb */
-  .signature-orb {
+  /* Fond de précision — grille technique fine.
+     Remplace les orbes floutés en dégradé : ces derniers sont un marqueur
+     reconnaissable de design généré par IA (voir skill ns-anti-generic-audit)
+     et contredisaient la direction "technique, précis" du projet.
+     La grille évoque le plan / le terminal, et reste calme : le seul moment
+     fort de la page est le terminal animé du hero. */
+  .precision-grid {
     position: absolute;
-    border-radius: 9999px;
-    filter: blur(80px);
-    opacity: 0.4;
-    animation: orb-float 20s ease-in-out infinite;
+    inset: 0;
     pointer-events: none;
-  }
-  .signature-orb-1 {
-    width: 400px;
-    height: 400px;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--primary)) 0%,
-      hsl(var(--accent)) 100%
+    background-image:
+      linear-gradient(to right, hsl(var(--border) / 0.4) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.4) 1px, transparent 1px);
+    background-size: 64px 64px;
+    /* Estompe la grille vers les bords pour qu'elle ne concurrence pas le contenu */
+    mask-image: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      black 20%,
+      transparent 75%
     );
-    top: -100px;
-    right: -100px;
-    animation-delay: 0s;
-  }
-  .signature-orb-2 {
-    width: 300px;
-    height: 300px;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--accent)) 0%,
-      hsl(var(--primary)) 100%
+    -webkit-mask-image: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      black 20%,
+      transparent 75%
     );
-    bottom: -50px;
-    left: -50px;
-    animation-delay: -7s;
   }
-  .signature-orb-3 {
-    width: 200px;
-    height: 200px;
-    background: hsl(var(--primary) / 0.3);
-    top: 50%;
+
+  /* Halo unique, très diffus, ancré derrière le hero — donne de la
+     profondeur sans devenir l'orbe décorative flottante habituelle. */
+  .precision-glow {
+    position: absolute;
+    top: -20%;
     left: 50%;
-    animation-delay: -14s;
-  }
-  @keyframes orb-float {
-    0%,
-    100% {
-      transform: translate(0, 0) scale(1);
-    }
-    25% {
-      transform: translate(30px, -20px) scale(1.05);
-    }
-    50% {
-      transform: translate(-20px, 30px) scale(0.95);
-    }
-    75% {
-      transform: translate(10px, 25px) scale(1.02);
-    }
+    width: min(900px, 90vw);
+    height: 520px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at center,
+      hsl(var(--primary) / 0.12) 0%,
+      transparent 70%
+    );
   }
 
   /* Scroll reveal animations */

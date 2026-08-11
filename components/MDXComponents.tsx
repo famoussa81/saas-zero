@@ -66,7 +66,7 @@ export const components: Record<
   ),
   li: ({ children }) => <li className="mb-1">{children}</li>,
   blockquote: ({ children }) => (
-    <blockquote className="border-l-4 border-primary pl-6 italic text-muted-foreground my-6">
+    <blockquote className="my-6 rounded-lg bg-muted/60 px-6 py-4 text-muted-foreground italic">
       {children}
     </blockquote>
   ),

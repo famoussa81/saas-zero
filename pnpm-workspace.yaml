@@ -6,3 +6,19 @@ onlyBuiltDependencies:
   - pixelmatch
   - pngjs
   - esbuild
+
+# Overrides de sécurité — DÉLIBÉRÉMENT dupliqués avec package.json > pnpm.overrides.
+#
+# pnpm 9 lit la clé "pnpm" de package.json ; pnpm 10 ne la lit plus et avertit
+# ("The 'pnpm' field in package.json is no longer read by pnpm") en attendant
+# de les trouver ici. Le repo peut être installé avec l'une ou l'autre version
+# selon la machine — les déclarer aux deux endroits est le seul moyen que les
+# overrides s'appliquent dans les deux cas.
+#
+# Garder les deux blocs SYNCHRONISÉS lors de toute modification.
+#
+# postcss : correctif >=8.5.18, atteint via @sentry/nextjs (dependency de PROD)
+# tmp     : correctif >=0.2.6, atteint via @lhci/cli (dev)
+overrides:
+  postcss: ">=8.5.18"
+  tmp: ">=0.2.6"

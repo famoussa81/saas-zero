@@ -30,22 +30,21 @@
     "supabase:start": "supabase start",
     "supabase:migrate:up": "supabase db push",
     "discovery:check": "node .claude/scripts/discovery-check.js",
-    "gates:all": "pnpm discovery:check && pnpm typecheck && pnpm lint && pnpm test && pnpm test:e2e && pnpm design:check",
+    "gates:all": "node .claude/scripts/run-gates.js",
     "gate:typecheck": "pnpm typecheck",
     "gate:lint": "pnpm lint",
     "gate:test": "pnpm test",
     "gate:e2e": "pnpm test:e2e",
     "gate:visual": "pnpm test:visual",
-    "gate:lighthouse": "npx lhci autorun",
-    "gate:bundle": "cross-env ANALYZE=true pnpm build",
-    "gate:cwv": "npx lhci autorun --config=lighthouse-ci.json",
-    "gate:hydration": "pnpm build 2>&1 | findstr /i \"hydration mismatch\" || echo No hydration mismatches",
-    "gate:rls": "supabase test db",
-    "gate:security": "pnpm audit --audit-level=high && (npx codeql database analyze --format=sarif-latest --output=codeql-results.sarif codeql-db 2>/dev/null || echo 'CodeQL not configured, skipping')",
-    "gate:accessibility": "npx playwright test --config=playwright.a11y.config.ts",
+    "gate:lighthouse": "pnpm exec lhci autorun",
+    "gate:bundle": "node .claude/scripts/check-bundle-budget.js",
+    "gate:cwv": "pnpm exec lhci autorun --config=lighthouse-ci.json",
+    "gate:hydration": "node .claude/scripts/check-hydration.js",
+    "gate:rls": "pnpm exec supabase test db",
+    "gate:security": "node .claude/scripts/check-security.js",
+    "gate:accessibility": "pnpm exec playwright test --config=playwright.a11y.config.ts",
     "gate:load": "node .claude/scripts/run-load-test.js",
-    "gate:sentry": "node -e \"const e=process.env; ['SENTRY_DSN'].forEach(k=>{if(!e[k]){console.warn('SENTRY_DSN not set, skipping');process.exit(0)}}); console.log('SENTRY_DSN configured')\"",
-    "gate:contracts": "vitest run tests/contracts",
+    "gate:contracts": "pnpm exec vitest run tests/contracts",
     "gate:design": "pnpm design:check",
     "design:tokens:build": "style-dictionary build --config style-dictionary.config.js",
     "design:tokens:watch": "style-dictionary build --config style-dictionary.config.js --watch",
@@ -54,7 +53,10 @@
     "design:check": "node .claude/scripts/design-check.js",
     "media:fetch": "node .claude/scripts/media-fetcher.js",
     "env:check": "node .claude/scripts/env-check.js",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "gates:fast": "node .claude/scripts/run-gates.js --fast",
+    "gates:list": "node .claude/scripts/run-gates.js --list",
+    "gates:strict": "node .claude/scripts/run-gates.js --strict"
   },
   "dependencies": {
     "@content-collections/core": "^0.15.2",
@@ -186,5 +188,11 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "packageManager": "pnpm@9.0.0"
+  "packageManager": "pnpm@9.0.0",
+  "pnpm": {
+    "overrides": {
+      "postcss": ">=8.5.18",
+      "tmp": ">=0.2.6"
+    }
+  }
 }

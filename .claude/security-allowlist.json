@@ -1,0 +1,21 @@
+{
+  "_comment": "Dérogations de sécurité CONSCIENTES, lues par .claude/scripts/check-security.js. Seules les vulnérabilités confinées aux devDependencies peuvent y figurer — une vulnérabilité atteignant une dependency de production est toujours bloquante, sans exception. Chaque entrée porte une justification et une date de réexamen ; passé cette date, elle redevient bloquante. Une vulnérabilité dev NON inscrite ici bloque aussi : c'est ce qui force à regarder les nouvelles au lieu de les laisser s'accumuler.",
+  "accepted": [
+    {
+      "module": "image-size",
+      "reason": "Aucun correctif publié en amont (patched_versions: <0.0.0). Chaîne @storybook/nextjs-vite > vite-plugin-storybook-nextjs > image-size : outillage Storybook, exécuté uniquement en développement et au build de la documentation de composants. Jamais inclus dans le bundle applicatif ni exécuté sur un serveur de production. Aucune donnée utilisateur ne traverse ce chemin.",
+      "severity": "high",
+      "acceptedOn": "2026-08-11",
+      "reviewBy": "2026-11-11",
+      "revisit": "Vérifier si @storybook/nextjs-vite a mis à jour vite-plugin-storybook-nextjs, ou si image-size a publié un correctif."
+    },
+    {
+      "module": "valibot",
+      "reason": "Chaîne @storybook/addon-mcp > valibot. Addon Storybook de développement, non livré. Le paquet est par ailleurs déjà signalé en conflit de peer dependency dans l'installation.",
+      "severity": "moderate",
+      "acceptedOn": "2026-08-11",
+      "reviewBy": "2026-11-11",
+      "revisit": "Envisager de retirer @storybook/addon-mcp s'il n'est pas utilisé."
+    }
+  ]
+}

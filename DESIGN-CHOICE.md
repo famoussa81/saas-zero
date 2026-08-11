@@ -84,16 +84,22 @@
 | `--border`           | `240 5.9% 90%`  | `240 3.7% 15.9%` | —               | Bordures, séparateurs        |
 | `--destructive`      | `0 84.2% 60.2%` | `0 62.8% 30.6%`  | —               | Erreurs                      |
 
-### 2.3 Semantic Color Aliases
+### 2.3 Usage sémantique (classes Tailwind)
 
-| Semantic Token              | Light Maps To | Dark Maps To  |
-| --------------------------- | ------------- | ------------- |
-| `color-bg-primary`          | `neutral-50`  | `neutral-950` |
-| `color-bg-secondary`        | `neutral-100` | `neutral-900` |
-| `color-text-primary`        | `neutral-900` | `neutral-50`  |
-| `color-text-secondary`      | `neutral-600` | `neutral-400` |
-| `color-border-subtle`       | `neutral-200` | `neutral-800` |
-| `color-interactive-primary` | `brand-600`   | `brand-400`   |
+Les variables du §2.2 sont exposées comme utilitaires Tailwind via `tailwind.config.ts`. Les composants utilisent **ces classes**, jamais les valeurs.
+
+| Intention          | Classe                  | Résout vers                    |
+| ------------------ | ----------------------- | ------------------------------ |
+| Fond de page       | `bg-background`         | `hsl(var(--background))`       |
+| Surface / carte    | `bg-card`               | `hsl(var(--card))`             |
+| Texte principal    | `text-foreground`       | `hsl(var(--foreground))`       |
+| Texte secondaire   | `text-muted-foreground` | `hsl(var(--muted-foreground))` |
+| Action principale  | `bg-primary`            | `hsl(var(--primary))`          |
+| Accent / signature | `text-accent`           | `hsl(var(--accent))`           |
+| Bordure            | `border-border`         | `hsl(var(--border))`           |
+| Anneau de focus    | `ring-ring`             | `hsl(var(--ring))`             |
+
+> Les échelles `--font-size-*`, `--font-weight-*`, `--shadow-*`, `--radius-*` sont câblées de la même façon : `text-sm` compile vers `font-size: var(--font-size-sm)`. C'est pourquoi `text-sm` **est** un token et non une valeur en dur (cf. `.claude/scripts/design-tokens-audit.js`).
 
 ### 2.4 Accessibility Requirements
 
@@ -106,19 +112,30 @@
 
 ### 3.1 Font Strategy
 
-- **Single variable font** : Geist (ou Inter en fallback), `font-display: swap`
-- Preload de la fonte critique
+Deux fontes, deux rôles distincts — chargées via `next/font/google` dans `app/[locale]/layout.tsx`, avec `display: "swap"` et preconnect.
+
+| Rôle        | Fonte          | Variable CSS     | Pourquoi                                                            |
+| ----------- | -------------- | ---------------- | ------------------------------------------------------------------- |
+| **Display** | **Syne**       | `--font-display` | Caractère marqué (le `S`, le `y`) — reconnaissable en un coup d'œil |
+| **Body**    | **DM Sans**    | `--font-sans`    | Grande hauteur d'x, lisible à 15-16px, neutre sans être fade        |
+| **Mono**    | JetBrains Mono | `--font-mono`    | Terminal du hero, chiffres alignés (`tabular-nums`)                 |
+
+> **Ni Inter ni Space Grotesk** : ce sont les choix « sûrs » par défaut, donc invisibles (cf. liste rouge de `ns-design-direction`).
 
 ### 3.2 Type Scale Definition
 
-| Token             | Font Size       | Line Height | Weight | Use Case         |
-| ----------------- | --------------- | ----------- | ------ | ---------------- |
-| `text-display-xl` | 72px / 4.5rem   | 1.1         | 700    | Marketing hero   |
-| `text-display-md` | 48px / 3rem     | 1.2         | 600    | Section headers  |
-| `text-heading-lg` | 24px / 1.5rem   | 1.3         | 600    | H2               |
-| `text-body-md`    | 16px / 1rem     | 1.6         | 400    | **Body default** |
-| `text-body-sm`    | 14px / 0.875rem | 1.5         | 400    | Secondary text   |
-| `text-caption`    | 12px / 0.75rem  | 1.5         | 500    | Labels, meta     |
+L'échelle vit dans `--font-size-*` (globals.css) et s'utilise via les classes Tailwind standard, qui résolvent vers ces variables.
+
+| Classe      | Variable           | Valeur   | Usage              |
+| ----------- | ------------------ | -------- | ------------------ |
+| `text-7xl`  | `--font-size-7xl`  | 4.5rem   | Hero marketing     |
+| `text-5xl`  | `--font-size-5xl`  | 3rem     | Titres de section  |
+| `text-2xl`  | `--font-size-2xl`  | 1.5rem   | H2                 |
+| `text-base` | `--font-size-base` | 1rem     | **Corps de texte** |
+| `text-sm`   | `--font-size-sm`   | 0.875rem | Texte secondaire   |
+| `text-xs`   | `--font-size-xs`   | 0.75rem  | Labels, méta       |
+
+Texte courant : viser ~65 caractères par ligne.
 
 ---
 
@@ -150,14 +167,19 @@
 - **Par défaut sombre** (cohérent "pro"), toggle clair
 - Persistance : localStorage + préférence OS
 
-### 5.2 Color Inversion Rules
+### 5.2 Mécanisme d'inversion
 
-| Light                        | Dark                   | Rule                                      |
-| ---------------------------- | ---------------------- | ----------------------------------------- |
-| `neutral-50` → `neutral-950` | Backgrounds invert     |
-| `neutral-900` → `neutral-50` | Text inverts           |
-| `brand-600` → `brand-400`    | Primary shifts lighter |
-| `shadow-*`                   | Same values            | Shadows work on dark (black with opacity) |
+Le thème sombre redéfinit **les mêmes variables** sous `.dark` dans `globals.css` (`darkMode: "class"` dans `tailwind.config.ts`). Les composants ne changent jamais : ils lisent `bg-background`, la variable change sous eux.
+
+| Variable             | Light          | Dark           | Règle appliquée                                   |
+| -------------------- | -------------- | -------------- | ------------------------------------------------- |
+| `--background`       | `0 0% 100%`    | `240 10% 3.9%` | Luminosité inversée, teinte conservée             |
+| `--foreground`       | `240 10% 3.9%` | `0 0% 98%`     | Idem, en miroir                                   |
+| `--primary`          | `255 85% 45%`  | `255 85% 55%`  | Même teinte, éclaircie sur fond sombre            |
+| `--muted-foreground` | `240 5% 35%`   | `240 5% 75%`   | Ajusté dans les deux sens pour tenir le WCAG AA   |
+| `--shadow-*`         | inchangé       | inchangé       | Noir avec opacité : fonctionne sur les deux fonds |
+
+**Règle** : on inverse les **luminosités**, jamais les teintes. Une inversion naïve casse l'identité de la marque.
 
 ---
 

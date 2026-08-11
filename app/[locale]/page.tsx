@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check as CheckIcon } from "lucide-react";
+import { PLANS } from "@/lib/stripe";
 import Script from "next/script";
 import {
   OrganizationJsonLd,
@@ -273,6 +274,94 @@ export default function HomePage() {
             </div>
 
             <PipelineTimeline steps={pipelineSteps} />
+          </div>
+        </section>
+
+        {/* Pricing Section */}
+        <section
+          className="section relative bg-muted/30"
+          data-testid="landing-pricing"
+        >
+          <div className="container">
+            <div className="max-w-2xl mx-auto text-center mb-16">
+              <span className="scroll-reveal inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary mb-4">
+                Tarifs
+              </span>
+              <h2 className="scroll-reveal scroll-reveal-delay-1 font-display font-bold tracking-tight text-4xl md:text-5xl text-foreground mb-4">
+                Un prix qui <span className="gradient-text">scale</span> avec
+                vous
+              </h2>
+              <p className="scroll-reveal scroll-reveal-delay-2 text-lg text-muted-foreground">
+                Commencez gratuitement. Passez à l&apos;échelle quand votre SaaS
+                en a besoin.
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {(
+                [
+                  { key: "free", plan: PLANS.free, highlight: false },
+                  { key: "starter", plan: PLANS.starter, highlight: false },
+                  { key: "pro", plan: PLANS.pro, highlight: true },
+                  {
+                    key: "enterprise",
+                    plan: PLANS.enterprise,
+                    highlight: false,
+                  },
+                ] as const
+              ).map(({ key, plan, highlight }, index) => (
+                <div
+                  key={key}
+                  className={`scroll-reveal relative flex flex-col rounded-2xl border p-6 glass transition-all ${
+                    highlight
+                      ? "border-primary shadow-xl scale-[1.03]"
+                      : "border-border/50 hover-lift"
+                  }`}
+                  style={{ transitionDelay: `${index * 80}ms` }}
+                  data-testid={`pricing-${key}`}
+                >
+                  {highlight && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                      Populaire
+                    </span>
+                  )}
+                  <h3 className="font-display font-bold text-lg text-foreground">
+                    {plan.name}
+                  </h3>
+                  <div className="mt-3 flex items-baseline gap-1">
+                    <span className="font-display font-bold text-3xl text-foreground">
+                      {plan.price === 0 ? "0€" : `${plan.price}€`}
+                    </span>
+                    {plan.price > 0 && (
+                      <span className="text-sm text-muted-foreground">
+                        /mois
+                      </span>
+                    )}
+                  </div>
+                  <ul className="mt-6 flex-1 space-y-3">
+                    {plan.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-start gap-2 text-sm text-muted-foreground"
+                      >
+                        <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/fr/inscription"
+                    className={`mt-8 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all active-scale focus-visible-ring ${
+                      highlight
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                        : "border border-border text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {plan.price === 0 ? "Commencer gratuitement" : "Choisir"}
+                  </Link>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 

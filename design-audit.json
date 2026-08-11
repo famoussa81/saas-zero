@@ -1,6 +1,6 @@
 {
   "overallPass": true,
-  "timestamp": "2026-08-11T00:43:21.615Z",
+  "timestamp": "2026-08-11T12:31:27.435Z",
   "gates": {
     "hardcodedValues": {
       "pass": false,
@@ -29,7 +29,7 @@
     "tokensAudit": {
       "violations": [],
       "filesScanned": 61,
-      "timestamp": "2026-08-11T00:38:36.017Z"
+      "timestamp": "2026-08-11T12:30:59.076Z"
     },
     "inventory": {
       "components": {
@@ -543,6 +543,7 @@
             "font-size-lg",
             "font-size-sm",
             "font-size-xl",
+            "font-size-xs",
             "font-weight-bold",
             "font-weight-medium",
             "font-weight-semibold",
@@ -550,10 +551,12 @@
             "muted",
             "primary",
             "radius",
+            "radius-2xl",
             "radius-3xl",
-            "radius-full"
+            "radius-full",
+            "shadow-xl"
           ],
-          "tokenCount": 21,
+          "tokenCount": 24,
           "hasTokens": true
         },
         {
@@ -944,7 +947,7 @@
           "definedIn": ["src\\styles\\globals.css"]
         }
       ],
-      "timestamp": "2026-08-11T00:38:38.005Z"
+      "timestamp": "2026-08-11T12:30:59.292Z"
     },
     "impeccable": {
       "findings": [

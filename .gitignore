@@ -59,3 +59,11 @@ Desktop.ini
 *.tsbuildinfo
 *storybook.log
 storybook-static
+
+# Skills tiers installés par `npx skills add`
+# Le contenu réel vit dans .agents/skills/ (versionné, voir skills-lock.json).
+# Les entrées créées dans .claude/skills/ sont des symlinks à chemin ABSOLU
+# (/c/Users/PC/saas-zero/...) : versionnés, ils casseraient sur toute autre
+# machine. Ils se recréent avec `npx skills add` depuis skills-lock.json.
+.claude/skills/supabase
+.claude/skills/supabase-postgres-best-practices

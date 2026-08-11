@@ -35,15 +35,17 @@
 
 > **Doctrine utilisateur** : _attirer avec le wow → convaincre avec la qualité → rassurer avec le zéro bug._
 
-| Champ                  | Définition                                                                            |
-| ---------------------- | ------------------------------------------------------------------------------------- |
-| **Quoi**               | Un **check vert émeraude** qui émerge (scale + bounce) quand une tâche passe à "done" |
-| **Où**                 | Hero de la landing, onboarding, kanban, empty states                                  |
-| **Pourquoi il marque** | Il incarne la promesse "compléter apporte de la satisfaction" en 1 seconde            |
-| **Motion associée**    | Tier Modéré-Bold, 300ms, `ease-out`                                                   |
-| **Ne PAS faire**       | Copier un concurrent, design générique AI, clipart                                    |
+| Champ                  | Définition                                                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Quoi**               | Un **terminal qui exécute la vraie commande du produit** (`/ns-ship "mon-saas"`) et déroule ses 6 phases en boucle |
+| **Où**                 | Hero de la landing (`components/marketing/PipelineHero.tsx`)                                                       |
+| **Pourquoi il marque** | Le produit EST une pipeline en ligne de commande — le hero le démontre au lieu de le décrire                       |
+| **Motion associée**    | Tier Modéré, timeline GSAP en boucle, `power2.out` / `back.out(3)` sur les checks                                  |
+| **Ne PAS faire**       | Forme abstraite décorative, orbes floutés en dégradé, capture statique                                             |
 
-**Hero de la landing** : le tableau kanban bouge légèrement (parallax) pour attirer l'oeil → donne envie d'essayer → inscription.
+**Hero de la landing** : deux colonnes — la promesse à gauche, le terminal qui tourne à droite. Le visiteur voit le produit fonctionner avant d'avoir scrollé.
+
+**Prolongements du même langage** : la section « Comment ça marche » reprend les mêmes 6 phases en timeline verticale liée au scroll (`PipelineTimeline.tsx`), et le fond de page est une grille de précision (`.precision-grid`) plutôt qu'un décor abstrait.
 
 **Critère d'acceptation** : un visiteur identifie la marque en < 3 secondes sans lire le logo.
 
@@ -64,22 +66,23 @@
 
 ### 2.1 Palette Strategy
 
-- **Fond** : neutre gris foncé (dark mode par défaut) — crédible "pro"
-- **Primaire** : indigo vif (action, confiance)
-- **Accent signature** : **vert émeraude** (complétion, tâche faite) — le fil qui rend le SaaS reconnaissable
+- **Fond** : neutre teinté vers le primaire (jamais un gris pur — cf. `ns-design-direction`)
+- **Primaire** : **violet-indigo** (précision technique, confiance)
+- **Accent secondaire** : **ambre chaud** — contrepoint qui réchauffe une palette autrement froide, utilisé en dégradé sur les barres de progression et le texte signature
+
+> Les couleurs vivent en HSL sans fonction (format Tailwind/shadcn) dans `src/styles/globals.css`, et sont exposées via `tailwind.config.ts`. Les valeurs hex ci-dessous sont indicatives, la source de vérité est le CSS.
 
 ### 2.2 Base Palette Definition
 
-| Token                  | Light Value | Dark Value | Usage                           |
-| ---------------------- | ----------- | ---------- | ------------------------------- |
-| `color-brand-500`      | `#4f46e5`   | `#818cf8`  | **Primaire indigo**             |
-| `color-brand-600`      | `#4338ca`   | `#6366f1`  | Hover/active                    |
-| `color-accent-emerald` | `#10b981`   | `#34d399`  | Check de complétion (signature) |
-| `color-neutral-50`     | `#fafafa`   | `#0a0a0a`  | Background base                 |
-| `color-neutral-900`    | `#171717`   | `#fafafa`  | Text primary                    |
-| `color-success-500`    | `#22c55e`   | `#4ade80`  | Success states                  |
-| `color-warning-500`    | `#f59e0b`   | `#fbbf24`  | Warning states                  |
-| `color-error-500`      | `#ef4444`   | `#f87171`  | Error states                    |
+| Variable CSS         | Light           | Dark             | Hex (indicatif) | Usage                        |
+| -------------------- | --------------- | ---------------- | --------------- | ---------------------------- |
+| `--primary`          | `255 85% 45%`   | `255 85% 55%`    | `#6d5bd0`       | **Primaire violet-indigo**   |
+| `--accent`           | `38 92% 50%`    | `38 92% 55%`     | `#f5a524`       | **Accent ambre** (signature) |
+| `--background`       | `0 0% 100%`     | `240 10% 3.9%`   | —               | Fond de page                 |
+| `--foreground`       | `240 10% 3.9%`  | `0 0% 98%`       | —               | Texte principal              |
+| `--muted-foreground` | `240 5% 35%`    | `240 5% 75%`     | —               | Texte secondaire (WCAG AA)   |
+| `--border`           | `240 5.9% 90%`  | `240 3.7% 15.9%` | —               | Bordures, séparateurs        |
+| `--destructive`      | `0 84.2% 60.2%` | `0 62.8% 30.6%`  | —               | Erreurs                      |
 
 ### 2.3 Semantic Color Aliases
 
@@ -194,17 +197,20 @@
 
 ## 8. Decision Log
 
-| Date       | Decision          | Chosen                                      | Rationale                               |
-| ---------- | ----------------- | ------------------------------------------- | --------------------------------------- |
-| 2026-08-09 | Design system     | ship-flow (shadcn + Radix + Tailwind + CVA) | Déjà en place, beau rendu, accessible   |
-| 2026-08-09 | Élément signature | Check vert émeraude + hero kanban parallax  | Fil reconnaissable qui vend la promesse |
-| 2026-08-09 | Motion tier       | Modéré à Bold (GSAP + Framer Motion)        | Effet wow sans surcharge                |
-| 2026-08-09 | Dark mode         | Sombre par défaut + toggle                  | Cohérent "pro"                          |
+| Date       | Decision          | Chosen                                                                                                | Rationale                                                                                                                                                                                          |
+| ---------- | ----------------- | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-09 | Design system     | ship-flow (shadcn + Radix + Tailwind + CVA)                                                           | Déjà en place, beau rendu, accessible                                                                                                                                                              |
+| 2026-08-09 | Élément signature | Check vert émeraude + hero kanban parallax                                                            | Fil reconnaissable qui vend la promesse                                                                                                                                                            |
+| 2026-08-09 | Motion tier       | Modéré à Bold (GSAP + Framer Motion)                                                                  | Effet wow sans surcharge                                                                                                                                                                           |
+| 2026-08-09 | Dark mode         | Sombre par défaut + toggle                                                                            | Cohérent "pro"                                                                                                                                                                                     |
+| 2026-08-11 | Élément signature | **Remplacé** : terminal `/ns-ship` animé (remplace le check émeraude + hero kanban)                   | Le doc décrivait la démo TaskFlow, pas le produit réel. La landing vend une pipeline en ligne de commande : le hero doit la montrer tourner. Le kanban reste pertinent côté app (`/projets/[id]`). |
+| 2026-08-11 | Palette           | **Corrigée** : primaire violet-indigo `#6d5bd0` + accent ambre (remplace indigo `#4f46e5` + émeraude) | Le doc ne correspondait pas au code (`globals.css`). Alignement du doc sur l'implémentation vérifiée.                                                                                              |
+| 2026-08-11 | Fond de page      | Grille de précision + halo unique (remplace 3 orbes floutés en dégradé)                               | Les orbes floutés sont un marqueur reconnaissable de design généré par IA (`ns-anti-generic-audit`) et contredisaient la direction « technique, précis ».                                          |
 
 ---
 
 > **Template Version** : 1.0
-> **Last Updated** : 2026-08-09
+> **Last Updated** : 2026-08-11
 > **Owner** : Design Architect (pipeline saas-zero)
 > **Review Cadence** : par release majeure
 

@@ -78,7 +78,7 @@ grep -rnE '>0[1-9]<|"0[1-9]"' components/marketing/
 
 > **Nuance importante** : ces patterns ne sont pas interdits _en soi_. Ils sont interdits **par défaut**. S'ils servent la direction artistique documentée dans `DESIGN-CHOICE.md`, ils sont légitimes — mais il faut que ce soit écrit.
 
-Ce repo a par exemple des orbes floutés (`.signature-orb`) hérités du scaffold : détectés, non justifiés dans la direction artistique → candidats au remplacement.
+**Cas réel de ce repo** : le scaffold initial posait trois orbes floutés en dégradé (`.signature-orb`, `blur(80px)`, flottement en boucle). Détectés par le grep ci-dessus, non justifiés dans `DESIGN-CHOICE.md`, et en contradiction avec la direction « technique, précis » du projet. Remplacés par `.precision-grid` (grille fine masquée en dégradé) plus un halo unique et diffus — le seul moment fort de la page restant le terminal animé du hero.
 
 ---
 

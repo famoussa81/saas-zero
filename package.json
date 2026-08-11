@@ -56,7 +56,8 @@
     "build-storybook": "storybook build",
     "gates:fast": "node .claude/scripts/run-gates.js --fast",
     "gates:list": "node .claude/scripts/run-gates.js --list",
-    "gates:strict": "node .claude/scripts/run-gates.js --strict"
+    "gates:strict": "node .claude/scripts/run-gates.js --strict",
+    "ns:new": "node .claude/scripts/new-project.js"
   },
   "dependencies": {
     "@content-collections/core": "^0.15.2",

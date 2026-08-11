@@ -1,13 +1,13 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+echo "🔍 Vérifications avant commit..."
 
-# Fast checks only - pre-commit
-echo "🔍 Pre-commit checks..."
+# Formatage + lint sur les seuls fichiers indexés
+npx lint-staged || exit 1
 
-# Lint staged files only
-npx lint-staged
+# Typecheck complet : rapide, et c'est le filet qui attrape les régressions de
+# types qu'un lint sur fichiers isolés ne peut pas voir.
+npx tsc --noEmit --skipLibCheck || {
+  echo "❌ Typecheck en échec. Commit bloqué."
+  exit 1
+}
 
-# Typecheck (fast)
-npx tsc --noEmit --skipLibCheck
-
-echo "✅ Pre-commit passed"
+echo "✅ Pré-commit passé"

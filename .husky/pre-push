@@ -1,18 +1,16 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+echo "🔒 Quality gates avant push..."
 
-# FULL QUALITY GATES - BLOCKS PUSH ON FAILURE
-echo "🔒 Running pre-push gates..."
-
-# 1. Typecheck + lint (fast, fail-closed)
-if ! npx tsc --noEmit --skipLibCheck; then
-  echo "❌ Typecheck failed. Push blocked."
+# Passe par le runner unique : même logique PASS/FAIL/SKIP qu'en CI et en local,
+# une seule source de vérité. Sélection volontairement rapide — un pre-push qui
+# dure cinq minutes finit contourné avec --no-verify.
+#
+# Historique : ce hook appelait `npx next lint`, commande SUPPRIMÉE dans
+# Next.js 16 (le projet est en 16.3.0). Next interprétait alors "lint" comme un
+# chemin de projet et échouait sur
+#   Invalid project directory provided, no such directory: <repo>/lint
+# — tout push était bloqué pour une raison sans rapport avec le code.
+node .claude/scripts/run-gates.js typecheck lint || {
+  echo "❌ Gates en échec. Push bloqué."
+  echo "   Corriger, ou contourner en connaissance de cause avec --no-verify."
   exit 1
-fi
-
-if ! npx next lint; then
-  echo "❌ Lint failed. Push blocked."
-  exit 1
-fi
-
-echo "✅ All pre-push checks passed. Pushing..."
+}

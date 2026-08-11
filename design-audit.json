@@ -1,6 +1,6 @@
 {
   "overallPass": true,
-  "timestamp": "2026-08-10T23:45:27.305Z",
+  "timestamp": "2026-08-11T00:06:19.579Z",
   "gates": {
     "hardcodedValues": {
       "pass": false,
@@ -9,7 +9,7 @@
     },
     "componentTokenCoverage": {
       "pass": true,
-      "coverage": "97.5%",
+      "coverage": "97.6%",
       "threshold": 90
     },
     "tokenUsageEfficiency": {
@@ -28,15 +28,15 @@
   "details": {
     "tokensAudit": {
       "violations": [],
-      "filesScanned": 60,
-      "timestamp": "2026-08-10T23:44:38.057Z"
+      "filesScanned": 61,
+      "timestamp": "2026-08-11T00:05:25.535Z"
     },
     "inventory": {
       "components": {
-        "total": 40,
-        "usingTokens": 39,
+        "total": 41,
+        "usingTokens": 40,
         "violations": 1,
-        "coverage": "97.5%",
+        "coverage": "97.6%",
         "skippedNoStylingSurface": 10
       },
       "tokens": {
@@ -627,6 +627,27 @@
           "hasTokens": true
         },
         {
+          "path": "components\\marketing\\PipelineTimeline.tsx",
+          "tokensUsed": [
+            "accent",
+            "border",
+            "card",
+            "font-size-2xl",
+            "font-size-lg",
+            "font-size-sm",
+            "font-size-xl",
+            "font-weight-bold",
+            "font-weight-medium",
+            "foreground",
+            "muted",
+            "primary",
+            "radius-2xl",
+            "radius-full"
+          ],
+          "tokenCount": 14,
+          "hasTokens": true
+        },
+        {
           "path": "components\\providers\\AnalyticsProvider.tsx",
           "tokensUsed": [],
           "tokenCount": 0,
@@ -926,7 +947,7 @@
           "definedIn": ["src\\styles\\globals.css"]
         }
       ],
-      "timestamp": "2026-08-10T23:44:38.535Z"
+      "timestamp": "2026-08-11T00:05:25.866Z"
     },
     "impeccable": {
       "findings": [

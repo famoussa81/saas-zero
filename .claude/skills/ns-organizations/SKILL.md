@@ -59,7 +59,7 @@ l'appartenance via `organization_members`. Testées en CI (gate:rls).
 ## Invitations
 
 1. Owner/admin crée une invite → token + email + expiration (7 j).
-2. Envoi email (Brevo, voir `ns-email`) avec lien `/invitations/:token`.
+2. Envoi email (Brevo, via `lib/brevo.ts` — `sendTeamInvitationEmail`) avec lien `/invitations/:token`.
 3. L'invité : session ou création → POST → `INSERT organization_members`.
 4. Purge des invites expirées (job cron, voir migration pg_cron).
 

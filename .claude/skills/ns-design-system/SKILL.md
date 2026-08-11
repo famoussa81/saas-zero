@@ -71,7 +71,7 @@ export const tokens = {
 ## Garde-fous (anti-générique)
 
 - `grep -rE "#[0-9a-fA-F]{6}|rgba?\(" components/` → ne doit renvoyer QUE les fichiers de tokens.
-- Pas de placeholder `via.placeholder.com` : vraies images (voir `ns-media`/`ns-media-sourcing`).
+- Pas de placeholder `via.placeholder.com` : vraies images (voir `media-sourcing`/`media-sourcing`).
 - Le hero doit avoir un élément signature ACTIF (animation ou motif), pas une image statique seule.
 
 ## Checklist de sortie

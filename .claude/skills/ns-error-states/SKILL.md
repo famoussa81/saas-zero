@@ -227,5 +227,5 @@ function SubmitButton() {
 ## Liens
 
 - `ns-sentry` — capture et triage des erreurs de production
-- `ns-component-kit` — `EmptyState` et primitives associées
+- `components/ui/empty-state.tsx` — le composant `EmptyState` livré, avec ses stories
 - `ns-forms` — validation et erreurs de champ

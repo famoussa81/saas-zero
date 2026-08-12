@@ -67,3 +67,17 @@ storybook-static
 # machine. Ils se recréent avec `npx skills add` depuis skills-lock.json.
 .claude/skills/supabase
 .claude/skills/supabase-postgres-best-practices
+
+# Rapports générés par les gates — régénérables, ils changeaient à chaque run
+# et polluaient tous les commits. `pnpm design:check`, `lhci autorun`,
+# `discovery:check` et Playwright les recréent à la demande.
+.lighthouseci/
+lighthouse-results.json
+playwright-a11y-report/
+DESIGN-AUDIT.md
+DISCOVERY-CHECK.md
+design-audit.json
+design-inventory.json
+design-tokens-audit.json
+discovery-check.json
+build-output.txt

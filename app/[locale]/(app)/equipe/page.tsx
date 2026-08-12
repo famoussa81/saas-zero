@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 
-// Page Équipe TaskFlow — membres de l'organisation (B2B). Placeholder simple
+// Page Équipe — membres de l'organisation (B2B). Placeholder simple
 // tant que les server actions d'invitation ne sont pas branchées.
 
 function hasSupabaseConfig(): boolean {

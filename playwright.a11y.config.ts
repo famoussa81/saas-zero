@@ -15,10 +15,10 @@ export default defineConfig({
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   testMatch: ["**/e2e/a11y.spec.ts"],
   webServer: {
-    command: "pnpm next:start",
+    command: "cmd /c pnpm next:start",
     url: "http://localhost:3000/fr",
     reuseExistingServer: !process.env.CI,
-    cwd: "/c/Users/PC/saas-zero",
     timeout: 120000,
+    cwd: process.cwd(),
   },
 });

@@ -75,8 +75,18 @@ Jamais `bg-[#6d28d9]`, jamais `style={{ color: "#fff" }}`, jamais `p-[13px]`.
 | `text-[15px]`           | `text-sm` / `text-base`             |
 | `font-family` en dur    | `font-sans` / `font-display`        |
 
-Seule exception tolérée : les logos de marque tierce (couleurs Google, etc.),
-déjà déclarés dans `allowedHardcoded` de `.design-auditrc.json`.
+Deux exceptions, et deux seulement :
+
+1. **Logos de marque tierce** (couleurs Google, etc.), déjà déclarés dans
+   `allowedHardcoded` de `.design-auditrc.json`.
+2. **Unités relatives dans une valeur arbitraire** — `h-[1em]`, `w-[50%]`. Ce
+   qu'interdit la règle, c'est de _figer_ une mesure : `h-[17px]` casse
+   l'échelle, `h-[1em]` la suit. Voir `Skeleton` variante `text`, qui doit
+   épouser la taille de police du contexte.
+
+Une dimension calculée au runtime (largeur d'une barre de progression, d'une
+ligne de squelette) passe par `style={{ … }}` : ce n'est pas une décision
+esthétique en dur, c'est de la donnée.
 
 Vérification obligatoire avant de rendre la main :
 

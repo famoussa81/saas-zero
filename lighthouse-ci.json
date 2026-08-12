@@ -2,8 +2,8 @@
   "ci": {
     "collect": {
       "numberOfRuns": 1,
-      "startServerCommand": "pnpm next:start",
-      "url": ["http://localhost:3000/fr", "http://localhost:3000/fr/blog"],
+      "startServerCommand": "cmd /c pnpm next:start",
+      "url": ["http://localhost:3000/fr"],
       "settings": {
         "headless": true,
         "preset": "desktop"

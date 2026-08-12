@@ -16,6 +16,14 @@
       "acceptedOn": "2026-08-11",
       "reviewBy": "2026-11-11",
       "revisit": "Envisager de retirer @storybook/addon-mcp s'il n'est pas utilisé."
+    },
+    {
+      "module": "extract-zip",
+      "reason": "Chaîne @lhci/cli > ... > extract-zip. Outil Lighthouse CI exécuté uniquement en développement et en CI pour mesurer la performance — jamais inclus dans le bundle applicatif ni déployé en production. Aucune donnée utilisateur ne traverse ce chemin (le zip extrait est le navigateur Chrome téléchargé par chrome-launcher pour lancer les audits). Aucun correctif publié en amont (patched_versions: <0.0.0).",
+      "severity": "high",
+      "acceptedOn": "2026-08-12",
+      "reviewBy": "2026-11-12",
+      "revisit": "Vérifier si @lhci/cli a mis à jour sa chaîne vers extract-zip, ou envisager de migrer vers @lhci/cli@0.16+ si un correctif sort."
     }
   ]
 }

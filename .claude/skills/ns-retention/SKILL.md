@@ -11,6 +11,23 @@ description: Rétention & notifications — emails transactionnels (Bienvenue, r
 > 📌 **Skills officiels à référencer** : `resend/email-best-practices`, `resend/react-email`
 > (registre VoltAgent) — patterns emails transactionnels propres et frappables.
 
+## Contrat design (non négociable)
+
+Avant d'écrire du JSX, lire dans cet ordre :
+
+1. **`DESIGN-CHOICE.md`** (racine) — palette, ambiance, élément signature, tier de motion.
+2. **`src/styles/globals.css`** — les tokens réellement définis. Ne pas en inventer.
+3. **`src/components/ui/`** — 16 primitives Radix + CVA déjà là. Ne pas les réécrire.
+4. **`.claude/design/UI-CONTRACT.md`** — densité, cinq états, cartes KPI, tables, formulaires, accessibilité, dark mode.
+
+Si `DESIGN-CHOICE.md` est encore le template non rempli : s'arrêter et le signaler. Générer de l'UI sans direction artistique décidée produit exactement le générique que la pipeline existe pour éviter.
+
+Aucune valeur en dur — couleur, espacement, rayon, ombre, taille de police. Avant de rendre la main :
+
+```bash
+pnpm design:tokens:audit
+```
+
 ## Emails transactionnels (Brevo)
 
 | Email              | Quand                             | Contenu                        |

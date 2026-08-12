@@ -4,8 +4,17 @@
   "impeccableMinScore": 95,
   "failOnHardcodedValues": true,
   "runImpeccable": true,
-  "includePaths": ["components/**/*.tsx", "app/**/*.tsx", "lib/**/*.ts"],
-  "componentPaths": ["components/**/*.tsx", "app/**/*.tsx"],
+  "includePaths": [
+    "components/**/*.tsx",
+    "src/components/**/*.tsx",
+    "app/**/*.tsx",
+    "lib/**/*.ts"
+  ],
+  "componentPaths": [
+    "components/**/*.tsx",
+    "src/components/**/*.tsx",
+    "app/**/*.tsx"
+  ],
   "excludePaths": [
     "**/*.stories.tsx",
     "**/*.test.tsx",

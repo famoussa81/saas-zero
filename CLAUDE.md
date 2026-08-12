@@ -43,6 +43,19 @@
 - **Semantic token names**: `--color-primary`, `--space-md`, `--radius-lg`, etc.
 - **Dark mode first**: Define tokens for both themes.
 
+### UI Quality Contract
+
+Any skill that emits JSX must first read, in order: `DESIGN-CHOICE.md` (art
+direction), `src/styles/globals.css` (the tokens that actually exist),
+`src/components/ui/` (existing primitives — do not rewrite them), then
+**`.claude/design/UI-CONTRACT.md`** — the opposable quality bar covering
+density, the five screen states, KPI cards, tables, forms, accessibility, and
+dark mode.
+
+If `DESIGN-CHOICE.md` is still the unfilled template, stop and say so. Emitting
+UI without a decided art direction produces exactly the generic output this
+pipeline exists to prevent.
+
 ### Code Style
 
 - **ESLint + Prettier** — configured in repo, run in CI.

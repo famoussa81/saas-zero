@@ -10,6 +10,23 @@ description: Comptes et authentification pour un SaaS — email+password, magic 
 > 📌 **Skills officiels à référencer** : `better-auth/create-auth`, `organization`, `twoFactor`,
 > `providers` (registre VoltAgent/awesome-agent-skills) — inspirer les patterns d'auth bien rodés.
 
+## Contrat design (non négociable)
+
+Avant d'écrire du JSX, lire dans cet ordre :
+
+1. **`DESIGN-CHOICE.md`** (racine) — palette, ambiance, élément signature, tier de motion.
+2. **`src/styles/globals.css`** — les tokens réellement définis. Ne pas en inventer.
+3. **`src/components/ui/`** — 16 primitives Radix + CVA déjà là. Ne pas les réécrire.
+4. **`.claude/design/UI-CONTRACT.md`** — densité, cinq états, cartes KPI, tables, formulaires, accessibilité, dark mode.
+
+Si `DESIGN-CHOICE.md` est encore le template non rempli : s'arrêter et le signaler. Générer de l'UI sans direction artistique décidée produit exactement le générique que la pipeline existe pour éviter.
+
+Aucune valeur en dur — couleur, espacement, rayon, ombre, taille de police. Avant de rendre la main :
+
+```bash
+pnpm design:tokens:audit
+```
+
 ## Architecture
 
 ```

@@ -81,3 +81,6 @@ design-inventory.json
 design-tokens-audit.json
 discovery-check.json
 build-output.txt
+
+# Réglages locaux : contiennent ANTHROPIC_AUTH_TOKEN — jamais commités
+.claude/settings.local.json

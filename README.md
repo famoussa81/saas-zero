@@ -1,4 +1,4 @@
-﻿# Zero-Risk SaaS Stack
+# Zero-Risk SaaS Stack
 
 > **Ship with confidence. Verify before deploy. Zero risk, maximum velocity.**
 
@@ -86,17 +86,22 @@ vercel CLI (for Vercel deploys)
 supabase CLI (for local dev)
 ```
 
-### One-Command Install
+### Installation
 
 ```bash
-# Clone and bootstrap in one go
-npx create-zero-risk-saas my-app --design-system=shadcn --database=supabase --deploy=vercel
-
-# Or if you already have the repo
-cd my-app
+git clone https://github.com/famoussa81/saas-zero.git <dossier>
+cd <dossier>
 pnpm install
-pnpm ns:bootstrap  # Sets up env, db, stripe, email
 ```
+
+C'est tout — `.claude/` (skills, agents, commandes, gates) voyage avec le dépôt.
+
+Détails, vérifications et création d'un projet client : **[BOOTSTRAP.md](BOOTSTRAP.md)**.
+
+> Les commandes `npx create-zero-risk-saas` et `pnpm ns:bootstrap` qui figuraient ici
+> n'ont jamais existé : le paquet npm n'a jamais été publié (404) et le script
+> n'est pas dans package.json. Un agent suivant ce README échouait sur la
+> première commande.
 
 ### First Feature in 3 Minutes
 
@@ -354,7 +359,7 @@ The Zero-Risk Stack is **design system agnostic**. Choose at bootstrap or migrat
 
 ```bash
 # At project creation
-npx create-zero-risk-saas my-app --design-system=shadcn
+pnpm ns:new my-app --variant=b2b
 
 # Add to existing project
 pnpm ns:design-system add shadcn
@@ -977,7 +982,7 @@ pnpm ns:ship-deploy list
 
 | Issue                            | Symptoms                                       | Root Cause                                             | Solution                                                                               |
 | -------------------------------- | ---------------------------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| **TypeScript errors after pull** | `tsc --noEmit` fails with "Cannot find module" | Missing generated types or outdated `node_modules`     | `pnpm install && pnpm ns:bootstrap`                                                    |
+| **TypeScript errors after pull** | `tsc --noEmit` fails with "Cannot find module" | Missing generated types or outdated `node_modules`     | `pnpm install`                                                                         |
 | **Supabase types out of sync**   | Type errors on `supabase.from('table')`        | Schema changed but types not regenerated               | `supabase db reset && supabase gen types typescript --local > src/types/supabase.ts`   |
 | **Stripe webhook fails**         | 400/500 on `/api/stripe/webhook`               | Wrong webhook secret or missing events                 | Verify `STRIPE_WEBHOOK_SECRET` matches Stripe Dashboard; check event selection         |
 | **Brevo emails not sending**     | No emails received, no errors in logs          | Unverified sender domain or template ID wrong          | Verify domain in Brevo; check template IDs in `src/lib/email/templates.ts`             |
@@ -1066,7 +1071,7 @@ cd zero-risk-saas
 pnpm install
 
 # Bootstrap (sets up local Supabase, Stripe CLI, etc.)
-pnpm ns:bootstrap
+pnpm install
 
 # Start dev
 pnpm dev

@@ -1,6 +1,6 @@
 ---
 name: "ocx-self"
-description: "Self-clone: delegate to your default main model (claude-ocx-opencode-free--deepseek-v4-flash-free), synced from the /model picker at launch. NOTE: this agent's real model is pinned by the opencodex proxy — the `model` argument is ignored. Pass model: \"haiku\" as a placeholder (or omit it); routing is unaffected either way."
+description: 'Self-clone: delegate to your default main model (claude-ocx-opencode-free--deepseek-v4-flash-free), synced from the /model picker at launch. NOTE: this agent''s real model is pinned by the opencodex proxy — the `model` argument is ignored. Pass model: "haiku" as a placeholder (or omit it); routing is unaffected either way.'
 model: "claude-ocx-opencode-free--deepseek-v4-flash-free"
 ---
 

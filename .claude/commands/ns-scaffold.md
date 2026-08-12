@@ -9,7 +9,7 @@
 ```bash
 /ns-scaffold
 # ou
-pnpm ns:scaffold
+/ns-scaffold
 ```
 
 > **Prérequis** : `SPEC.md`, `ARCHITECTURE-CHOICE.md`, `DESIGN-CHOICE.md` validés.

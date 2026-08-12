@@ -9,7 +9,7 @@
 ```bash
 /ns-deploy
 # ou
-pnpm ns:deploy
+/ns-deploy
 # ou
 ./.claude/commands/ns-deploy.sh
 ```

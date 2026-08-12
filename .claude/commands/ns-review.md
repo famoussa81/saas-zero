@@ -1,7 +1,7 @@
 # `/ns-review` — Relecture en contexte vierge (isolation)
 
 > **Règle** : le contexte qui **écrit** ne se relit **jamais**. Cette commande lance un agent
-> `ns-reviewer` **lecture seule** sur le travail courant et écrit un verdict.
+> `.claude/agents/ns-reviewer.md` (agent, pas skill) **lecture seule** sur le travail courant et écrit un verdict.
 > Utilisation : `/ns-review` après une story/tâche, avant push.
 
 ---
@@ -17,12 +17,12 @@ ns-reviewer --scope="<ce qui a été fait>"
 ## Procédure
 
 1. **Contexte vierge** : ne pas repartir du raisonnement de construction. Lire l'état réel.
-2. **Lecture seule** : l'agent `ns-reviewer` n'a PAS les outils d'écriture — il vérifie et rapporte.
+2. **Lecture seule** : l'agent `.claude/agents/ns-reviewer.md` (agent, pas skill) n'a PAS les outils d'écriture — il vérifie et rapporte.
 3. **Verdict** écrit dans `REVIEW.md` à la racine :
    - `## Verdict: PRÊT` → le push est autorisé
    - `## Verdict: À REVOIR` → le push est BLOQUÉ (fail-closed)
 
-## Ce que vérifie l'agent (cf. `ns-reviewer`)
+## Ce que vérifie l'agent (cf. `.claude/agents/ns-reviewer.md` (agent, pas skill))
 
 - TypeScript strict (pas de `any`, return types)
 - RLS sur toute table utilisée (policies `auth.uid()` / `organization_id`)

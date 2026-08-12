@@ -1,6 +1,6 @@
 ---
 name: "ocx-laguna-s-2-1-free"
-description: "Delegate work to laguna-s-2.1-free (opencode-free) via opencodex routing. General-purpose worker/explorer on that model. NOTE: this agent's real model is pinned by the opencodex proxy — the `model` argument is ignored. Pass model: \"haiku\" as a placeholder (or omit it); routing is unaffected either way."
+description: 'Delegate work to laguna-s-2.1-free (opencode-free) via opencodex routing. General-purpose worker/explorer on that model. NOTE: this agent''s real model is pinned by the opencodex proxy — the `model` argument is ignored. Pass model: "haiku" as a placeholder (or omit it); routing is unaffected either way.'
 model: "claude-ocx-opencode-free--laguna-s-2.1-free"
 ---
 

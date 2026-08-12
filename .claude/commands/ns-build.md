@@ -9,7 +9,7 @@
 ```bash
 /ns-build
 # ou
-pnpm ns:build
+/ns-build
 ```
 
 > **Prérequis** : Phases 1-3 terminées, `DESIGN-SPEC.md` validé.

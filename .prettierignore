@@ -1,0 +1,24 @@
+# Généré / non formatable
+node_modules
+.next
+.content-collections
+storybook-static
+coverage
+pnpm-lock.yaml
+public/fonts
+
+# Rapports produits par les gates
+.lighthouseci
+playwright-report
+playwright-visual-report
+playwright-a11y-report
+test-results
+*.snap
+tests/visual/**/*.png
+
+# Fichier de référence de types généré par Storybook/vitest : une seule ligne
+# `/// <reference ... />` que Prettier signale sans pouvoir formater.
+vitest.shims.d.ts
+
+# Skills tiers installés par `npx skills add` — ils appartiennent à l'amont
+.agents

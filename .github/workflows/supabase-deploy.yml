@@ -10,31 +10,31 @@ on:
   push:
     branches: [main]
     paths:
-      - 'supabase/migrations/**'
-      - 'supabase/config.toml'
-      - 'supabase/seed/**'
+      - "supabase/migrations/**"
+      - "supabase/config.toml"
+      - "supabase/seed/**"
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Target environment'
+        description: "Target environment"
         required: true
-        default: 'production'
+        default: "production"
         type: choice
         options:
           - production
           - staging
       migration_name:
-        description: 'Specific migration to deploy (optional, deploys all pending)'
+        description: "Specific migration to deploy (optional, deploys all pending)"
         required: false
         type: string
       dry_run:
-        description: 'Run as dry-run (validate only)'
+        description: "Run as dry-run (validate only)"
         required: false
         default: false
         type: boolean
 
 env:
-  SUPABASE_CLI_VERSION: 'latest'
+  SUPABASE_CLI_VERSION: "latest"
 
 concurrency:
   group: supabase-deploy-${{ github.ref }}-${{ github.event.inputs.environment || 'production' }}
@@ -71,7 +71,7 @@ jobs:
         run: |
           MIGRATION_FILES=$(ls supabase/migrations/*.sql 2>/dev/null | sort -V)
           MIGRATION_COUNT=$(echo "$MIGRATION_FILES" | grep -c '\.sql$' || echo "0")
-          
+
           if [ "$MIGRATION_COUNT" -eq 0 ]; then
             echo "No migration files found"
             echo "migration_files=" >> $GITHUB_OUTPUT
@@ -136,17 +136,17 @@ jobs:
             echo "❌ supabase/config.toml not found"
             exit 1
           fi
-          
+
           # Check required fields
           if ! grep -q "project" supabase/config.toml; then
             echo "⚠️ Warning: No project ref in config.toml"
           fi
-          
+
           if ! grep -q "migration_dir" supabase/config.toml; then
             echo "❌ migration_dir not configured in config.toml"
             exit 1
           fi
-          
+
           echo "✅ config.toml validation passed"
 
   # ===========================================================================
@@ -165,7 +165,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install sqlfluff
         run: pip install sqlfluff sqlfluff-templater-dbt
@@ -177,13 +177,13 @@ jobs:
           templater = raw
           dialect = postgres
           exclude_rules = L010,L016,L036
-          
+
           [sqlfluff:rules:L010]
           capitalisation_policy = lower
-          
+
           [sqlfluff:rules:L016]
           capitalisation_policy = lower
-          
+
           [sqlfluff:rules:L036]
           select_clause_trailing_comma = True
           EOF
@@ -267,7 +267,7 @@ jobs:
         id: migrate
         run: |
           echo "=== Applying migrations ==="
-          
+
           if [ -n "${{ github.event.inputs.migration_name }}" ]; then
             # Deploy specific migration
             echo "Deploying specific migration: ${{ github.event.inputs.migration_name }}"
@@ -285,14 +285,14 @@ jobs:
         run: |
           echo "=== Verifying applied migrations ==="
           supabase migration list --linked
-          
+
           # Check for any failed migrations
           FAILED=$(supabase migration list --linked --json | jq -r '.[] | select(.status=="failed") | .name')
           if [ -n "$FAILED" ]; then
             echo "❌ Failed migrations detected: $FAILED"
             exit 1
           fi
-          
+
           echo "✅ All migrations applied successfully"
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -325,13 +325,13 @@ jobs:
             echo "❌ Type generation failed - file is empty"
             exit 1
           fi
-          
+
           # Check for basic type structure
           if ! grep -q "export type" ./workers/database.types.ts; then
             echo "❌ Generated types appear invalid"
             exit 1
           fi
-          
+
           echo "✅ TypeScript types generated successfully"
           echo "File size: $(wc -c < ./workers/database.types.ts) bytes"
 
@@ -371,7 +371,7 @@ jobs:
         run: |
           echo "=== Verifying critical tables ==="
           TABLES=("organizations" "profiles" "subscriptions" "invoices" "webhook_events")
-          
+
           for table in "${TABLES[@]}"; do
             RESULT=$(supabase db execute --linked -c "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = '$table');" --json)
             EXISTS=$(echo "$RESULT" | jq -r '.[0].exists')
@@ -392,10 +392,10 @@ jobs:
             WHERE schemaname = 'public'
             ORDER BY tablename, policyname;
           " --json)
-          
+
           POLICY_COUNT=$(echo "$POLICIES" | jq 'length')
           echo "Found $POLICY_COUNT RLS policies"
-          
+
           if [ "$POLICY_COUNT" -eq 0 ]; then
             echo "⚠️ Warning: No RLS policies found"
           else
@@ -412,10 +412,10 @@ jobs:
             AND indexname LIKE 'idx_%'
             ORDER BY tablename, indexname;
           " --json)
-          
+
           INDEX_COUNT=$(echo "$INDEXES" | jq 'length')
           echo "Found $INDEX_COUNT custom indexes"
-          
+
           if [ "$INDEX_COUNT" -gt 0 ]; then
             echo "$INDEXES" | jq -r '.[] | "\(.tablename): \(.indexname)"'
           fi
@@ -429,10 +429,10 @@ jobs:
             WHERE routine_schema = 'public'
             ORDER BY routine_name;
           " --json)
-          
+
           FUNC_COUNT=$(echo "$FUNCTIONS" | jq 'length')
           echo "Found $FUNC_COUNT functions"
-          
+
           if [ "$FUNC_COUNT" -gt 0 ]; then
             echo "$FUNCTIONS" | jq -r '.[].routine_name'
           fi

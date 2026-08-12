@@ -98,7 +98,7 @@ C'est tout — `.claude/` (skills, agents, commandes, gates) voyage avec le dép
 
 Détails, vérifications et création d'un projet client : **[BOOTSTRAP.md](BOOTSTRAP.md)**.
 
-> Les commandes `npx create-zero-risk-saas` et `pnpm ns:bootstrap` qui figuraient ici
+> Les commandes `npx create-zero-risk-saas` et `/ns-bootstrap` qui figuraient ici
 > n'ont jamais existé : le paquet npm n'a jamais été publié (404) et le script
 > n'est pas dans package.json. Un agent suivant ce README échouait sur la
 > première commande.
@@ -232,10 +232,10 @@ The Zero-Risk Stack exposes three primary commands via `package.json` scripts an
 
 ```bash
 # Basic usage
-pnpm ns:ship "feature description"
+/ns-ship "feature description"
 
 # Options
-pnpm ns:ship "add billing page" --design-system=shadcn --with-tests --with-storybook
+/ns-ship "add billing page" --design-system=shadcn --with-tests --with-storybook
 
 # What it does:
 # 1. Scaffolds route, component, and API files
@@ -249,7 +249,7 @@ pnpm ns:ship "add billing page" --design-system=shadcn --with-tests --with-story
 **Output Example:**
 
 ```bash
-$ pnpm ns:ship "add team settings page with role management"
+$ /ns-ship "add team settings page with role management"
 
 🚀  Shipping: "add team settings page with role management"
 ✓  Scaffolded: src/app/(dashboard)/teams/$teamId/settings.tsx
@@ -260,23 +260,23 @@ $ pnpm ns:ship "add team settings page with role management"
 ✓  Created: tests/e2e/teams-settings.spec.ts
 ✓  Updated: navigation manifest
 ⚡  Type-check: passed (234ms)
-✨  Ready for verification! Run: pnpm ns:verify
+✨  Ready for verification! Run: /ns-verify
 ```
 
 ### `/ns-verify` — Quality Gates
 
 ```bash
 # Run all 14 gates
-pnpm ns:verify
+/ns-verify
 
 # Run specific gates
-pnpm ns:verify --gates=typecheck,lint,test
+/ns-verify --gates=typecheck,lint,test
 
 # Watch mode for development
-pnpm ns:verify --watch
+/ns-verify --watch
 
 # CI mode (non-interactive, exits with code)
-pnpm ns:verify --ci
+/ns-verify --ci
 ```
 
 **The 14 Gates (see [Quality Gates](#-quality-gates-14-gates) for details):**
@@ -302,20 +302,20 @@ pnpm ns:verify --ci
 
 ```bash
 # Deploy to staging (preview)
-pnpm ns:ship-deploy staging
+/ns-ship-deploy staging
 
 # Deploy to production
-pnpm ns:ship-deploy production
+/ns-ship-deploy production
 
 # Deploy with custom message
-pnpm ns:ship-deploy production --message="Release v1.2.0: Team settings"
+/ns-ship-deploy production --message="Release v1.2.0: Team settings"
 
 # Rollback
-pnpm ns:ship-deploy rollback --to=deployment-abc123
+/ns-ship-deploy rollback --to=deployment-abc123
 
 # Options
-pnpm ns:ship-deploy staging --skip-verification  # DANGER: bypasses gates
-pnpm ns:ship-deploy production --canary=10       # 10% canary release
+/ns-ship-deploy staging --skip-verification  # DANGER: bypasses gates
+/ns-ship-deploy production --canary=10       # 10% canary release
 ```
 
 **Deployment Flow:**
@@ -362,8 +362,8 @@ The Zero-Risk Stack is **design system agnostic**. Choose at bootstrap or migrat
 pnpm ns:new my-app --variant=b2b
 
 # Add to existing project
-pnpm ns:design-system add shadcn
-pnpm ns:design-system switch radix  # Migrate (experimental)
+/ns-design-system add shadcn
+/ns-design-system switch radix  # Migrate (experimental)
 ```
 
 ### Design Tokens (Shared)
@@ -594,7 +594,7 @@ pnpm deps:check
 
 ```bash
 # Command
-pnpm schema:validate
+pnpm gate:rls
 
 # Validates
 # - Supabase migrations apply cleanly
@@ -643,19 +643,19 @@ pnpm test:smoke
 
 ```bash
 # All gates (default)
-pnpm ns:verify
+/ns-verify
 
 # Fast feedback loop (core gates only)
-pnpm ns:verify --fast  # typecheck, lint, format, unit, build
+/ns-verify --fast  # typecheck, lint, format, unit, build
 
 # Specific gates
-pnpm ns:verify --gates=typecheck,lint,test:unit
+/ns-verify --gates=typecheck,lint,test:unit
 
 # Watch mode
-pnpm ns:verify --watch --gates=typecheck,lint
+/ns-verify --watch --gates=typecheck,lint
 
 # CI mode (for GitHub Actions)
-pnpm ns:verify --ci
+/ns-verify --ci
 ```
 
 ---
@@ -697,7 +697,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run quality gates
-        run: pnpm ns:verify --ci
+        run: /ns-verify --ci
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -939,23 +939,23 @@ vercel link
 
 ```bash
 # Local preview deploy
-pnpm ns:ship-deploy preview
+/ns-ship-deploy preview
 
 # Staging deploy (develop branch)
 git push origin develop
 # Or manually:
-pnpm ns:ship-deploy staging
+/ns-ship-deploy staging
 
 # Production deploy (main branch)
 git push origin main
 # Or manually:
-pnpm ns:ship-deploy production
+/ns-ship-deploy production
 
 # Rollback
-pnpm ns:ship-deploy rollback --to=<deployment-id>
+/ns-ship-deploy rollback --to=<deployment-id>
 
 # List deployments
-pnpm ns:ship-deploy list
+/ns-ship-deploy list
 ```
 
 ### Post-Deploy Verification
@@ -1002,19 +1002,19 @@ pnpm ns:ship-deploy list
 
 ```bash
 # Full diagnostic
-pnpm ns:doctor
+/ns-doctor
 
 # Check environment
-pnpm ns:env:check
+/ns-env-check
 
 # Verify Supabase connection
-pnpm ns:db:ping
+/ns-db-ping
 
 # Test Stripe webhook locally
 stripe listen --forward-to localhost:3000/api/stripe/webhook --print-json
 
 # Test email sending
-pnpm ns:email:test --to=you@example.com
+/ns-email-test --to=you@example.com
 
 # Analyze bundle
 pnpm analyze
@@ -1045,12 +1045,12 @@ act -j verify  # Requires 'act' tool
 
 ```bash
 # Built-in help
-pnpm ns:ship --help
-pnpm ns:verify --help
-pnpm ns:ship-deploy --help
+/ns-ship --help
+/ns-verify --help
+/ns-ship-deploy --help
 
 # Verbose output
-DEBUG=1 pnpm ns:verify
+DEBUG=1 /ns-verify
 
 # Report an issue
 # https://github.com/zero-risk-saas/zero-risk-stack/issues/new
@@ -1103,7 +1103,7 @@ Brief description of changes
 
 ## Verification
 
-- [ ] `pnpm ns:verify` passes locally
+- [ ] `/ns-verify` passes locally
 - [ ] Unit tests added/updated
 - [ ] E2E tests added/updated
 - [ ] Documentation updated

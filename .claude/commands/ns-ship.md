@@ -422,4 +422,4 @@ SSO_PROVIDERS=google,github
 
 ---
 
-_Pipeline `ns-ship` v1.0 — SaaS-Zero (Next.js 14)_
+_Pipeline `/ns-ship` (commande, pas skill) v1.0 — SaaS-Zero (Next.js 14)_

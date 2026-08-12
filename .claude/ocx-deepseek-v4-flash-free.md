@@ -1,6 +1,6 @@
 ---
 name: "ocx-deepseek-v4-flash-free"
-description: "Delegate work to deepseek-v4-flash-free (opencode-free) via opencodex routing. General-purpose worker/explorer on that model. NOTE: this agent's real model is pinned by the opencodex proxy — the `model` argument is ignored. Pass model: \"haiku\" as a placeholder (or omit it); routing is unaffected either way."
+description: 'Delegate work to deepseek-v4-flash-free (opencode-free) via opencodex routing. General-purpose worker/explorer on that model. NOTE: this agent''s real model is pinned by the opencodex proxy — the `model` argument is ignored. Pass model: "haiku" as a placeholder (or omit it); routing is unaffected either way.'
 model: "claude-ocx-opencode-free--deepseek-v4-flash-free"
 ---
 

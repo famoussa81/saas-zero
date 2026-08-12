@@ -9,7 +9,7 @@
 ```bash
 /ns-discovery "SaaS de facturation pour freelances avec Stripe, équipe, API keys"
 # ou
-pnpm ns:discovery "votre description"
+/ns-discovery "votre description"
 ```
 
 ---

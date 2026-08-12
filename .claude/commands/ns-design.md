@@ -9,7 +9,7 @@
 ```bash
 /ns-design
 # ou
-pnpm ns:design
+/ns-design
 ```
 
 > **Prérequis** : Phase 2 Scaffold terminée, `DESIGN-CHOICE.md` validé.

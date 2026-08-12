@@ -57,7 +57,20 @@
     "gates:fast": "node .claude/scripts/run-gates.js --fast",
     "gates:list": "node .claude/scripts/run-gates.js --list",
     "gates:strict": "node .claude/scripts/run-gates.js --strict",
-    "ns:new": "node .claude/scripts/new-project.js"
+    "ns:new": "node .claude/scripts/new-project.js",
+    "doctor": "node .claude/scripts/doctor.js",
+    "test:unit": "vitest run tests/unit",
+    "test:smoke": "playwright test --config=playwright.smoke.config.ts",
+    "test:a11y": "playwright test --config=playwright.a11y.config.ts",
+    "test:contract": "vitest run tests/contracts",
+    "analyze": "cross-env ANALYZE=true pnpm build",
+    "deps:check": "pnpm outdated",
+    "verify:ci": "node .claude/scripts/run-gates.js --strict",
+    "adr:new": "node .claude/scripts/new-adr.js",
+    "format:check": "prettier --check .",
+    "bundlesize": "node .claude/scripts/check-bundle-budget.js",
+    "deploy:preview": "vercel --prebuilt",
+    "design:tokens:check": "node .claude/scripts/design-tokens-audit.js"
   },
   "dependencies": {
     "@content-collections/core": "^0.15.2",

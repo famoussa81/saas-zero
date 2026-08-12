@@ -20,11 +20,36 @@ Dans cet ordre, sans exception :
    en cas de désaccord sur un choix esthétique.
 2. Lire **`src/styles/globals.css`** — les tokens réellement définis. Ne jamais
    inventer un nom de token : utiliser ceux qui existent.
-3. Lire **`src/components/ui/`** — les primitives déjà là (16 composants
+3. Lire **`src/components/ui/`** — les primitives déjà là (21 composants
    Radix + CVA). **Aucune raison d'en réécrire une.**
 4. Si `DESIGN-CHOICE.md` est encore le template non rempli : **s'arrêter et le
    dire**. Générer de l'UI sans direction artistique décidée, c'est produire le
    générique que la pipeline existe pour éviter.
+
+### Une seule maison pour les primitives
+
+`src/components/ui/` est le **seul** emplacement des primitives. Ne jamais en
+créer une dans `components/ui/`.
+
+`tsconfig.json` mappe `@/components/*` sur deux dossiers :
+
+```json
+"@/components/*": ["./src/components/*", "./components/*"]
+```
+
+TypeScript retient le premier qui existe. Un même nom des deux côtés produit
+donc un composant fantôme : celui de `components/` n'est jamais rendu, mais
+reste modifiable, testable et documentable. On corrige alors un bouton que
+personne ne voit.
+
+Le dépôt a vécu avec onze doublons, dont neuf divergeaient — `select` faisait
+159 lignes d'un côté (Radix, accessible) et 94 de l'autre (`<select>` natif) —
+et deux stories Storybook documentaient la version morte.
+
+`pnpm doctor` détecte désormais toute réapparition et échoue.
+
+`components/` reste réservé aux composants **de domaine** : `marketing/`,
+`forms/`, `links/`, `providers/`.
 
 ---
 

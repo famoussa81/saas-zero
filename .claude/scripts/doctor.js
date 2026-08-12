@@ -196,6 +196,48 @@ for (const doc of docs) {
   }
 }
 
+// --- 5b. Composants dupliqués entre les deux racines -------------------------
+
+/**
+ * `tsconfig.json` mappe `@/components/*` sur DEUX dossiers :
+ *
+ *   "@/components/*": ["./src/components/*", "./components/*"]
+ *
+ * TypeScript retient le premier qui existe. Un même nom présent des deux
+ * côtés crée donc un composant fantôme : celui de `components/` n'est jamais
+ * rendu, mais reste modifiable, testable et documentable — on corrige un
+ * bouton que personne ne voit.
+ *
+ * Le dépôt a vécu avec onze doublons dont neuf divergeaient (`select` avait
+ * 159 lignes d'un côté, 94 de l'autre : Radix contre `<select>` natif), et
+ * deux stories Storybook documentaient la version morte.
+ */
+const dupRoots = [
+  path.join(ROOT, "src", "components"),
+  path.join(ROOT, "components"),
+];
+if (dupRoots.every((d) => fs.existsSync(d))) {
+  const namesOf = (root) =>
+    new Map(
+      listFiles(root, (f) => /\.(tsx|ts)$/.test(f) && !/\.stories\./.test(f))
+        .map((f) => [path.relative(root, f).replace(/\\/g, "/"), f])
+        .map(([k, v]) => [k, v]),
+    );
+  const [inSrc, inRoot] = dupRoots.map(namesOf);
+  for (const [name, srcFile] of inSrc) {
+    const rootFile = inRoot.get(name);
+    if (!rootFile) continue;
+    const same =
+      fs.readFileSync(srcFile, "utf8") === fs.readFileSync(rootFile, "utf8");
+    problems.push(
+      `composant dupliqué "${name}" dans src/components/ ET components/ ` +
+        `— seule la version src/ est rendue` +
+        (same ? " (copies identiques)" : " ET LES DEUX DIVERGENT"),
+    );
+  }
+  console.log(`   Composants : ${inSrc.size + inRoot.size} vérifiés`);
+}
+
 // --- 6. Gates déclarés -------------------------------------------------------
 
 const gatesPath = path.join(ROOT, ".claude", "gates.config.js");

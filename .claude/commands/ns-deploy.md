@@ -69,13 +69,22 @@ Deploys automatiques dans CI : `.github/workflows/ci.yml` → jobs `deploy-previ
 
 ### 3. Stripe Webhooks Configuration
 
-**Endpoint** : `https://saas-zero.vercel.app/api/webhooks/stripe`
+> ⚠️ Le domaine ci-dessous vient de **ton** déploiement, jamais d'un exemple
+> copié. `saas-zero.vercel.app` était écrit en dur ici : un agent qui suivait
+> la consigne configurait les webhooks Stripe du client vers un domaine qui
+> n'est pas le sien — paiements confirmés nulle part.
+
+```bash
+export APP_URL="https://<ton-projet>.vercel.app"   # ou ton domaine personnalisé
+```
+
+**Endpoint** : `$APP_URL/api/webhooks/stripe`
 
 **Events à configurer** (via Stripe CLI ou Dashboard) :
 
 ```bash
 stripe webhook_endpoints create \
-  --url=https://saas-zero.vercel.app/api/webhooks/stripe \
+  --url="$APP_URL/api/webhooks/stripe" \
   --events=checkout.session.completed,invoice.paid,customer.subscription.updated,customer.subscription.deleted,payment_method.attached
 ```
 
@@ -83,7 +92,7 @@ stripe webhook_endpoints create \
 
 ### 4. Brevo Webhooks Configuration
 
-**Endpoint** : `https://saas-zero.vercel.app/api/webhooks/brevo`
+**Endpoint** : `$APP_URL/api/webhooks/brevo`
 
 **Events** :
 
@@ -113,7 +122,7 @@ BREVO_SENDER_EMAIL=noreply@votredomaine.com
 BREVO_SENDER_NAME=Votre SaaS
 
 # Vercel
-NEXT_PUBLIC_APP_URL=https://saas-zero.vercel.app
+NEXT_PUBLIC_APP_URL=https://<ton-projet>.vercel.app
 
 # Feature Flags
 ENABLE_MFA=true
@@ -216,12 +225,12 @@ supabase db push --project-ref $SUPABASE_PROD_REF
 echo "▲  Deploying to Vercel..."
 npx vercel --prod
 
-# 4. Smoke tests
+# 4. Smoke tests — SMOKE_BASE_URL est obligatoire, la config échoue sans elle
 echo "🧪 Running smoke tests..."
-pnpm test:e2e -- --config=playwright.smoke.config.ts
+SMOKE_BASE_URL="$APP_URL" pnpm test:smoke
 
 echo "✅ Deploy complete! 🎉"
-echo "🌐 Live at: https://saas-zero.vercel.app"
+echo "🌐 Live at: $APP_URL"
 ```
 
 ---

@@ -2,7 +2,9 @@ import { test, expect } from "@playwright/test";
 
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000";
 
-test.describe("Smoke Tests - Local Dev", () => {
+// Le libellé disait « Local Dev » alors que ces tests visent un déploiement
+// (voir playwright.smoke.config.ts, qui exige SMOKE_BASE_URL).
+test.describe("Smoke Tests - Deployment", () => {
   test("Home page loads", async ({ page }) => {
     test.setTimeout(60000);
     await page.goto(`${BASE_URL}/fr`, {

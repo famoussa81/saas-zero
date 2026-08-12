@@ -34,10 +34,6 @@
     "#FBBC05",
     "#EA4335"
   ],
-  "tokenPaths": [
-    "tokens/**/*.json",
-    "src/lib/design-tokens.ts",
-    "src/styles/tokens.css",
-    "src/styles/globals.css"
-  ]
+  "_tokenPaths_note": "Seuls des chemins existants : globals.css est aujourd'hui l'unique source de tokens. tokens/**, src/lib/design-tokens.ts et src/styles/tokens.css étaient listés sans exister — l'inventaire calculait alors son ratio de tokens inutilisés sur un ensemble partiellement vide. Réintroduire une entrée seulement en même temps que le fichier.",
+  "tokenPaths": ["src/styles/globals.css"]
 }

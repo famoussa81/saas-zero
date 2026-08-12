@@ -131,6 +131,11 @@ jobs:
     needs: [pre-deploy-check, approval]
     if: ${{ needs.pre-deploy-check.outputs.ci_passed == 'true' }}
     environment: production
+    outputs:
+      # Publié pour le job smoke-tests. Sans ça il reconstruisait une URL
+      # depuis VERCEL_PROJECT_ID, qui est un identifiant `prj_…` et non un
+      # sous-domaine : l'URL ne résolvait jamais.
+      url: ${{ steps.deploy.outputs.preview-url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -150,6 +155,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Deploy to Vercel (Production)
+        id: deploy
         uses: amondnet/vercel-action@v20
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -204,7 +210,11 @@ jobs:
     name: Post-Deploy Smoke Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: [deploy-vercel, deploy-supabase]
+    # `pre-deploy-check` doit figurer ici : sans lui,
+    # `needs.pre-deploy-check.outputs.ci_passed` vaut la chaîne vide, la
+    # condition est toujours fausse et le job ne s'exécute jamais — les smoke
+    # tests post-déploiement ne tournaient donc pas une seule fois.
+    needs: [pre-deploy-check, deploy-vercel, deploy-supabase]
     if: ${{ needs.pre-deploy-check.outputs.ci_passed == 'true' && github.event.inputs.skip_smoke_tests != 'true' }}
     steps:
       - name: Checkout repository
@@ -225,8 +235,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Verify production URL
+        env:
+          # URL réelle produite par le déploiement. `vars.PRODUCTION_URL` sert
+          # de repli quand le projet a un domaine personnalisé.
+          DEPLOY_URL: ${{ needs.deploy-vercel.outputs.url }}
+          FALLBACK_URL: ${{ vars.PRODUCTION_URL }}
         run: |
-          PROD_URL="https://${{ secrets.VERCEL_PROJECT_ID }}.vercel.app"
+          PROD_URL="${DEPLOY_URL:-$FALLBACK_URL}"
+          if [ -z "$PROD_URL" ]; then
+            echo "❌ Aucune URL de production. Définir la variable de dépôt PRODUCTION_URL."
+            exit 1
+          fi
+          case "$PROD_URL" in https://*) ;; *) PROD_URL="https://$PROD_URL" ;; esac
           echo "Production URL: $PROD_URL"
 
           # Home page
@@ -248,7 +268,10 @@ jobs:
     name: Notify Deployment Complete
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [smoke-tests]
+    # Même raison que pour smoke-tests : le résumé lit
+    # `needs.pre-deploy-check.outputs.sha`, qui rendait une chaîne vide tant
+    # que le job n'était pas déclaré ici.
+    needs: [pre-deploy-check, smoke-tests]
     if: always()
     steps:
       - name: Determine deployment status

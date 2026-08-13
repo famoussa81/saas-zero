@@ -206,6 +206,8 @@ The **only** way to ship features. Six phases, each with deterministic gates.
 | `ns-dashboard` · `ns-onboarding`                  | App produit · onboarding guidé ("wow" à l'arrivée)                |
 | `ns-retention` · `ns-analytics`                   | Faire rester · analytics d'usage                                  |
 | `ns-admin` · `ns-docs`                            | Panneau admin · documentation canonique                           |
+| `ns-boutique-admin`                               | Back-office boutique pour commerçant non technique                |
+| `ns-whatsapp`                                     | Commande et notification WhatsApp, sans carte bancaire            |
 | `ns-ecommerce`                                    | Domaine boutique : catalogue, variantes, stock, panier, commandes |
 | `ns-antislop`                                     | Filtre de livraison : 38 règles contre l'UI générique             |
 | `ns-design-import`                                | Importer un `DESIGN.md` fourni et le convertir en tokens          |

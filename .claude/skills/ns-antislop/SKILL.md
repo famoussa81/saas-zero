@@ -196,6 +196,69 @@ quelque chose à y mettre.
 
 ---
 
+## Détection automatique
+
+Fusionne l'ancien skill ns-anti-generic-audit, qui visait le même défaut
+avec un vocabulaire différent — il fallait lire les deux pour savoir lequel
+s'appliquait.
+
+Trois niveaux, du moins au plus coûteux :
+
+**Niveau 1 — outillé.**
+
+```bash
+pnpm design:check                                  # gate #14
+npx impeccable detect app components lib --json    # si installé
+```
+
+**Niveau 2 — clichés visuels, par recherche.**
+
+```bash
+# Dégradés interdits par défaut (P-1)
+grep -rEn "from-(purple|violet|indigo|blue)-[0-9]{3}.*to-(blue|cyan|pink|purple)-[0-9]{3}" app components src
+
+# Orbes floutés en décor
+grep -rEn "blur-(2xl|3xl)|filter:\s*blur\(" app components src
+
+# Fontes « sûres » = fontes invisibles (P-3)
+grep -rEn "Inter|Space Grotesk" src/styles tailwind.config.ts
+
+# Mots creux (Q-4)
+grep -rEniw "propulsé par l'IA|nouvelle génération|révolutionnaire|sans effort" app components content
+```
+
+Un résultat n'est pas une faute en soi : c'est une question posée au
+Purpose-Gate. Si la raison est écrite, le motif reste.
+
+**Niveau 3 — répétition entre projets.**
+
+Comparer la palette et la composition de sections aux projets déjà livrés.
+Deux boutiques du même studio ne doivent pas partager leur hiérarchie de
+sections. Ce niveau n'a pas d'outil : il demande d'ouvrir les deux.
+
+## L'échappatoire du Purpose-Gate, et sa limite
+
+Le Purpose-Gate autorise une technique interdite « si la raison est écrite ».
+**Cette porte a été empruntée dès la première landing produite par la
+pipeline** : la palette reproduisait le combo crème + terracotta — l'interdit
+n°1 de la liste rouge — avec une justification parfaitement rédigée.
+
+Le défaut est structurel : l'agent qui produit le design est aussi celui qui
+rédige la justification. Il ne peut pas s'auto-refuser.
+
+**Donc, pour les trois motifs les plus reconnaissables** — crème + accent
+terracotta, dégradé violet-bleu en hero, near-black + un seul pop acide — une
+raison écrite **ne suffit pas**. Il faut :
+
+1. Signaler explicitement à l'utilisateur que la direction s'approche d'un
+   cliché connu, en nommant lequel.
+2. Montrer la version décalée (saturation abaissée, teinte déplacée) **à côté**
+   de la version proposée.
+3. Attendre un choix humain.
+
+Pour tous les autres motifs, la raison écrite reste suffisante — sinon la
+règle devient une bureaucratie que l'on contourne.
+
 ## Procédure de livraison
 
 Avant de déclarer une page terminée, produire ce rapport. PASS ou FAIL par
@@ -239,7 +302,6 @@ pour être appliqué par un humain ou un agent qui relit, pas par un linter.
 ## Liens
 
 - `ns-design-direction` — choisit l'identité (ce skill la protège)
-- `ns-anti-generic-audit` — détection automatique, complémentaire
 - `ns-sections` — variantes de mise en page, contre Q-1
 - `ns-error-states` — H-6
 - `ns-motion` — P-11

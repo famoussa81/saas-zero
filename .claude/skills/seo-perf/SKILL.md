@@ -90,6 +90,59 @@ grep -r "og:image" .next/server/app --include="*.html" | head
 npx playwright test --config=playwright.a11y.config.ts
 ```
 
+## Sitemap, robots et données structurées
+
+Trois skills séparés couvraient ces sujets — ns-next-sitemap, ns-json-ld,
+ns-plausible — sur près de 1 150 lignes qui reproduisaient la documentation
+amont. Deux d'entre eux décrivaient des paquets **jamais installés** dans ce
+dépôt, si bien que le projet n'avait ni sitemap ni robots.txt pendant que
+391 lignes expliquaient comment les configurer.
+
+Ils sont fondus ici, et la capacité est désormais réelle.
+
+### Sitemap et robots — natifs, aucune dépendance
+
+`app/sitemap.ts` et `app/robots.ts` sont générés par l'App Router. Les URL
+viennent des collections de contenu via `lib/content`, donc elles suivent le
+contenu au lieu d'une configuration à tenir à jour.
+
+Deux points qui se ratent facilement :
+
+- **Les brouillons sont exclus.** `getAllPosts()` filtre déjà `draft` — c'est
+  pourquoi le sitemap passe par le helper et non par la collection brute.
+- **Les alternates de langue sont obligatoires** en multilingue. Sans elles,
+  Google traite `/fr/blog` et `/en/blog` comme du contenu dupliqué au lieu de
+  servir la bonne version.
+
+`robots.ts` exclut `/api/` et les zones d'administration. Ce n'est **pas** une
+mesure de sécurité : un robots.txt n'empêche aucun accès, il demande seulement
+aux moteurs bien élevés de ne pas indexer. La protection reste le middleware
+et la RLS.
+
+### Données structurées
+
+`src/components/ui/JsonLd.tsx` expose `OrganizationJsonLd`, `WebsiteJsonLd` et
+`SoftwareApplicationJsonLd`. Les poser dans le layout suffit ; valider ensuite
+avec l'outil de test des résultats enrichis de Google.
+
+Pour une boutique, ajouter `Product` et `Offer` sur la fiche produit — c'est
+ce qui fait apparaître le prix et la disponibilité dans les résultats. Le prix
+déclaré doit être **celui réellement affiché** : un écart est sanctionné.
+
+### Analytics
+
+Plausible est déjà branché — script dans `app/[locale]/layout.tsx` et
+fournisseur dans `src/components/providers/plausible-provider.tsx`. Sans
+cookie, sans bandeau de consentement, moins d'1 Ko.
+
+Ne pas installer `next-plausible` : le montage actuel fonctionne, et deux
+implémentations concurrentes comptent les visites en double.
+
+À distinguer de `ns-analytics`, qui mesure l'usage **produit** (activation,
+rétention) et non l'audience.
+
+---
+
 ## Checklist de sortie
 
 - [ ] Metadata complète sur chaque page (title, description, OG, twitter)
@@ -99,6 +152,8 @@ npx playwright test --config=playwright.a11y.config.ts
 - [ ] Images optimisées (`next/image`, alt)
 - [ ] Lighthouse ≥ 90 Perf/A11y/BP/SEO
 - [ ] 0 erreur console, 0 mismatch hydration
+- [ ] `/sitemap.xml` et `/robots.txt` répondent, brouillons absents
+- [ ] Alternates de langue présentes sur chaque URL multilingue
 
 ---
 

@@ -334,7 +334,7 @@ pnpm gates:all
     ├── ns-landing.md · ns-auth.md · ns-organizations.md · ns-billing.md
     ├── ns-dashboard.md · ns-onboarding.md · ns-retention.md · ns-analytics.md
     ├── ns-admin.md · ns-quality-gates.md · ns-load-test.md · ns-sentry.md
-    └── + skills contenu (ns-contentlayer, ns-forms, ns-pagefind, ns-next-intl, ...)
+    └── + skills contenu (ns-forms, ns-pagefind, ns-next-intl, seo-perf, ...)
 ```
 
 ---

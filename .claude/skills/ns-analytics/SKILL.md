@@ -7,7 +7,7 @@ description: Analytics d'usage du SaaS — comment les users utilisent le produi
 
 > Distinguer deux couches :
 >
-> - **Marketing** : Plausible, privacy-first, exempté de cookie banner (voir skill `ns-plausible`).
+> - **Marketing** : Plausible, privacy-first, exempté de cookie banner (voir skill `seo-perf`).
 > - **Produit** (ce skill) : ce que les users font DANS l'app (funnels, activation, rétention).
 
 ## Ce qu'on mesure (fungele produit)

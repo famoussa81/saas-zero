@@ -74,6 +74,41 @@ export const tokens = {
 - Pas de placeholder `via.placeholder.com` : vraies images (voir `media-sourcing`/`media-sourcing`).
 - Le hero doit avoir un élément signature ACTIF (animation ou motif), pas une image statique seule.
 
+## Quand passer à Style Dictionary
+
+Fusionne l'ancien skill design-system, qui décrivait la même chose par un
+autre outil — deux skills pour un seul sujet obligeaient à hésiter à chaque
+projet.
+
+**Par défaut : les tokens à la main dans `src/styles/globals.css`.** Un
+fichier, lisible, versionné, que `pnpm design:tokens:audit` vérifie. C'est
+suffisant pour un produit avec deux thèmes.
+
+**Passer à Style Dictionary quand l'un de ces trois cas se présente :**
+
+1. **Plus de deux thèmes** — clair, sombre, contraste élevé, marque blanche
+   par client. Tenir quatre blocs de variables à la main diverge en un mois.
+2. **Les tokens doivent sortir de l'application** — être consommés par une
+   application mobile, un e-mail, une charte imprimée. Style Dictionary génère
+   depuis une source JSON unique vers CSS, TypeScript, Swift, XML.
+3. **Une équipe design édite les tokens sans toucher au code** — le JSON est
+   un format d'échange, `globals.css` ne l'est pas.
+
+Hors de ces cas, c'est de la plomberie en plus sans bénéfice : un build de
+plus, un format de plus, et une source de vérité éloignée du code qui la
+consomme.
+
+### La bascule, si elle est justifiée
+
+```bash
+pnpm add -D style-dictionary
+```
+
+`tokens/core.json` (valeurs brutes) et `tokens/semantic.json` (alias par
+rôle : `color-primary` pointe vers une primitive). Le build produit
+`globals.css`, qui devient alors **généré** — donc à ne plus éditer à la main,
+et à faire ignorer par `design:tokens:audit` en tant que source.
+
 ## Checklist de sortie
 
 - [ ] Tokens dans `@theme` (pas de valeurs en dur)

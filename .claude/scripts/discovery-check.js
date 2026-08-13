@@ -304,9 +304,28 @@ function checkPositionnement(content) {
   );
 }
 
+/**
+ * Unit economics : un mot-clé du domaine ET un montant chiffré.
+ *
+ * La version précédente exigeait un montant EN DOLLARS :
+ *
+ *     return /(\$\s*\d+|\d+\s*\$)/i.test(content);
+ *
+ * Une Discovery rédigée en francs CFA, en euros ou en dirhams échouait donc
+ * quels que soient ses chiffres — le gate refusait « AOV 25k F, CAC 3k F,
+ * LTV 30k F » et laissait passer un document vide contenant « $0 » quelque
+ * part. Il mesurait la devise, pas la complétude.
+ *
+ * La version actuelle est agnostique à la devise et plus stricte : elle exige
+ * à la fois le vocabulaire (le sujet est traité) et un nombre unitaire (il est
+ * chiffré). Un pourcentage compte — une marge est une unit economic.
+ */
 function checkUnitEconomics(content) {
-  // Vérifie qu'au moins ACV ou churn ou LTV ou MRR est rempli avec un nombre
-  return /(\$\s*\d+|\d+\s*\$)/i.test(content);
+  const KEYWORDS =
+    /\b(unit\s*economics|ACV|CAC|LTV|churn|MRR|ARR|AOV|panier\s*moyen|marge|payback)\b/i;
+  const AMOUNT =
+    /\d[\d\s.,]*\s*(?:k|K|M)?\s*(?:F\b|FCFA|XOF|CFA|MAD|DH|€|EUR|\$|USD|%)|[$€]\s*\d/;
+  return KEYWORDS.test(content) && AMOUNT.test(content);
 }
 
 // ─── Main ────────────────────────────────────────────────────────────────────

@@ -42,7 +42,7 @@ pnpm gates:fast      # vérifier qu'on n'a rien cassé
 On ne travaille **pas** dans le socle : on en génère un projet autonome, ailleurs.
 
 ```bash
-pnpm ns:new boutique-diallo --variant=b2c
+pnpm ns:new boutique-diallo --variant=b2c --type=ecommerce
 cd ../boutique-diallo
 pnpm install
 ```
@@ -57,6 +57,16 @@ Le projet obtenu a son propre dépôt git vierge, sa Discovery à zéro, et le s
 | `--variant=b2c` | utilisateur seul — commerce, outils personnels |
 
 Ce choix engage le schéma Supabase et les policies RLS. Il ne se change pas après coup sans migration (ADR-005).
+
+**Choisir le type** — axe séparé, il répond à « qu'est-ce qu'on vend » :
+
+|                    | Ce que ça ajoute                                    |
+| ------------------ | --------------------------------------------------- |
+| `--type=saas`      | abonnement, quotas, portail de facturation (défaut) |
+| `--type=ecommerce` | catalogue, variantes, stock, panier, commandes      |
+| `--type=vitrine`   | présentation et contact, aucune transaction         |
+
+Les deux axes se combinent : un grossiste est `--variant=b2b --type=ecommerce`.
 
 ---
 

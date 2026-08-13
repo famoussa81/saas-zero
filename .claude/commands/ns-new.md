@@ -11,8 +11,8 @@ Jusqu'ici la pipeline travaillait **en place** : `/ns-ship` lancé dans le socle
 ## Usage
 
 ```bash
-pnpm ns:new <nom> --variant=b2b|b2c
-pnpm ns:new boutique-diallo --variant=b2c
+pnpm ns:new <nom> --variant=b2b|b2c [--type=saas|ecommerce|vitrine]
+pnpm ns:new boutique-diallo --variant=b2c --type=ecommerce
 pnpm ns:new --dry-run mon-saas --variant=b2b     # simulation
 pnpm ns:new mon-saas --variant=b2b --target=D:/projets/mon-saas
 ```
@@ -29,6 +29,28 @@ Le nom sert de nom de paquet npm : minuscules, chiffres et tirets uniquement.
 | `b2c`    | utilisateur seul, pas d'organisation       | commerce, outils personnels, communautés    |
 
 Ce choix engage le schéma Supabase, les 45 policies RLS et les pages générées. **Il ne se change pas après coup sans migration** (voir ADR-005). C'est pourquoi il est exigé à la création, et non laissé à une copie manuelle.
+
+## Le type est un axe séparé
+
+La variante répond à « qui possède la donnée ». Le type répond à « qu'est-ce
+qu'on vend ». Les deux se combinent librement.
+
+| Type        | Ce que ça ajoute                                     | Schéma                     |
+| ----------- | ---------------------------------------------------- | -------------------------- |
+| `saas`      | abonnement récurrent, quotas, portail de facturation | aucun (déjà dans le socle) |
+| `ecommerce` | catalogue, variantes, stock, panier, commandes       | 10 tables + vue + RLS      |
+| `vitrine`   | présentation et contact, aucune transaction          | aucun, volontairement      |
+
+Par défaut : `--type=saas`.
+
+Une boutique de vêtements grand public est `--variant=b2c --type=ecommerce`.
+Un grossiste qui vend à des entreprises est `--variant=b2b --type=ecommerce`.
+Confondre les deux axes obligeait à recoder le domaine boutique à chaque
+projet — c'est ce que cette séparation supprime.
+
+Le domaine boutique se construit ensuite avec le skill `ns-ecommerce`, qui
+explique les trois pièges que le schéma prévient : le prix qui change après
+l'achat, la survente, et le panier perdu à la connexion.
 
 ## Ce que fait la commande
 

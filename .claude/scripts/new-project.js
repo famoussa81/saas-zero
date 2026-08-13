@@ -12,8 +12,10 @@
  * de création, pas une copie manuelle après coup.
  *
  * Usage :
- *   node .claude/scripts/new-project.js <nom> --variant=b2b|b2c [--target=<chemin>]
- *   node .claude/scripts/new-project.js boutique-diallo --variant=b2c
+ *   node .claude/scripts/new-project.js <nom> --variant=b2b|b2c
+ *                                        [--type=saas|ecommerce|vitrine]
+ *                                        [--target=<chemin>]
+ *   node .claude/scripts/new-project.js boutique-diallo --variant=b2c --type=ecommerce
  *   node .claude/scripts/new-project.js --dry-run mon-saas --variant=b2b
  *
  * Par défaut le projet est créé À CÔTÉ du socle (../<nom>).
@@ -29,6 +31,7 @@ const argv = process.argv.slice(2);
 const DRY = argv.includes("--dry-run");
 const name = argv.find((a) => !a.startsWith("--"));
 const variantArg = argv.find((a) => a.startsWith("--variant="));
+const typeArg = argv.find((a) => a.startsWith("--type="));
 const targetArg = argv.find((a) => a.startsWith("--target="));
 
 if (!name) {
@@ -57,6 +60,33 @@ if (!variant || !["b2b", "b2c"].includes(variant)) {
   console.error(
     "   Il ne se change pas après coup sans migration (voir ADR-005).\n",
   );
+  process.exit(1);
+}
+
+/**
+ * Axe ORTHOGONAL à la variante.
+ *
+ * `--variant` répond « qui possède la donnée » : un utilisateur seul (b2c) ou
+ * une organisation à plusieurs membres (b2b). `--type` répond « qu'est-ce
+ * qu'on vend » : un abonnement (saas), des articles (ecommerce), ou rien
+ * (vitrine). Les deux se combinent : une boutique B2B qui vend en gros est
+ * `--variant=b2b --type=ecommerce`.
+ *
+ * Confondre les deux — ce que faisait la pipeline, qui n'avait que la
+ * variante — obligeait à recoder le domaine boutique à chaque projet.
+ */
+const TYPES = {
+  saas: "abonnement récurrent, quotas, portail de facturation",
+  ecommerce: "catalogue, variantes, stock, panier, commandes",
+  vitrine: "présentation et contact, aucune transaction",
+};
+const type = typeArg ? typeArg.split("=")[1] : "saas";
+if (!Object.keys(TYPES).includes(type)) {
+  console.error(`\n❌ Type invalide : "${type}"`);
+  for (const [k, v] of Object.entries(TYPES)) {
+    console.error(`   --type=${k.padEnd(10)} ${v}`);
+  }
+  console.error("\n   Par défaut : --type=saas\n");
   process.exit(1);
 }
 
@@ -135,7 +165,10 @@ function copyRecursive(from, to, rel = "") {
 
 // --- Vérifications ----------------------------------------------------------
 
-console.log(`\n🌱 Nouveau projet « ${name} » (${variant.toUpperCase()})\n`);
+console.log(
+  `\n🌱 Nouveau projet « ${name} » — ${variant.toUpperCase()} / ${type}\n`,
+);
+console.log(`   ${TYPES[type]}\n`);
 console.log(`   Socle  : ${SOURCE}`);
 console.log(`   Cible  : ${TARGET}`);
 if (DRY) console.log(`   Mode   : simulation, rien n'est écrit`);
@@ -244,6 +277,32 @@ if (!hasVariantTemplate && variant === "b2c") {
   console.log(
     `   ⚠️  Aucun template b2c trouvé — vérifier supabase/schema-variants/`,
   );
+}
+
+/**
+ * Schéma du TYPE, posé par-dessus celui de la variante.
+ *
+ * `vitrine` n'a pas de schéma : c'est le point, elle ne stocke rien de
+ * métier. `saas` n'en a pas non plus — abonnements et quotas vivent déjà
+ * dans le socle commun (tables Stripe). Seul `ecommerce` ajoute son domaine.
+ */
+if (!DRY) {
+  const typeTemplate = path.join(TARGET, "supabase", "schema-variants", type);
+  const targetMigrationsDir = path.join(TARGET, "supabase", "migrations");
+  if (fs.existsSync(typeTemplate) && fs.existsSync(targetMigrationsDir)) {
+    for (const f of fs.readdirSync(typeTemplate)) {
+      if (!f.endsWith(".template")) continue;
+      const dest = path.join(targetMigrationsDir, f.replace(/\.template$/, ""));
+      if (!fs.existsSync(dest)) {
+        fs.copyFileSync(path.join(typeTemplate, f), dest);
+        console.log(`   ✅ Migration ${type} activée : ${path.basename(dest)}`);
+      }
+    }
+  } else if (type === "ecommerce") {
+    console.log(
+      `   ⚠️  Aucun template ecommerce trouvé — vérifier supabase/schema-variants/ecommerce/`,
+    );
+  }
 }
 
 // --- Documents d'identité, repartis des templates --------------------------

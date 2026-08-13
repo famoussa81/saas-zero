@@ -1,0 +1,318 @@
+-- =============================================================================
+-- Migration: 20260813000001_ecommerce_schema.sql
+-- Domaine boutique : catalogue, stock, panier, commandes.
+--
+-- Activée par `pnpm ns:new <nom> --variant=b2c --type=ecommerce`.
+-- Se pose PAR-DESSUS le socle commun (user_profiles, tables Stripe) et la
+-- variante b2c. Ne dépend d'aucune table d'organisation.
+--
+-- Trois décisions structurantes, à ne pas défaire sans les comprendre :
+--
+--  1. L'argent est en CENTIMES ENTIERS, jamais en flottant. Une erreur d'un
+--     centime sur une facture est un litige, et les flottants en produisent.
+--
+--  2. Les lignes de commande sont DÉNORMALISÉES : nom, SKU et prix unitaire
+--     sont copiés au moment de l'achat. Un produit renommé, reprixé ou retiré
+--     six mois plus tard ne doit pas réécrire l'historique. Le variant_id
+--     reste pour l'analyse, mais la vérité de la commande est la copie.
+--
+--  3. Le CATALOGUE et le STOCK vivent dans des tables séparées. La fiche
+--     produit change quand le marketing la retouche ; la quantité change à
+--     chaque vente. Deux rythmes d'écriture, deux tables.
+-- =============================================================================
+
+-- =============================================================================
+-- CATALOGUE
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS public.categories (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    slug        TEXT NOT NULL UNIQUE,
+    name        TEXT NOT NULL,
+    description TEXT,
+    parent_id   UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+    position    INTEGER NOT NULL DEFAULT 0,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.products (
+    id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    slug             TEXT NOT NULL UNIQUE,
+    name             TEXT NOT NULL,
+    description      TEXT,
+    base_price_cents INTEGER NOT NULL CHECK (base_price_cents >= 0),
+    currency         TEXT NOT NULL DEFAULT 'XOF',
+    status           TEXT NOT NULL DEFAULT 'draft'
+                     CHECK (status IN ('draft', 'active', 'archived')),
+    -- Attributs libres (matière, coupe, saison). JSONB + GIN : on interroge
+    -- sans multiplier les jointures, au prix d'un typage plus faible.
+    attributes       JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.product_categories (
+    product_id  UUID NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
+    category_id UUID NOT NULL REFERENCES public.categories(id) ON DELETE CASCADE,
+    PRIMARY KEY (product_id, category_id)
+);
+
+-- Une variante = une combinaison vendable. Un t-shirt en 4 tailles et
+-- 3 couleurs fait 12 variantes, donc 12 SKU et 12 lignes de stock.
+CREATE TABLE IF NOT EXISTS public.product_variants (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    product_id   UUID NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
+    sku          TEXT NOT NULL UNIQUE,
+    -- Libellé lisible : « M / Bleu marine ». Copié dans order_items.
+    label        TEXT NOT NULL,
+    -- Options structurées : {"taille":"M","couleur":"bleu-marine"}
+    options      JSONB NOT NULL DEFAULT '{}'::jsonb,
+    -- NULL = hérite de products.base_price_cents.
+    price_cents  INTEGER CHECK (price_cents IS NULL OR price_cents >= 0),
+    position     INTEGER NOT NULL DEFAULT 0,
+    is_active    BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.product_images (
+    id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    product_id UUID NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
+    -- NULL = image de la fiche ; sinon image propre à une variante.
+    variant_id UUID REFERENCES public.product_variants(id) ON DELETE CASCADE,
+    url        TEXT NOT NULL,
+    alt        TEXT NOT NULL,
+    position   INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- =============================================================================
+-- STOCK — chemin d'écriture séparé du catalogue
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS public.inventory (
+    variant_id  UUID PRIMARY KEY REFERENCES public.product_variants(id) ON DELETE CASCADE,
+    quantity    INTEGER NOT NULL DEFAULT 0 CHECK (quantity >= 0),
+    -- Réservé par les paniers en cours de paiement.
+    reserved    INTEGER NOT NULL DEFAULT 0 CHECK (reserved >= 0),
+    low_stock_threshold INTEGER NOT NULL DEFAULT 3,
+    updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT inventory_reserved_lte_quantity CHECK (reserved <= quantity)
+);
+
+CREATE OR REPLACE VIEW public.variant_availability AS
+SELECT v.id            AS variant_id,
+       v.product_id,
+       v.sku,
+       v.label,
+       COALESCE(i.quantity, 0) - COALESCE(i.reserved, 0) AS available,
+       COALESCE(i.quantity, 0) <= COALESCE(i.low_stock_threshold, 0) AS is_low
+FROM public.product_variants v
+LEFT JOIN public.inventory i ON i.variant_id = v.id
+WHERE v.is_active;
+
+-- =============================================================================
+-- PANIER
+-- =============================================================================
+
+-- user_id nullable : un visiteur non connecté doit pouvoir remplir un panier.
+-- session_token identifie alors le panier invité ; la connexion le rattache.
+CREATE TABLE IF NOT EXISTS public.carts (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id       UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    session_token TEXT,
+    status        TEXT NOT NULL DEFAULT 'open'
+                  CHECK (status IN ('open', 'ordered', 'abandoned')),
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT carts_owner_present CHECK (user_id IS NOT NULL OR session_token IS NOT NULL)
+);
+
+CREATE TABLE IF NOT EXISTS public.cart_items (
+    id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    cart_id    UUID NOT NULL REFERENCES public.carts(id) ON DELETE CASCADE,
+    variant_id UUID NOT NULL REFERENCES public.product_variants(id) ON DELETE RESTRICT,
+    quantity   INTEGER NOT NULL CHECK (quantity > 0),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    -- Rajouter deux fois le même article incrémente la quantité.
+    UNIQUE (cart_id, variant_id)
+);
+
+-- =============================================================================
+-- COMMANDES
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS public.orders (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    -- Numéro lisible donné au client. Jamais l'UUID.
+    reference       TEXT NOT NULL UNIQUE,
+    user_id         UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    status          TEXT NOT NULL DEFAULT 'pending'
+                    CHECK (status IN ('pending', 'confirmed', 'preparing',
+                                      'shipped', 'delivered', 'cancelled', 'refunded')),
+    -- Coordonnées COPIÉES à la commande : le client peut changer d'adresse
+    -- ensuite, la commande garde celle de la livraison.
+    customer_name    TEXT NOT NULL,
+    customer_email   TEXT,
+    customer_phone   TEXT NOT NULL,
+    shipping_address JSONB NOT NULL DEFAULT '{}'::jsonb,
+    subtotal_cents   INTEGER NOT NULL CHECK (subtotal_cents >= 0),
+    shipping_cents   INTEGER NOT NULL DEFAULT 0 CHECK (shipping_cents >= 0),
+    total_cents      INTEGER NOT NULL CHECK (total_cents >= 0),
+    currency         TEXT NOT NULL DEFAULT 'XOF',
+    -- 'stripe' | 'whatsapp' | 'cash_on_delivery' — se décide en Discovery.
+    payment_method   TEXT NOT NULL DEFAULT 'whatsapp',
+    payment_status   TEXT NOT NULL DEFAULT 'unpaid'
+                     CHECK (payment_status IN ('unpaid', 'paid', 'refunded')),
+    notes            TEXT,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- DÉNORMALISÉE VOLONTAIREMENT. Voir l'en-tête, décision 2.
+CREATE TABLE IF NOT EXISTS public.order_items (
+    id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_id         UUID NOT NULL REFERENCES public.orders(id) ON DELETE CASCADE,
+    -- ON DELETE SET NULL : supprimer un produit n'efface jamais une ligne.
+    variant_id       UUID REFERENCES public.product_variants(id) ON DELETE SET NULL,
+    product_name     TEXT NOT NULL,
+    variant_label    TEXT NOT NULL,
+    sku              TEXT NOT NULL,
+    unit_price_cents INTEGER NOT NULL CHECK (unit_price_cents >= 0),
+    quantity         INTEGER NOT NULL CHECK (quantity > 0),
+    total_cents      INTEGER NOT NULL CHECK (total_cents >= 0),
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- =============================================================================
+-- INDEX
+-- =============================================================================
+
+-- Index partiel : la boutique n'interroge que les produits actifs. L'index
+-- reste petit même quand les archives grossissent.
+CREATE INDEX IF NOT EXISTS idx_products_active ON public.products(id) WHERE status = 'active';
+CREATE INDEX IF NOT EXISTS idx_products_slug ON public.products(slug);
+CREATE INDEX IF NOT EXISTS idx_products_attributes ON public.products USING GIN (attributes);
+
+CREATE INDEX IF NOT EXISTS idx_variants_product ON public.product_variants(product_id);
+CREATE INDEX IF NOT EXISTS idx_variants_options ON public.product_variants USING GIN (options);
+CREATE INDEX IF NOT EXISTS idx_images_product ON public.product_images(product_id, position);
+CREATE INDEX IF NOT EXISTS idx_product_categories_category ON public.product_categories(category_id);
+
+CREATE INDEX IF NOT EXISTS idx_carts_user ON public.carts(user_id) WHERE status = 'open';
+CREATE INDEX IF NOT EXISTS idx_carts_session ON public.carts(session_token) WHERE status = 'open';
+CREATE INDEX IF NOT EXISTS idx_cart_items_cart ON public.cart_items(cart_id);
+
+CREATE INDEX IF NOT EXISTS idx_orders_user ON public.orders(user_id);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON public.orders(status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_order_items_order ON public.order_items(order_id);
+
+-- =============================================================================
+-- TRIGGERS updated_at
+-- =============================================================================
+
+CREATE TRIGGER set_updated_at_products
+    BEFORE UPDATE ON public.products
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+CREATE TRIGGER set_updated_at_categories
+    BEFORE UPDATE ON public.categories
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+CREATE TRIGGER set_updated_at_product_variants
+    BEFORE UPDATE ON public.product_variants
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+CREATE TRIGGER set_updated_at_inventory
+    BEFORE UPDATE ON public.inventory
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+CREATE TRIGGER set_updated_at_carts
+    BEFORE UPDATE ON public.carts
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+CREATE TRIGGER set_updated_at_cart_items
+    BEFORE UPDATE ON public.cart_items
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+CREATE TRIGGER set_updated_at_orders
+    BEFORE UPDATE ON public.orders
+    FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
+
+-- =============================================================================
+-- ROW LEVEL SECURITY
+--
+-- Le catalogue est PUBLIC en lecture — c'est une boutique. Tout le reste est
+-- privé. L'écriture du catalogue et la lecture des commandes d'autrui passent
+-- exclusivement par le rôle admin ou la service-role côté serveur.
+-- =============================================================================
+
+ALTER TABLE public.categories         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.products           ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.product_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.product_variants   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.product_images     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.inventory          ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.carts              ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.cart_items         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders             ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.order_items        ENABLE ROW LEVEL SECURITY;
+
+-- Vitrine : lecture publique du catalogue actif seulement.
+CREATE POLICY "catalogue lisible par tous" ON public.categories
+    FOR SELECT USING (TRUE);
+CREATE POLICY "produits actifs lisibles par tous" ON public.products
+    FOR SELECT USING (status = 'active');
+CREATE POLICY "liens categorie lisibles par tous" ON public.product_categories
+    FOR SELECT USING (TRUE);
+CREATE POLICY "variantes actives lisibles par tous" ON public.product_variants
+    FOR SELECT USING (is_active);
+CREATE POLICY "images lisibles par tous" ON public.product_images
+    FOR SELECT USING (TRUE);
+-- Le stock est lisible (« plus que 2 en stock ») mais jamais modifiable
+-- côté client.
+CREATE POLICY "stock lisible par tous" ON public.inventory
+    FOR SELECT USING (TRUE);
+
+-- Panier : chacun le sien.
+CREATE POLICY "panier: proprietaire lit" ON public.carts
+    FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "panier: proprietaire ecrit" ON public.carts
+    FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "lignes panier: proprietaire" ON public.cart_items
+    FOR ALL USING (
+        EXISTS (SELECT 1 FROM public.carts c
+                WHERE c.id = cart_items.cart_id AND c.user_id = auth.uid())
+    ) WITH CHECK (
+        EXISTS (SELECT 1 FROM public.carts c
+                WHERE c.id = cart_items.cart_id AND c.user_id = auth.uid())
+    );
+
+-- Commandes : lecture seule pour le client. Aucune policy d'UPDATE côté
+-- client — changer le statut d'une commande est une opération serveur.
+CREATE POLICY "commandes: client lit les siennes" ON public.orders
+    FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "lignes commande: client lit les siennes" ON public.order_items
+    FOR SELECT USING (
+        EXISTS (SELECT 1 FROM public.orders o
+                WHERE o.id = order_items.order_id AND o.user_id = auth.uid())
+    );
+
+-- =============================================================================
+-- RÉFÉRENCE DE COMMANDE LISIBLE
+-- =============================================================================
+
+CREATE SEQUENCE IF NOT EXISTS public.order_reference_seq START 1000;
+
+CREATE OR REPLACE FUNCTION public.generate_order_reference()
+RETURNS TEXT
+LANGUAGE sql
+VOLATILE
+AS $$
+    SELECT 'CMD-' || TO_CHAR(NOW(), 'YYYYMM') || '-' ||
+           LPAD(nextval('public.order_reference_seq')::TEXT, 4, '0');
+$$;
+
+COMMENT ON TABLE public.order_items IS
+    'Denormalisee volontairement : nom, SKU et prix copies a l''achat. '
+    'Un produit modifie plus tard ne reecrit pas l''historique des commandes.';
+COMMENT ON TABLE public.inventory IS
+    'Separee du catalogue : rythmes d''ecriture differents. quantity - reserved '
+    '= reellement vendable.';

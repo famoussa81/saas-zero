@@ -42,31 +42,28 @@ pnpm gates:fast      # vérifier qu'on n'a rien cassé
 On ne travaille **pas** dans le socle : on en génère un projet autonome, ailleurs.
 
 ```bash
-pnpm ns:new boutique-diallo --variant=b2c --type=ecommerce
+pnpm ns:new boutique-diallo boutique
 cd ../boutique-diallo
 pnpm install
 ```
 
 Le projet obtenu a son propre dépôt git vierge, sa Discovery à zéro, et le schéma de la variante choisie. Voir `.claude/commands/ns-new.md`.
 
-**Choisir la variante :**
+**Les quatre modèles :**
 
-|                 | Pour qui                                       |
-| --------------- | ---------------------------------------------- |
-| `--variant=b2b` | organisations, équipes, invitations, rôles     |
-| `--variant=b2c` | utilisateur seul — commerce, outils personnels |
+| Modèle       | Ce que vous obtenez                            |
+| ------------ | ---------------------------------------------- |
+| `boutique`   | catalogue, variantes, stock, panier, commandes |
+| `saas`       | organisations, équipes, abonnement             |
+| `saas-perso` | compte unique, abonnement                      |
+| `vitrine`    | présentation et contact, aucune transaction    |
 
-Ce choix engage le schéma Supabase et les policies RLS. Il ne se change pas après coup sans migration (ADR-005).
+Un modèle fixe deux choses : à qui appartient la donnée, et ce qu'on vend. Le
+premier choix engage le schéma Supabase et les policies RLS — il ne se change
+pas après coup sans migration (ADR-005).
 
-**Choisir le type** — axe séparé, il répond à « qu'est-ce qu'on vend » :
-
-|                    | Ce que ça ajoute                                    |
-| ------------------ | --------------------------------------------------- |
-| `--type=saas`      | abonnement, quotas, portail de facturation (défaut) |
-| `--type=ecommerce` | catalogue, variantes, stock, panier, commandes      |
-| `--type=vitrine`   | présentation et contact, aucune transaction         |
-
-Les deux axes se combinent : un grossiste est `--variant=b2b --type=ecommerce`.
+Pour une combinaison qu'aucun modèle ne couvre, un grossiste par exemple, les
+drapeaux restent là : `--variant=b2b --type=ecommerce`.
 
 ---
 

@@ -11,10 +11,33 @@ Jusqu'ici la pipeline travaillait **en place** : `/ns-ship` lancé dans le socle
 ## Usage
 
 ```bash
-pnpm ns:new <nom> --variant=b2b|b2c [--type=saas|ecommerce|vitrine]
-pnpm ns:new boutique-diallo --variant=b2c --type=ecommerce
-pnpm ns:new --dry-run mon-saas --variant=b2b     # simulation
-pnpm ns:new mon-saas --variant=b2b --target=D:/projets/mon-saas
+pnpm ns:new <nom> <modèle>
+```
+
+| Modèle       | Ce que vous obtenez                              |
+| ------------ | ------------------------------------------------ |
+| `boutique`   | boutique en ligne — catalogue, panier, commandes |
+| `saas`       | outil d'équipe — organisations, abonnement       |
+| `saas-perso` | outil individuel — compte unique, abonnement     |
+| `vitrine`    | site de présentation — aucune transaction        |
+
+```bash
+pnpm ns:new boutique-diallo boutique
+pnpm ns:new --dry-run mon-outil saas             # simulation
+pnpm ns:new mon-outil saas --target=D:/projets/mon-outil
+```
+
+Un modèle inconnu, ou aucun modèle, affiche la liste — jamais une erreur
+cryptique.
+
+### Les combinaisons rares
+
+Un modèle est un raccourci vers deux axes. Pour une combinaison qu'aucun ne
+couvre — un grossiste qui vend à des entreprises, par exemple — les drapeaux
+restent disponibles et l'emportent sur le modèle :
+
+```bash
+pnpm ns:new gros-diallo --variant=b2b --type=ecommerce
 ```
 
 Par défaut le projet est créé **à côté** du socle : `../<nom>`.

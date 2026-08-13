@@ -12,11 +12,15 @@
  * de création, pas une copie manuelle après coup.
  *
  * Usage :
- *   node .claude/scripts/new-project.js <nom> --variant=b2b|b2c
- *                                        [--type=saas|ecommerce|vitrine]
- *                                        [--target=<chemin>]
- *   node .claude/scripts/new-project.js boutique-diallo --variant=b2c --type=ecommerce
- *   node .claude/scripts/new-project.js --dry-run mon-saas --variant=b2b
+ *   node .claude/scripts/new-project.js <nom> <modèle> [--target=<chemin>]
+ *
+ *   Modèles : boutique | saas | saas-perso | vitrine
+ *
+ *   node .claude/scripts/new-project.js boutique-diallo boutique
+ *   node .claude/scripts/new-project.js --dry-run mon-outil saas
+ *
+ *   Combinaison rare, sans modèle correspondant :
+ *   node .claude/scripts/new-project.js gros --variant=b2b --type=ecommerce
  *
  * Par défaut le projet est créé À CÔTÉ du socle (../<nom>).
  */
@@ -29,16 +33,72 @@ const { spawnSync } = require("node:child_process");
 
 const argv = process.argv.slice(2);
 const DRY = argv.includes("--dry-run");
-const name = argv.find((a) => !a.startsWith("--"));
+const positional = argv.filter((a) => !a.startsWith("--"));
+const name = positional[0];
 const variantArg = argv.find((a) => a.startsWith("--variant="));
 const typeArg = argv.find((a) => a.startsWith("--type="));
 const targetArg = argv.find((a) => a.startsWith("--target="));
 
-if (!name) {
-  console.error("\n❌ Nom de projet manquant.\n");
+/**
+ * Raccourcis nommés — le chemin normal.
+ *
+ * La commande exigeait `--variant=b2c --type=ecommerce` : trois concepts à
+ * connaître avant d'écrire une ligne, dont deux en jargon. « b2b » et « b2c »
+ * sont le vocabulaire de la pipeline, pas celui de quelqu'un qui veut ouvrir
+ * une boutique.
+ *
+ * Un mot suffit maintenant pour les combinaisons courantes. Les drapeaux
+ * restent disponibles pour les cas rares — un grossiste est
+ * `--variant=b2b --type=ecommerce`, ce qu'aucun raccourci ne couvre.
+ */
+const PRESETS = {
+  boutique: {
+    variant: "b2c",
+    type: "ecommerce",
+    quoi: "boutique en ligne — catalogue, panier, commandes",
+  },
+  saas: {
+    variant: "b2b",
+    type: "saas",
+    quoi: "outil d'équipe — organisations, abonnement",
+  },
+  "saas-perso": {
+    variant: "b2c",
+    type: "saas",
+    quoi: "outil individuel — compte unique, abonnement",
+  },
+  vitrine: {
+    variant: "b2c",
+    type: "vitrine",
+    quoi: "site de présentation — aucune transaction",
+  },
+};
+
+const presetName = positional[1];
+const preset = presetName ? PRESETS[presetName] : null;
+
+function usage() {
+  console.error("\n   Usage :\n");
+  console.error("     pnpm ns:new <nom> <modèle>\n");
+  for (const [k, v] of Object.entries(PRESETS)) {
+    console.error(`     ${k.padEnd(12)} ${v.quoi}`);
+  }
+  console.error("\n   Exemple :\n");
+  console.error("     pnpm ns:new boutique-diallo boutique\n");
+  console.error("   Combinaison inhabituelle (grossiste, place de marché) :\n");
   console.error(
-    "   node .claude/scripts/new-project.js <nom> --variant=b2b|b2c\n",
+    "     pnpm ns:new gros-diallo --variant=b2b --type=ecommerce\n",
   );
+}
+
+if (!name) {
+  console.error("\n❌ Nom de projet manquant.");
+  usage();
+  process.exit(1);
+}
+if (presetName && !preset) {
+  console.error(`\n❌ Modèle inconnu : "${presetName}"`);
+  usage();
   process.exit(1);
 }
 if (!/^[a-z0-9][a-z0-9-]*$/.test(name)) {
@@ -49,13 +109,19 @@ if (!/^[a-z0-9][a-z0-9-]*$/.test(name)) {
   process.exit(1);
 }
 
-const variant = variantArg ? variantArg.split("=")[1] : null;
+// Le drapeau explicite l'emporte sur le raccourci : il sert justement à
+// composer une combinaison qu'aucun modèle ne couvre.
+const variant = variantArg
+  ? variantArg.split("=")[1]
+  : preset
+    ? preset.variant
+    : null;
+
 if (!variant || !["b2b", "b2c"].includes(variant)) {
-  console.error("\n❌ Variante manquante ou invalide.");
-  console.error("   --variant=b2b  organisations, équipes, invitations, rôles");
-  console.error("   --variant=b2c  utilisateur seul, pas d'organisation");
+  console.error("\n❌ Modèle ou variante manquant.");
+  usage();
   console.error(
-    "\n   Ce choix engage le schéma Supabase, les policies RLS et les pages.",
+    "   Ce choix engage le schéma Supabase, les policies RLS et les pages.",
   );
   console.error(
     "   Il ne se change pas après coup sans migration (voir ADR-005).\n",
@@ -80,7 +146,7 @@ const TYPES = {
   ecommerce: "catalogue, variantes, stock, panier, commandes",
   vitrine: "présentation et contact, aucune transaction",
 };
-const type = typeArg ? typeArg.split("=")[1] : "saas";
+const type = typeArg ? typeArg.split("=")[1] : preset ? preset.type : "saas";
 if (!Object.keys(TYPES).includes(type)) {
   console.error(`\n❌ Type invalide : "${type}"`);
   for (const [k, v] of Object.entries(TYPES)) {

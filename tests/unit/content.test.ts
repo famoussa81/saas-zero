@@ -53,7 +53,13 @@ const { mockPosts, mockPages, mockComponents } = vi.hoisted(() => ({
   ],
 }));
 
-vi.mock("@/src/lib/content/generated", () => ({
+// Chemin relatif, et non `@/src/…` : cet alias n'existe dans aucune
+// configuration valide. Il ne fonctionnait que parce que vitest faisait
+// pointer `@` sur la racine, contredisant tsconfig qui le fait pointer sur
+// `src/`. `lib/content.ts` importe ce module en relatif — le mock doit viser
+// le même fichier résolu, sinon il ne s'applique pas et le vrai module se
+// charge silencieusement.
+vi.mock("../../src/lib/content/generated", () => ({
   allPosts: mockPosts,
   allPages: mockPages,
   allComponents: mockComponents,

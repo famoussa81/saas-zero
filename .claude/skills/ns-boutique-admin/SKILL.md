@@ -28,6 +28,37 @@ Aucune valeur en dur. Avant de rendre la main : `pnpm design:tokens:audit`.
 
 ---
 
+## Ce qui est déjà écrit
+
+Quatre composants existent dans `src/components/admin/`. Les utiliser plutôt
+que les réécrire — chacun porte une règle de ce skill, et elle est testée.
+
+**`PriceInput`** — saisie en francs, stockage en centimes. Ne multiplie jamais
+un flottant : `parseFloat("15000") * 100` vaut parfois 1499999.9999999998. La
+conversion travaille sur la chaîne et recompose un entier. Accepte
+« 15 000 », « 15.000 » et « 15,000 », qui veulent tous dire quinze mille.
+Refuse les décimales sur XOF, qui n'a pas de sous-unité.
+
+**`VariantGrid`** — la grille de déclinaisons, générée depuis les tailles et
+les couleurs saisies. Sa propriété critique n'est pas de produire les bonnes
+combinaisons, c'est de **préserver les stocks déjà remplis** quand on ajoute
+une taille. Sans ça, ajouter « XL » en dernier remet tout à zéro et l'erreur
+ne se voit qu'après enregistrement. Codes article masqués par défaut.
+
+**`OrderAdvanceButton`** — un seul bouton, à l'impératif, qui fait avancer
+d'un cran. Ne propose rien sur une commande annulée ou remboursée : elles sont
+hors du chemin normal, et proposer « suivant » ferait revivre une commande
+morte.
+
+**`StatusBadge`** — le statut dans le vocabulaire du commerçant, la forme et
+le texte portant l'état, pas seulement la couleur.
+
+23 tests unitaires couvrent la conversion monétaire et la génération de
+grille. Ce sont les deux endroits où une erreur coûte de l'argent réel : un
+facteur 100 sur un prix, ou des stocks effacés sans que rien ne le signale.
+
+---
+
 ## Règle n°1 — le vocabulaire du métier, jamais celui de la base
 
 C'est la règle qui décide de tout le reste. Chaque mot technique affiché à

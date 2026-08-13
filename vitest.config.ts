@@ -12,9 +12,34 @@ const dirname =
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "."),
-    },
+    /**
+     * Ces alias DOIVENT refléter `paths` de tsconfig.json, sans quoi un test
+     * et le code de production ne résolvent pas le même fichier.
+     *
+     * L'alias précédent était unique — `"@"` vers la racine — alors que
+     * tsconfig fait pointer `@/*` sur `./src/*`. Il marchait par accident pour
+     * `@/lib` et `@/hooks`, qui vivent bien à la racine, et se trompait pour
+     * tout le reste : `@/components/ui/button` résolvait vers
+     * `<racine>/components/`, le répertoire fantôme supprimé pour cette raison
+     * même. Un test important un composant de `src/` échouait donc sur
+     * « Failed to resolve import », ou pire, testait silencieusement l'autre
+     * fichier quand les deux existaient.
+     *
+     * L'ordre compte : le plus spécifique d'abord, comme dans tsconfig.
+     */
+    alias: [
+      { find: /^@\/lib\/(.*)$/, replacement: path.resolve(dirname, "lib/$1") },
+      {
+        find: /^@\/hooks\/(.*)$/,
+        replacement: path.resolve(dirname, "hooks/$1"),
+      },
+      { find: /^@\/app\/(.*)$/, replacement: path.resolve(dirname, "app/$1") },
+      {
+        find: /^@\/styles\/(.*)$/,
+        replacement: path.resolve(dirname, "src/styles/$1"),
+      },
+      { find: /^@\/(.*)$/, replacement: path.resolve(dirname, "src/$1") },
+    ],
   },
   test: {
     projects: [

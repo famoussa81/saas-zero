@@ -16,150 +16,168 @@
 -- =============================================================================
 -- 1. HEALTH CHECK - Every 5 minutes
 -- =============================================================================
-SELECT cron.schedule(
-    'health-check-every-5min',
-    '*/5 * * * *',
-    $$
-    SELECT net.http_post(
-        url := 'https://your-project.supabase.co/functions/v1/health-check',
-        headers := jsonb_build_object(
-            'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
-            'Content-Type', 'application/json'
-        ),
-        body := '{"source": "pg_cron", "job": "health-check"}'::jsonb
+-- pg_cron_guard : la planification ne s'exécute que si l'extension est là.
+--
+-- pg_cron demande les droits superutilisateur et n'est PAS activé par défaut
+-- sur un projet Supabase. Sans cette garde, la migration échoue sur
+--   ERROR: schema "cron" does not exist (SQLSTATE 3F000)
+-- et bloque toutes les migrations suivantes, dont le schéma boutique.
+--
+-- Pour activer : Dashboard > Database > Extensions > pg_cron, puis rejouer
+-- cette migration. Sans elle, le produit fonctionne — seules les tâches
+-- planifiées de maintenance sont absentes.
+DO $pg_cron_guard$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_namespace WHERE nspname = 'cron') THEN
+    PERFORM cron.schedule(
+        'health-check-every-5min',
+        '*/5 * * * *',
+        $$
+        SELECT net.http_post(
+            url := 'https://your-project.supabase.co/functions/v1/health-check',
+            headers := jsonb_build_object(
+                'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
+                'Content-Type', 'application/json'
+            ),
+            body := '{"source": "pg_cron", "job": "health-check"}'::jsonb
+        );
+        $$
     );
-    $$
-);
 
--- =============================================================================
--- 2. USAGE METRICS AGGREGATION - Every hour
--- =============================================================================
-SELECT cron.schedule(
-    'usage-metrics-hourly',
-    '0 * * * *',
-    $$
-    SELECT net.http_post(
-        url := 'https://your-project.supabase.co/functions/v1/aggregate-usage',
-        headers := jsonb_build_object(
-            'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
-            'Content-Type', 'application/json'
-        ),
-        body := '{"source": "pg_cron", "job": "usage-metrics", "window": "1h"}'::jsonb
+    -- =============================================================================
+    -- 2. USAGE METRICS AGGREGATION - Every hour
+    -- =============================================================================
+    PERFORM cron.schedule(
+        'usage-metrics-hourly',
+        '0 * * * *',
+        $$
+        SELECT net.http_post(
+            url := 'https://your-project.supabase.co/functions/v1/aggregate-usage',
+            headers := jsonb_build_object(
+                'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
+                'Content-Type', 'application/json'
+            ),
+            body := '{"source": "pg_cron", "job": "usage-metrics", "window": "1h"}'::jsonb
+        );
+        $$
     );
-    $$
-);
 
--- =============================================================================
--- 3. TRIAL ENDING REMINDERS - Daily at 9 AM
--- Sends reminders at 3 days, 1 day, and day of trial end
--- =============================================================================
-SELECT cron.schedule(
-    'trial-ending-reminders-daily-9am',
-    '0 9 * * *',
-    $$
-    SELECT net.http_post(
-        url := 'https://your-project.supabase.co/functions/v1/trial-ending-reminders',
-        headers := jsonb_build_object(
-            'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
-            'Content-Type', 'application/json'
-        ),
-        body := '{"source": "pg_cron", "job": "trial-ending-reminders", "days": [3, 1, 0]}'::jsonb
+    -- =============================================================================
+    -- 3. TRIAL ENDING REMINDERS - Daily at 9 AM
+    -- Sends reminders at 3 days, 1 day, and day of trial end
+    -- =============================================================================
+    PERFORM cron.schedule(
+        'trial-ending-reminders-daily-9am',
+        '0 9 * * *',
+        $$
+        SELECT net.http_post(
+            url := 'https://your-project.supabase.co/functions/v1/trial-ending-reminders',
+            headers := jsonb_build_object(
+                'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
+                'Content-Type', 'application/json'
+            ),
+            body := '{"source": "pg_cron", "job": "trial-ending-reminders", "days": [3, 1, 0]}'::jsonb
+        );
+        $$
     );
-    $$
-);
 
--- =============================================================================
--- 4. CHURN ANALYSIS - Weekly on Monday at 6 AM
--- =============================================================================
-SELECT cron.schedule(
-    'churn-analysis-weekly-monday-6am',
-    '0 6 * * 1',
-    $$
-    SELECT net.http_post(
-        url := 'https://your-project.supabase.co/functions/v1/churn-analysis',
-        headers := jsonb_build_object(
-            'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
-            'Content-Type', 'application/json'
-        ),
-        body := '{"source": "pg_cron", "job": "churn-analysis", "window": "7d"}'::jsonb
+    -- =============================================================================
+    -- 4. CHURN ANALYSIS - Weekly on Monday at 6 AM
+    -- =============================================================================
+    PERFORM cron.schedule(
+        'churn-analysis-weekly-monday-6am',
+        '0 6 * * 1',
+        $$
+        SELECT net.http_post(
+            url := 'https://your-project.supabase.co/functions/v1/churn-analysis',
+            headers := jsonb_build_object(
+                'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
+                'Content-Type', 'application/json'
+            ),
+            body := '{"source": "pg_cron", "job": "churn-analysis", "window": "7d"}'::jsonb
+        );
+        $$
     );
-    $$
-);
 
--- =============================================================================
--- 5. EMAIL QUEUE PROCESSING - Every minute
--- =============================================================================
-SELECT cron.schedule(
-    'email-queue-every-minute',
-    '* * * * *',
-    $$
-    SELECT net.http_post(
-        url := 'https://your-project.supabase.co/functions/v1/process-email-queue',
-        headers := jsonb_build_object(
-            'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
-            'Content-Type', 'application/json'
-        ),
-        body := '{"source": "pg_cron", "job": "process-email-queue", "batch_size": 50}'::jsonb
+    -- =============================================================================
+    -- 5. EMAIL QUEUE PROCESSING - Every minute
+    -- =============================================================================
+    PERFORM cron.schedule(
+        'email-queue-every-minute',
+        '* * * * *',
+        $$
+        SELECT net.http_post(
+            url := 'https://your-project.supabase.co/functions/v1/process-email-queue',
+            headers := jsonb_build_object(
+                'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
+                'Content-Type', 'application/json'
+            ),
+            body := '{"source": "pg_cron", "job": "process-email-queue", "batch_size": 50}'::jsonb
+        );
+        $$
     );
-    $$
-);
 
--- =============================================================================
--- 6. STALE INVITE CLEANUP - Daily at 2 AM
--- Removes expired organization invites
--- =============================================================================
-SELECT cron.schedule(
-    'stale-invite-cleanup-daily-2am',
-    '0 2 * * *',
-    $$
-    SELECT net.http_post(
-        url := 'https://your-project.supabase.co/functions/v1/cleanup-stale-invites',
-        headers := jsonb_build_object(
-            'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
-            'Content-Type', 'application/json'
-        ),
-        body := '{"source": "pg_cron", "job": "cleanup-stale-invites", "expired_hours": 72}'::jsonb
+    -- =============================================================================
+    -- 6. STALE INVITE CLEANUP - Daily at 2 AM
+    -- Removes expired organization invites
+    -- =============================================================================
+    PERFORM cron.schedule(
+        'stale-invite-cleanup-daily-2am',
+        '0 2 * * *',
+        $$
+        SELECT net.http_post(
+            url := 'https://your-project.supabase.co/functions/v1/cleanup-stale-invites',
+            headers := jsonb_build_object(
+                'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
+                'Content-Type', 'application/json'
+            ),
+            body := '{"source": "pg_cron", "job": "cleanup-stale-invites", "expired_hours": 72}'::jsonb
+        );
+        $$
     );
-    $$
-);
 
--- =============================================================================
--- 7. SUBSCRIPTION STATUS SYNC - Every 15 minutes
--- Syncs Stripe subscription status with Supabase
--- =============================================================================
-SELECT cron.schedule(
-    'subscription-sync-every-15min',
-    '*/15 * * * *',
-    $$
-    SELECT net.http_post(
-        url := 'https://your-project.supabase.co/functions/v1/sync-subscriptions',
-        headers := jsonb_build_object(
-            'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
-            'Content-Type', 'application/json'
-        ),
-        body := '{"source": "pg_cron", "job": "subscription-sync"}'::jsonb
+    -- =============================================================================
+    -- 7. SUBSCRIPTION STATUS SYNC - Every 15 minutes
+    -- Syncs Stripe subscription status with Supabase
+    -- =============================================================================
+    PERFORM cron.schedule(
+        'subscription-sync-every-15min',
+        '*/15 * * * *',
+        $$
+        SELECT net.http_post(
+            url := 'https://your-project.supabase.co/functions/v1/sync-subscriptions',
+            headers := jsonb_build_object(
+                'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
+                'Content-Type', 'application/json'
+            ),
+            body := '{"source": "pg_cron", "job": "subscription-sync"}'::jsonb
+        );
+        $$
     );
-    $$
-);
 
--- =============================================================================
--- 8. USAGE LIMIT ENFORCEMENT - Every 30 minutes
--- Checks and enforces usage limits for all organizations
--- =============================================================================
-SELECT cron.schedule(
-    'usage-limit-enforcement-every-30min',
-    '*/30 * * * *',
-    $$
-    SELECT net.http_post(
-        url := 'https://your-project.supabase.co/functions/v1/enforce-usage-limits',
-        headers := jsonb_build_object(
-            'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
-            'Content-Type', 'application/json'
-        ),
-        body := '{"source": "pg_cron", "job": "enforce-usage-limits"}'::jsonb
+    -- =============================================================================
+    -- 8. USAGE LIMIT ENFORCEMENT - Every 30 minutes
+    -- Checks and enforces usage limits for all organizations
+    -- =============================================================================
+    PERFORM cron.schedule(
+        'usage-limit-enforcement-every-30min',
+        '*/30 * * * *',
+        $$
+        SELECT net.http_post(
+            url := 'https://your-project.supabase.co/functions/v1/enforce-usage-limits',
+            headers := jsonb_build_object(
+                'Authorization', 'Bearer ' || current_setting('app.service_role_key'),
+                'Content-Type', 'application/json'
+            ),
+            body := '{"source": "pg_cron", "job": "enforce-usage-limits"}'::jsonb
+        );
+        $$
     );
-    $$
-);
+  ELSE
+    RAISE NOTICE 'pg_cron absent : taches planifiees ignorees. Activer l''extension puis rejouer cette migration.';
+  END IF;
+END
+$pg_cron_guard$;
 
 -- =============================================================================
 -- JOB MANAGEMENT QUERIES

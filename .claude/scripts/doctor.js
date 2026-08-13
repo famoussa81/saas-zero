@@ -238,6 +238,62 @@ if (dupRoots.every((d) => fs.existsSync(d))) {
   console.log(`   Composants : ${inSrc.size + inRoot.size} vérifiés`);
 }
 
+// --- 5c. Les primitives promises existent-elles VRAIMENT ? -------------------
+
+/**
+ * Le contrôle 5b ne cherchait que les doublons. Il ne vérifiait jamais que les
+ * composants EXISTENT, et il se sautait entièrement quand `components/` à la
+ * racine était absent — le cas normal.
+ *
+ * Conséquence observée sur un vrai projet : un agent a supprimé les 36
+ * primitives de `src/components/ui/` pour faire taire des imports qui ne
+ * résolvaient pas, puis `doctor` a répondu « Dépôt cohérent ». Le build
+ * échouait sur 72 erreurs.
+ *
+ * On vérifie donc que chaque composant nommé dans le UI-CONTRACT a bien un
+ * fichier. Le contrat est la source de vérité : y ajouter une ligne rend
+ * automatiquement le composant obligatoire.
+ */
+const contractPath = path.join(ROOT, ".claude", "design", "UI-CONTRACT.md");
+const uiDir = path.join(ROOT, "src", "components", "ui");
+
+if (fs.existsSync(contractPath)) {
+  const contract = fs.readFileSync(contractPath, "utf8");
+  // Les tableaux du kit listent les composants en `CodeSpan` en début de
+  // ligne : | `DataTable` | … |
+  const promised = new Set();
+  for (const m of contract.matchAll(/^\s*\|\s*`([A-Z][A-Za-z0-9]*)`\s*\|/gm)) {
+    promised.add(m[1]);
+  }
+
+  if (promised.size > 0) {
+    if (!fs.existsSync(uiDir)) {
+      problems.push(
+        `src/components/ui/ est ABSENT alors que le UI-CONTRACT promet ` +
+          `${promised.size} composants — un agent suivant la doc ne trouvera rien`,
+      );
+    } else {
+      const files = listFiles(uiDir, (f) => /\.tsx$/.test(f)).map((f) =>
+        path.basename(f, ".tsx"),
+      );
+      // `DataTable` vit dans data-table.tsx : on compare en kebab-case.
+      const kebab = (s) =>
+        s.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+      const have = new Set(files.map(kebab));
+      const missing = [...promised].filter((c) => !have.has(kebab(c)));
+      for (const c of missing) {
+        problems.push(
+          `le UI-CONTRACT promet le composant \`${c}\` — aucun fichier ` +
+            `correspondant dans src/components/ui/`,
+        );
+      }
+      console.log(
+        `   Primitives promises : ${promised.size - missing.length}/${promised.size} présentes`,
+      );
+    }
+  }
+}
+
 // --- 6. Gates déclarés -------------------------------------------------------
 
 const gatesPath = path.join(ROOT, ".claude", "gates.config.js");

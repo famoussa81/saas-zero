@@ -20,7 +20,7 @@ Dans cet ordre, sans exception :
    en cas de désaccord sur un choix esthétique.
 2. Lire **`src/styles/globals.css`** — les tokens réellement définis. Ne jamais
    inventer un nom de token : utiliser ceux qui existent.
-3. Lire **`src/components/ui/`** — les primitives déjà là (28 composants
+3. Lire **`src/components/ui/`** — les primitives déjà là (30 composants
    Radix + CVA). **Aucune raison d'en réécrire une.**
 
    Six portent du COMPORTEMENT, pas du style, et remplacent ce que chaque
@@ -34,6 +34,13 @@ Dans cet ordre, sans exception :
    | `Sidebar`    | `aria-current`, actif non porté par la couleur, lien d'évitement, repli mobile |
    | `Stepper`    | `<ol>` et `aria-current="step"`, état porté par la forme                       |
    | `EmptyState` | un vide qui explique et propose une action                                     |
+
+   Deux de plus n'existent que pour `--type=ecommerce` :
+
+   | Composant       | Ce qu'il évite d'oublier                                                                                                   |
+   | --------------- | -------------------------------------------------------------------------------------------------------------------------- |
+   | `VariantPicker` | la rupture DÉSACTIVÉE et non masquée, groupe radio ARIA, cible de 44 px, stock annoncé en `aria-live`                      |
+   | `ProductCard`   | ratio d'image fixé (pas de saut de grille), prix converti depuis les centimes via `Intl`, rupture visible dès le catalogue |
 
    Aucun n'impose d'apparence : tout vient des tokens. Deux projets aux
    palettes différentes rendent des composants différents.

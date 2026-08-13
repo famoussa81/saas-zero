@@ -49,7 +49,25 @@ description: "Framework d'interview guidée de la phase Discovery. Transforme un
 
 - **Modèle** : abonnement tiers / usage-based / freemium / one-time.
 - **Pricing** : tiers + prix + features par tier (annuel -20%), défaut si pas d'idée.
-- **Unit economics** : ACV cible, marge brute, churn max, LTV, payback, **objectif MRR à 6 et 12 mois**.
+- **Unit economics** : panier ou contrat moyen, marge brute, LTV, coût
+  d'acquisition, payback, **objectif de revenu à 6 et 12 mois**.
+
+  L'indicateur de revenu dépend du modèle, et se demande dans les mots du
+  modèle :
+
+  | Modèle       | Indicateur                     | Ce qui compte en plus  |
+  | ------------ | ------------------------------ | ---------------------- |
+  | Abonnement   | **MRR** à 6 et 12 mois         | churn mensuel          |
+  | Boutique     | **chiffre d'affaires mensuel** | fréquence de réachat   |
+  | Vente unique | **CA mensuel**                 | taux de recommandation |
+
+  Demander un MRR à une boutique est une erreur : il n'y a aucune récurrence
+  contractuelle. Le bon chiffre est le CA mensuel, et la métrique fragile est
+  la fréquence de réachat — c'est elle qui décide de la LTV.
+
+  **La devise est celle du marché**, pas le dollar. Une Discovery en francs
+  CFA, en euros ou en dirhams est aussi valide qu'une Discovery en dollars, et
+  `discovery:check` l'accepte depuis qu'il a cessé de chercher un `$`.
 
 ### E. Discovery Conversion & Rétention (doctrine utilisateur)
 

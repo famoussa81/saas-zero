@@ -20,7 +20,7 @@ Avant d'écrire du JSX, lire dans cet ordre :
 
 1. **`DESIGN-CHOICE.md`** (racine) — palette, ambiance, élément signature, tier de motion.
 2. **`src/styles/globals.css`** — les tokens réellement définis. Ne pas en inventer.
-3. **`src/components/ui/`** — 28 primitives Radix + CVA déjà là. Ne pas les réécrire.
+3. **`src/components/ui/`** — 30 primitives Radix + CVA déjà là. Ne pas les réécrire.
 4. **`.claude/design/UI-CONTRACT.md`** — densité, cinq états, cartes KPI, tables, formulaires.
 5. **`ns-antislop`** avant de livrer.
 

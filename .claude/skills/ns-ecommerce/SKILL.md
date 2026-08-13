@@ -104,6 +104,18 @@ visiteur. Un client remplit son panier, se connecte pour payer, et **son
 panier doit le suivre**. Sinon il abandonne — c'est la première cause de perte
 au tunnel.
 
+**Le panier invité n'a aucune policy RLS, et c'est volontaire.** Les policies
+ne couvrent que `auth.uid() = user_id` : un panier `session_token` est donc
+invisible depuis le navigateur. Une policy sur le jeton le rendrait
+énumérable — un panier se lirait en devinant.
+
+Tout accès au panier invité passe donc par une **server action avec la
+service-role**, le jeton vivant dans un cookie `httpOnly + Secure +
+SameSite=Lax` généré par `crypto.randomUUID()`.
+
+Ne pas « corriger » l'absence apparente de policy. Un accès client qui renvoie
+zéro ligne est le comportement attendu.
+
 À la connexion : retrouver le panier `session_token`, le rattacher au
 `user_id`, fusionner avec un éventuel panier existant (additionner les
 quantités sur `UNIQUE (cart_id, variant_id)`).

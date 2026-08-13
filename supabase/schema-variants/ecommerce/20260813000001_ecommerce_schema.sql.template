@@ -271,6 +271,21 @@ CREATE POLICY "stock lisible par tous" ON public.inventory
     FOR SELECT USING (TRUE);
 
 -- Panier : chacun le sien.
+--
+-- ATTENTION — LE PANIER INVITÉ N'A VOLONTAIREMENT AUCUNE POLICY.
+--
+-- Les policies ci-dessous ne couvrent que `auth.uid() = user_id`. Un panier
+-- identifié par `session_token` est donc INVISIBLE depuis le navigateur, et
+-- c'est voulu : une policy du type `session_token = current_setting(...)`
+-- rendrait le jeton énumérable, et un panier se lirait en devinant.
+--
+-- Conséquence pour l'implémentation : tout accès au panier invité passe par
+-- une server action utilisant la service-role, avec le jeton stocké dans un
+-- cookie httpOnly + Secure + SameSite=Lax, généré par crypto.randomUUID().
+--
+-- Ne PAS « corriger » ce qui ressemble à un oubli en ajoutant une policy sur
+-- session_token. Un agent qui tente de lire le panier côté client obtiendra
+-- zéro ligne : c'est le comportement attendu, pas un bug.
 CREATE POLICY "panier: proprietaire lit" ON public.carts
     FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "panier: proprietaire ecrit" ON public.carts

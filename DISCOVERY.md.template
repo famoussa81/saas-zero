@@ -88,8 +88,8 @@
 | **Churn max acceptable** | [ex: 3%/mois] | [raisonnement] |
 | **LTV** (durée vie × ACV) | [ex: 1160$] | [raisonnement] |
 | **Payback** (LTV/CAC) | [ex: >3x] | [raisonnement] |
-| **MRR cible à 6 mois** | [ex: 3 000$] | [raisonnement] |
-| **MRR cible à 12 mois** | [ex: 10 000$] | [raisonnement] |
+| **Revenu cible à 6 mois** | [MRR si abonnement, CA mensuel si boutique — ex: 1 000 000 F] | [raisonnement] |
+| **Revenu cible à 12 mois** | [même indicateur — ex: 3 000 000 F] | [raisonnement] |
 
 ---
 
@@ -148,7 +148,7 @@
 | **Acquisition** | [ex: trafic organique/mois] | [cible] |
 | **Activation** | [ex: % signups qui atteignent 1er succès] | [cible] |
 | **Rétention** | [ex: rétention M3] | [cible] |
-| **Revenu** | [ex: MRR] | [cible 6/12 mois] |
+| **Revenu** | [MRR · CA mensuel] | [cible 6/12 mois] |
 | **Qualité** | [ex: bugs critiques] | [0] |
 
 ---

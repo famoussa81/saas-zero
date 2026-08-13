@@ -239,7 +239,7 @@
 | **Acquisition** | [ex: trafic organique/mois] | [cible] |
 | **Activation** | [ex: % signups atteignant le 1er succès] | [cible] |
 | **Rétention** | [ex: rétention M3] | [cible] |
-| **Revenu** | MRR à 6 mois / 12 mois | [ex: 3k$ / 10k$] |
+| **Revenu** | Revenu à 6 / 12 mois (MRR si abonnement, CA mensuel sinon) | [ex: 1M F / 3M F] |
 | **Unit economics** | ACV / churn max / LTV / payback | [ex: 348$ / 3% / 1160$ / >3x] |
 | **Qualité** | Bugs critiques | 0 |
 

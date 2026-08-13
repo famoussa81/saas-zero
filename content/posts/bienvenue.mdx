@@ -1,58 +1,27 @@
 ---
-title: "Bienvenue sur notre blog"
-description: "Découvrez nos derniers articles, guides et actualités."
-date: "2024-01-15"
-tags: ["bienvenue", "blog", "actualites"]
-heroImage: "/images/blog-hero.jpg"
-author: "L'équipe"
+title: "Premier article"
+description: "Article de démarrage — remplacez-le par le vôtre."
+date: "2026-01-01"
+tags: ["demarrage"]
+author: "À renseigner"
 draft: false
 ---
 
-# Bienvenue sur notre blog
+# Premier article
 
-Bienvenue sur notre tout nouveau blog ! Nous sommes ravis de vous accueillir dans cet espace où nous partagerons nos réflexions, nos découvertes et nos apprentissages.
+> **Article de démarrage.** Il existe pour que la route `/blog`, l'index de
+> recherche Pagefind et les gates visuels aient une page à traiter. Remplacez
+> son contenu ; ne le supprimez pas tant que vous n'avez pas écrit le vôtre,
+> sinon le blog rend une liste vide et plusieurs gates perdent leur cible.
 
-## Ce que vous trouverez ici
+## Écrire le vôtre
 
-### 📝 Articles de fond
+Créez un fichier dans `content/posts/`. Le frontmatter accepte `title`,
+`description`, `date`, `tags`, `author`, `heroImage` et `draft`.
 
-Des articles approfondis sur nos domaines d'expertise, nos méthodes de travail et nos apprentissages.
+Les types sont générés par `content-collections` au build : une clé mal
+orthographiée casse le typecheck plutôt que de passer silencieusement.
 
-### 💡 Guides pratiques
-
-Des tutoriels étape par étape pour vous aider à résoudre des problèmes concrets.
-
-### 🔬 Études de cas
-
-Des retours d'expérience réels sur nos projets, avec nos succès et nos erreurs.
-
-### 💭 Réflexions
-
-Nos pensées sur l'industrie, les tendances et l'avenir de notre domaine.
-
-## Notre philosophie
-
-Nous croyons au partage de connaissances. Tout ce que nous apprenons, nous essayons de le documenter et de le partager pour que d'autres puissent en bénéficier.
-
-> « Le savoir est la seule chose qui s'accroît quand on le partage. » — Sacha Boudjema
-
-## Comment nous suivre
-
-- **Newsletter** : Recevez nos derniers articles directement dans votre boîte mail
-- **RSS** : Ajoutez notre flux RSS à votre lecteur préféré
-- **Réseaux sociaux** : Suivez-nous sur Twitter, LinkedIn et GitHub
-
-## Votre avis compte
-
-Ce blog est fait pour vous. N'hésitez pas à :
-
-- Commenter les articles
-- Proposer des sujets
-- Partager vos propres expériences
-- Signaler des erreurs ou des imprécisions
-
----
-
-_Merci de nous lire. Au plaisir d'échanger avec vous !_
-
-**L'équipe**
+```bash
+pnpm content:build
+```

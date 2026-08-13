@@ -1,14 +1,32 @@
 import Stripe from "stripe";
 
-const secretKey = process.env.STRIPE_SECRET_KEY;
+let _stripe: Stripe | null = null;
 
-if (!secretKey) {
-  console.warn("STRIPE_SECRET_KEY not set — Stripe functions will fail");
+/**
+ * Client Stripe paresseux.
+ *
+ * La version précédente construisait le client À L'IMPORT, avec
+ * `new Stripe(secretKey || "")`. Ce module étant importé par les pages
+ * facturation et tarifs, `next build` échouait dès qu'aucune
+ * `STRIPE_SECRET_KEY` n'était présente — c'est-à-dire sur tout clone frais :
+ *
+ *     Error: Failed to collect page data for /[locale]/facturation
+ *
+ * Le client n'est désormais créé qu'au premier appel réel. Importer `PLANS`
+ * ou lire un tarif ne déclenche plus rien, et l'absence de clé produit une
+ * erreur explicite au moment de l'appel plutôt qu'un build cassé.
+ */
+export function getStripe(): Stripe {
+  if (_stripe) return _stripe;
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    throw new Error("STRIPE_SECRET_KEY manquante — appel Stripe impossible");
+  }
+  _stripe = new Stripe(secretKey, {
+    apiVersion: "2026-07-29.dahlia",
+  });
+  return _stripe;
 }
-
-export const stripe = new Stripe(secretKey || "", {
-  apiVersion: "2026-07-29.dahlia",
-});
 
 export interface Plan {
   name: string;
@@ -87,7 +105,7 @@ export async function createCheckoutSession({
   cancelUrl: string;
   metadata?: Record<string, string>;
 }): Promise<Stripe.Checkout.Session> {
-  return stripe.checkout.sessions.create({
+  return getStripe().checkout.sessions.create({
     customer: customerId,
     mode: "subscription",
     line_items: [{ price: priceId, quantity: 1 }],
@@ -107,7 +125,7 @@ export async function createPortalSession({
   customerId: string;
   returnUrl: string;
 }): Promise<Stripe.BillingPortal.Session> {
-  return stripe.billingPortal.sessions.create({
+  return getStripe().billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,
   });
@@ -122,11 +140,11 @@ export async function getOrCreateCustomer({
   email: string;
   name?: string;
 }): Promise<Stripe.Customer> {
-  const existing = await stripe.customers.list({ email, limit: 1 });
+  const existing = await getStripe().customers.list({ email, limit: 1 });
   if (existing.data.length > 0) {
     return existing.data[0];
   }
-  return stripe.customers.create({
+  return getStripe().customers.create({
     email,
     name,
     metadata: { userId },
@@ -138,5 +156,5 @@ export function verifyWebhookSignature(
   signature: string,
   secret: string,
 ): Stripe.Event {
-  return stripe.webhooks.constructEvent(payload, signature, secret);
+  return getStripe().webhooks.constructEvent(payload, signature, secret);
 }

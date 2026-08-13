@@ -1,445 +1,186 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { ArrowRight, Check as CheckIcon } from "lucide-react";
-import { PLANS } from "@/lib/stripe";
-import Script from "next/script";
+import { ArrowRight } from "lucide-react";
 import {
   OrganizationJsonLd,
   WebsiteJsonLd,
   SoftwareApplicationJsonLd,
 } from "@/components/ui/JsonLd";
-import { PipelineHero } from "@/components/marketing/PipelineHero";
-import { PipelineTimeline } from "@/components/marketing/PipelineTimeline";
-import { FeatureGrid } from "@/components/marketing/FeatureGrid";
 
+/**
+ * Page d'accueil du SOCLE — volontairement minimale.
+ *
+ * Elle contenait auparavant la landing qui vendait saas-zero lui-même :
+ * 445 lignes, un hero animé, une grille de six features, une timeline de
+ * pipeline et une grille tarifaire. Or `pnpm ns:new` copie le dépôt entier,
+ * si bien que chaque projet client héritait de la page marketing d'un autre
+ * produit, avec ses arguments et ses chiffres.
+ *
+ * Ce qui reste ici est une page de départ honnête : la coquille (métadonnées,
+ * JSON-LD, en-tête, pied de page) que tout projet garde, et un contenu qui dit
+ * ce qu'il est — un point de départ à remplacer, pas une démo à imiter.
+ *
+ * Pour construire la vraie page : `/ns-design`, skills `ns-landing` et
+ * `ns-sections`, puis `ns-antislop` avant de livrer.
+ */
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Accueil",
-    description: "SaaS Zero - Build SaaS Faster",
+    description:
+      "Point de départ du projet. Remplacez cette page par la landing issue de votre Discovery.",
   };
 }
 
-const features = [
+const nextSteps = [
   {
-    icon: "shield" as const,
-    title: "Authentification complète",
-    description:
-      "Supabase Auth avec email/password, OAuth, MFA, magic links. RLS activé sur toutes les tables.",
-    benefit: "Sécurité enterprise dès le jour 1",
+    command: "/ns-discovery",
+    label: "Décider le produit",
+    detail:
+      "Interview guidée : problème, personas, message, preuve, architecture. Produit SPEC.md et DESIGN-CHOICE.md.",
   },
   {
-    icon: "zap" as const,
-    title: "Billing Stripe natif",
-    description:
-      "Abonnements, paiements uniques, portail client, webhooks, gestion des factures.",
-    benefit: "Monétisation prête en minutes",
+    command: "/ns-design",
+    label: "Décider l'identité",
+    detail:
+      "Direction artistique distincte, tokens, sections de la landing, palier de motion.",
   },
   {
-    icon: "barChart" as const,
-    title: "Dashboard temps réel",
-    description:
-      "Interface admin avec paramètres, facturation, équipe, analytics en temps réel.",
-    benefit: "Visibilité totale sur votre business",
+    command: "/ns-build",
+    label: "Construire le domaine",
+    detail:
+      "Server actions, RLS, états non nominaux. La logique propre au produit.",
   },
   {
-    icon: "users" as const,
-    title: "Gestion d'équipe B2B",
-    description:
-      "Organisations, invitations, rôles, permissions granulaires, audit logs.",
-    benefit: "Collaboration sans friction",
-  },
-  {
-    icon: "globe" as const,
-    title: "i18n & SEO optimisés",
-    description:
-      "Next-intl, sitemap, JSON-LD, Open Graph, Pagefind search, performance 90+.",
-    benefit: "Visibilité mondiale automatique",
-  },
-  {
-    icon: "check" as const,
-    title: "Quality gates intégrés",
-    description:
-      "14 gates déterministes : typecheck, lint, tests, a11y, visual regression, perf, design.",
-    benefit: "Confiance totale à chaque deploy",
-  },
-];
-
-const socialProof = [
-  { metric: "14", label: "Quality Gates" },
-  { metric: "6", label: "Agents parallèles" },
-  { metric: "100%", label: "TypeScript strict" },
-  { metric: "0", label: "Dettes techniques" },
-];
-
-const pipelineSteps = [
-  {
-    phase: 1,
-    title: "Discovery",
-    desc: "Clarification B2B/B2C, design system, motion tier. Génère SPEC + ARCHITECTURE + DESIGN",
-    duration: "15-30 min",
-    icon: "🔍",
-  },
-  {
-    phase: 2,
-    title: "Scaffold",
-    desc: "Structure repo, deps, Supabase, Cloudflare, env, types. Agents core + auth en parallèle",
-    duration: "5-10 min",
-    icon: "🏗️",
-  },
-  {
-    phase: 3,
-    title: "Design",
-    desc: "Design system complet, composants, Storybook, baselines visuels",
-    duration: "15-30 min",
-    icon: "🎨",
-  },
-  {
-    phase: 4,
-    title: "Build",
-    desc: "6 agents parallèles : core, auth, billing, CMS, forms, search",
-    duration: "30-60 min",
-    icon: "⚙️",
-  },
-  {
-    phase: 5,
-    title: "Verify",
-    desc: "14 gates déterministes : typecheck, lint, test, e2e, visual, lighthouse, CWV, RLS, security, a11y, contracts, design",
-    duration: "10-20 min",
-    icon: "✅",
-  },
-  {
-    phase: 6,
-    title: "Deploy",
-    desc: "Migrations Supabase, Vercel, webhooks Stripe/Brevo, smoke tests",
-    duration: "5 min",
-    icon: "🚀",
+    command: "pnpm gates:all",
+    label: "Vérifier",
+    detail:
+      "18 gates déterministes. Un prérequis absent donne un SKIP explicite, jamais un faux succès.",
   },
 ];
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background relative overflow-x-hidden">
-      {/* JSON-LD Structured Data */}
+    <div className="min-h-screen bg-background text-foreground">
       <OrganizationJsonLd />
       <WebsiteJsonLd />
       <SoftwareApplicationJsonLd />
 
-      {/* Fond de précision (grille + halo unique) — voir globals.css */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[900px] overflow-hidden">
-        <div className="precision-glow" />
-        <div className="precision-grid" />
-      </div>
-
-      <header className="relative z-10 border-b border-border/50 glass sticky top-0">
-        <div className="container flex items-center justify-between h-16 md:h-20">
+      <header className="border-b border-border sticky top-0 z-10 bg-background/95 backdrop-blur-sm">
+        <div className="container flex h-16 items-center justify-between">
           <Link
             href="/fr"
-            className="font-display font-bold text-xl md:text-2xl text-foreground flex items-center gap-2"
+            className="font-display text-lg font-bold focus-visible-ring rounded-md"
           >
-            <span className="gradient-text">SaaS</span> Zero
+            Nouveau projet
           </Link>
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="flex items-center gap-6">
             <Link
               href="/fr/blog"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible-ring rounded-md px-1"
             >
               Blog
             </Link>
             <Link
               href="/fr/connexion"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible-ring rounded-md px-1"
             >
               Connexion
             </Link>
             <Link
               href="/fr/inscription"
-              className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible-ring"
             >
-              S&apos;inscrire
+              Créer un compte
             </Link>
           </nav>
         </div>
       </header>
 
-      <div className="relative z-10">
-        {/* Hero Section */}
-        <section
-          className="section relative pt-28 md:pt-36"
-          data-testid="landing-hero"
-        >
+      <main>
+        <section className="section">
           <div className="container">
-            <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-8">
-              <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left">
-                <div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-border/50 mb-8">
-                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                  <span className="text-sm font-medium text-muted-foreground">
-                    Nouveau : Pipeline SaaS complète en 2h
-                  </span>
-                </div>
-
-                <h1 className="scroll-reveal font-display font-bold tracking-tight text-5xl md:text-6xl lg:text-7xl text-foreground mb-8 leading-[1.1]">
-                  Build <span className="gradient-text">SaaS</span> Faster
-                </h1>
-
-                <p className="scroll-reveal scroll-reveal-delay-1 text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-12 leading-relaxed">
-                  La pipeline{" "}
-                  <span className="font-medium text-foreground">/ns-ship</span>{" "}
-                  g&eacute;n&egrave;re un SaaS production-ready avec auth,
-                  billing, dashboard, équipe et API keys — en une seule
-                  commande.
-                </p>
-
-                <div className="scroll-reveal scroll-reveal-delay-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-16">
-                  <Link
-                    href="/fr/inscription"
-                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full text-lg font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"
-                  >
-                    Commencer gratuitement
-                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                  <Link
-                    href="/fr/blog"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-border text-foreground rounded-full text-lg font-semibold hover:bg-muted transition-all hover-lift active-scale focus-visible-ring"
-                  >
-                    Voir la documentation
-                  </Link>
-                </div>
-
-                {/* Social Proof */}
-                <div className="scroll-reveal scroll-reveal-delay-3 flex flex-wrap items-center justify-center lg:justify-start gap-8 md:gap-12 text-center lg:text-left">
-                  {socialProof.map((item, i) => (
-                    <div
-                      key={item.label}
-                      className={`scroll-reveal-delay-${i + 4}`}
-                    >
-                      <div className="font-display font-bold text-3xl md:text-4xl text-foreground gradient-text">
-                        {item.metric}
-                      </div>
-                      <div className="text-sm text-muted-foreground font-medium">
-                        {item.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+            <div className="max-w-2xl">
+              <div className="mb-5 flex items-center gap-3">
+                <span className="font-mono text-xs uppercase tracking-widest text-primary">
+                  Socle
+                </span>
+                <span aria-hidden="true" className="h-px w-16 bg-border" />
               </div>
-
-              <div className="scroll-reveal scroll-reveal-delay-2">
-                <PipelineHero />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="section relative" data-testid="landing-features">
-          <div className="container">
-            <div className="max-w-2xl mx-auto text-center mb-16">
-              <span className="scroll-reveal inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary mb-4">
-                Fonctionnalités clés
-              </span>
-              <h2 className="scroll-reveal scroll-reveal-delay-1 font-display font-bold tracking-tight text-4xl md:text-5xl text-foreground mb-4">
-                Tout ce qu&apos;il faut pour{" "}
-                <span className="gradient-text">lancer</span> et{" "}
-                <span className="gradient-text">scaler</span>
-              </h2>
-              <p className="scroll-reveal scroll-reveal-delay-2 text-lg text-muted-foreground">
-                Pas de boilerplate, pas de configuration. Juste du code qui
-                marche.
+              <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">
+                Le projet est en place. Le produit reste à décider.
+              </h1>
+              <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+                Cette page est un point de départ, pas une démonstration.
+                L&apos;authentification, le tableau de bord, l&apos;espace
+                d&apos;administration, les primitives d&apos;interface et les
+                migrations sont déjà là. Ce qui manque, c&apos;est votre
+                produit.
               </p>
-            </div>
-
-            <FeatureGrid features={features} />
-          </div>
-        </section>
-
-        {/* Pipeline Section */}
-        <section
-          className="section relative bg-muted/30"
-          data-testid="landing-pipeline"
-        >
-          <div className="container">
-            <div className="max-w-2xl mx-auto text-center mb-16">
-              <span className="scroll-reveal inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary mb-4">
-                La pipeline /ns-ship
-              </span>
-              <h2 className="scroll-reveal scroll-reveal-delay-1 font-display font-bold tracking-tight text-4xl md:text-5xl text-foreground mb-4">
-                De l&apos;id&eacute;e au SaaS d&eacute;ploy&eacute;{" "}
-                <span className="gradient-text">en 6 phases</span>
-              </h2>
-              <p className="scroll-reveal scroll-reveal-delay-2 text-lg text-muted-foreground">
-                Zéro décision humaine après le lancement. Gates déterministes,
-                agents parallèles.
-              </p>
-            </div>
-
-            <PipelineTimeline steps={pipelineSteps} />
-          </div>
-        </section>
-
-        {/* Pricing Section */}
-        <section
-          className="section relative bg-muted/30"
-          data-testid="landing-pricing"
-        >
-          <div className="container">
-            <div className="max-w-2xl mx-auto text-center mb-16">
-              <span className="scroll-reveal inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary mb-4">
-                Tarifs
-              </span>
-              <h2 className="scroll-reveal scroll-reveal-delay-1 font-display font-bold tracking-tight text-4xl md:text-5xl text-foreground mb-4">
-                Un prix qui <span className="gradient-text">scale</span> avec
-                vous
-              </h2>
-              <p className="scroll-reveal scroll-reveal-delay-2 text-lg text-muted-foreground">
-                Commencez gratuitement. Passez à l&apos;échelle quand votre SaaS
-                en a besoin.
-              </p>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {(
-                [
-                  { key: "free", plan: PLANS.free, highlight: false },
-                  { key: "starter", plan: PLANS.starter, highlight: false },
-                  { key: "pro", plan: PLANS.pro, highlight: true },
-                  {
-                    key: "enterprise",
-                    plan: PLANS.enterprise,
-                    highlight: false,
-                  },
-                ] as const
-              ).map(({ key, plan, highlight }, index) => (
-                <div
-                  key={key}
-                  className={`scroll-reveal relative flex flex-col rounded-2xl border p-6 glass transition-all ${
-                    highlight
-                      ? "border-primary shadow-xl scale-[1.03]"
-                      : "border-border/50 hover-lift"
-                  }`}
-                  style={{ transitionDelay: `${index * 80}ms` }}
-                  data-testid={`pricing-${key}`}
+              <div className="mt-10 flex flex-wrap gap-4">
+                <Link
+                  href="/fr/inscription"
+                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible-ring"
                 >
-                  {highlight && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-                      Populaire
-                    </span>
-                  )}
-                  <h3 className="font-display font-bold text-lg text-foreground">
-                    {plan.name}
-                  </h3>
-                  <div className="mt-3 flex items-baseline gap-1">
-                    <span className="font-display font-bold text-3xl text-foreground">
-                      {plan.price === 0 ? "0€" : `${plan.price}€`}
-                    </span>
-                    {plan.price > 0 && (
-                      <span className="text-sm text-muted-foreground">
-                        /mois
-                      </span>
-                    )}
-                  </div>
-                  <ul className="mt-6 flex-1 space-y-3">
-                    {plan.features.map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex items-start gap-2 text-sm text-muted-foreground"
-                      >
-                        <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href="/fr/inscription"
-                    className={`mt-8 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all active-scale focus-visible-ring ${
-                      highlight
-                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                        : "border border-border text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {plan.price === 0 ? "Commencer gratuitement" : "Choisir"}
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="section relative" data-testid="landing-cta">
-          <div className="container">
-            <div className="relative rounded-3xl overflow-hidden glass-dark p-8 md:p-16 text-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
-              <div className="relative z-10 max-w-3xl mx-auto">
-                <div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
-                  Prêt à commencer ?
-                </div>
-                <h2 className="scroll-reveal scroll-reveal-delay-1 font-display font-bold tracking-tight text-4xl md:text-5xl text-foreground mb-6">
-                  Lancez votre SaaS{" "}
-                  <span className="gradient-text">aujourd&apos;hui</span>
-                </h2>
-                <p className="scroll-reveal scroll-reveal-delay-2 text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
-                  Rejoignez des d&eacute;veloppeurs qui construisent des SaaS
-                  plus vite avec SaaS Zero. Une commande. Production en 2h.
-                </p>
-                <div className="scroll-reveal scroll-reveal-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Link
-                    href="/fr/inscription"
-                    className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full text-lg font-semibold hover:bg-primary/90 transition-all hover-lift active-scale focus-visible-ring"
-                  >
-                    Créer mon compte
-                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                  <Link
-                    href="/fr/blog"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-border text-foreground rounded-full text-lg font-semibold hover:bg-muted transition-all hover-lift active-scale focus-visible-ring"
-                  >
-                    Voir la doc
-                  </Link>
-                </div>
+                  Essayer le parcours d&apos;inscription
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/fr/blog"
+                  className="inline-flex items-center gap-2 rounded-lg border border-border px-6 py-3 font-semibold transition-colors hover:bg-muted focus-visible-ring"
+                >
+                  Voir le blog
+                </Link>
               </div>
             </div>
           </div>
         </section>
-      </div>
 
-      <footer className="relative z-10 border-t border-border/50 py-12">
-        <div className="container text-center">
-          <Link
-            href="/fr"
-            className="font-display font-bold text-xl text-foreground mb-4 inline-block"
-          >
-            <span className="gradient-text">SaaS</span> Zero
-          </Link>
-          <p className="text-muted-foreground text-sm">
-            &copy; {new Date().getFullYear()} SaaS Zero. Construit avec Next.js
-            14, Supabase, Stripe, Vercel.
+        <section className="section bg-muted/30">
+          <div className="container">
+            <div className="mb-10 max-w-2xl">
+              <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
+                Les quatre commandes qui suivent
+              </h2>
+              <p className="mt-3 text-muted-foreground">
+                Dans cet ordre. Chacune produit des fichiers que la suivante
+                lit.
+              </p>
+            </div>
+            <ol className="grid gap-4 md:grid-cols-2">
+              {nextSteps.map((step, index) => (
+                <li
+                  key={step.command}
+                  className="rounded-xl border border-border bg-card p-6"
+                >
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-mono text-xs tabular-nums text-muted-foreground">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <code className="font-mono text-sm font-semibold text-primary">
+                      {step.command}
+                    </code>
+                  </div>
+                  <h3 className="mt-3 font-display font-bold">{step.label}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {step.detail}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-border py-10">
+        <div className="container text-sm text-muted-foreground">
+          <p>
+            Remplacez cet en-tête, cette page et ce pied de page par les vôtres.
+            Aucun chiffre ni témoignage n&apos;est affiché ici : il n&apos;y a
+            rien à prouver tant que le produit n&apos;existe pas (
+            <code className="font-mono text-xs">ns-antislop</code> H-1 à H-3).
           </p>
         </div>
       </footer>
-
-      {/* Scroll reveal observer */}
-      <Script
-        id="scroll-reveal-observer"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('visible'));
-                return;
-              }
-              const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                  if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                  }
-                });
-              }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-              document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
-            })();
-          `,
-        }}
-      />
     </div>
   );
 }

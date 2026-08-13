@@ -29,6 +29,7 @@ Ordre de priorité, du plus fort au plus faible :
 
 | Source                         | Extraction                                                                                     |
 | ------------------------------ | ---------------------------------------------------------------------------------------------- |
+| **`DESIGN.md`**                | **Chemin privilégié.** Format lisible par un agent, voir la convention ci-dessous.             |
 | **Artifact Claude / HTML+CSS** | Lire le fichier, parser les `:root { --* }` et les valeurs récurrentes. Le plus fiable.        |
 | **URL en ligne**               | `WebFetch` ou ouvrir dans le navigateur → lire les computed styles                             |
 | **Figma**                      | Demander l'export des variables/tokens (JSON), ou les valeurs à la main                        |
@@ -36,6 +37,73 @@ Ordre de priorité, du plus fort au plus faible :
 | **Description orale**          | Reformuler en 2 propositions et faire choisir                                                  |
 
 Si l'utilisateur mentionne un design sans fournir le fichier : **demander le fichier ou le lien avant de coder quoi que ce soit.**
+
+---
+
+## La convention `DESIGN.md`
+
+C'est le format à privilégier : un agent le lit sans interprétation, il se
+versionne, il se relit six mois plus tard. Un fichier `DESIGN.md` déposé à la
+racine du projet est détecté et importé sans autre instruction.
+
+Ce que le fichier doit contenir pour être exploitable **sans poser de
+question** :
+
+```markdown
+# DESIGN — <nom du produit>
+
+## Palette
+
+| Rôle       | Clair     | Sombre    |
+| ---------- | --------- | --------- |
+| background | `#F7F6F4` | `#101015` |
+| foreground | `#16181D` | `#E9EBEF` |
+| primary    | `#4A2FD0` | `#A68BFA` |
+| accent     | `#B45309` | `#F59E0B` |
+| border     | `#E2E5EA` | `#262A33` |
+
+## Typographie
+
+- **Display** : Unbounded — titres uniquement
+- **Corps** : Instrument Sans
+- **Mono** : IBM Plex Mono — chiffres et code
+
+## Rayons, ombres, espacement
+
+- `--radius` : 10px
+- Ombres : deux niveaux maximum, `sm` et `lg`
+- Échelle d'espacement : celle de Tailwind, sans valeur arbitraire
+
+## Élément signature
+
+Ce qui rend le produit reconnaissable en moins de trois secondes, et où il
+apparaît.
+
+## Motion
+
+Palier : Minimal | Moderate | Bold. Durées, easing.
+
+## Interdits
+
+Ce qu'on ne veut voir nulle part.
+```
+
+**Ce qui manque bloque, ce qui est ambigu se demande.** Une palette sans mode
+sombre est acceptable — le skill dérive le second thème et le fait valider.
+Une palette sans rôles nommés ne l'est pas : `#4A2FD0` sans savoir si c'est
+la couleur d'action ou une couleur de marque ne se convertit pas en token.
+
+**Le format compte moins que la complétude.** Un `DESIGN.md` écrit autrement
+mais qui donne rôles, valeurs et interdits s'importe très bien. Cette
+convention est un gabarit, pas une grammaire à respecter au caractère près.
+
+Deux catalogues publics diffusent des `DESIGN.md` prêts à l'emploi —
+[VoltAgent/awesome-design-md](https://github.com/voltagent/awesome-design-md)
+et le catalogue de [nexu-io/open-design](https://github.com/nexu-io/open-design)
+(151 paquets, chacun avec `manifest.json`, `DESIGN.md` et `tokens.css`). Les
+deux sont sous licence MIT. Un fichier venu de là s'importe comme n'importe
+quel autre — en vérifiant que la §« Ce qu'on ne reprend PAS » est appliquée,
+sans quoi le projet hérite de l'identité d'une marque existante.
 
 ---
 

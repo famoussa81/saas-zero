@@ -194,12 +194,23 @@ The **only** way to ship features. Six phases, each with deterministic gates.
 
 ## 8. Skills Available
 
-### Project-Specific Skills
+### Project-Specific Skills (socle `ns-*`, dans `.claude/skills/`)
 
-| Skill                | Purpose                                                |
-| -------------------- | ------------------------------------------------------ |
-| `saas-design-system` | Token architecture, component specs, design token sync |
-| `saas-architecture`  | ADR templates, decision log, architecture diagrams     |
+| Skill                                             | Purpose                                                           |
+| ------------------------------------------------- | ----------------------------------------------------------------- |
+| `ns-design-system`                                | Design non-générique, tokens, palette, élément signature          |
+| `ns-landing` · `ns-auth`                          | Site de vente · comptes (email, OAuth, MFA, sessions)             |
+| `ns-organizations`                                | Comptes B2B multi-membres (orgs, rôles, invites, RLS)             |
+| `ns-billing`                                      | Monétisation Stripe (checkout, abonnement, portal, hooks)         |
+| `ns-dashboard` · `ns-onboarding`                  | App produit · onboarding guidé ("wow" à l'arrivée)                |
+| `ns-retention` · `ns-analytics`                   | Faire rester · analytics d'usage                                  |
+| `ns-admin` · `ns-docs`                            | Panneau admin · documentation canonique                           |
+| `ns-ecommerce`                                    | Domaine boutique : catalogue, variantes, stock, panier, commandes |
+| `ns-antislop`                                     | Filtre de livraison : 38 règles contre l'UI générique             |
+| `ns-design-import`                                | Importer un `DESIGN.md` fourni et le convertir en tokens          |
+| `ns-quality-gates` · `ns-load-test` · `ns-sentry` | 14 gates · k6 · triage erreurs prod                               |
+| `ns-quickstart` · `ns-doctor`                     | Démarrage rapide · diagnostic toolchain                           |
+| `ns-optimize` · `ns-check-launch` · `ns-release`  | Perf · verdict launch · release vérifiée                          |
 
 ### Creative Skills (from registry)
 
@@ -306,7 +317,7 @@ npm run supabase:start
 # Apply migrations locally
 npm run supabase:migrate:up
 
-# Vercel Workers dev (Wrangler)
+# Vercel CLI dev / deploy
 npx vercel dev
 
 # Deploy to Vercel preview

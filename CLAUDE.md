@@ -197,18 +197,21 @@ The **only** way to ship features. Six phases, each with deterministic gates.
 
 ### Project-Specific Skills (socle `ns-*`, dans `.claude/skills/`)
 
-| Skill                                             | Purpose                                                   |
-| ------------------------------------------------- | --------------------------------------------------------- |
-| `ns-design-system`                                | Design non-générique, tokens, palette, élément signature  |
-| `ns-landing` · `ns-auth`                          | Site de vente · comptes (email, OAuth, MFA, sessions)     |
-| `ns-organizations`                                | Comptes B2B multi-membres (orgs, rôles, invites, RLS)     |
-| `ns-billing`                                      | Monétisation Stripe (checkout, abonnement, portal, hooks) |
-| `ns-dashboard` · `ns-onboarding`                  | App produit · onboarding guidé ("wow" à l'arrivée)        |
-| `ns-retention` · `ns-analytics`                   | Faire rester · analytics d'usage                          |
-| `ns-admin` · `ns-docs`                            | Panneau admin · documentation canonique                   |
-| `ns-quality-gates` · `ns-load-test` · `ns-sentry` | 14 gates · k6 · triage erreurs prod                       |
-| `ns-quickstart` · `ns-doctor`                     | Démarrage rapide · diagnostic toolchain                   |
-| `ns-optimize` · `ns-check-launch` · `ns-release`  | Perf · verdict launch · release vérifiée                  |
+| Skill                                             | Purpose                                                           |
+| ------------------------------------------------- | ----------------------------------------------------------------- |
+| `ns-design-system`                                | Design non-générique, tokens, palette, élément signature          |
+| `ns-landing` · `ns-auth`                          | Site de vente · comptes (email, OAuth, MFA, sessions)             |
+| `ns-organizations`                                | Comptes B2B multi-membres (orgs, rôles, invites, RLS)             |
+| `ns-billing`                                      | Monétisation Stripe (checkout, abonnement, portal, hooks)         |
+| `ns-dashboard` · `ns-onboarding`                  | App produit · onboarding guidé ("wow" à l'arrivée)                |
+| `ns-retention` · `ns-analytics`                   | Faire rester · analytics d'usage                                  |
+| `ns-admin` · `ns-docs`                            | Panneau admin · documentation canonique                           |
+| `ns-ecommerce`                                    | Domaine boutique : catalogue, variantes, stock, panier, commandes |
+| `ns-antislop`                                     | Filtre de livraison : 38 règles contre l'UI générique             |
+| `ns-design-import`                                | Importer un `DESIGN.md` fourni et le convertir en tokens          |
+| `ns-quality-gates` · `ns-load-test` · `ns-sentry` | 14 gates · k6 · triage erreurs prod                               |
+| `ns-quickstart` · `ns-doctor`                     | Démarrage rapide · diagnostic toolchain                           |
+| `ns-optimize` · `ns-check-launch` · `ns-release`  | Perf · verdict launch · release vérifiée                          |
 
 > Tous les skills `ns-*` sont au format `SKILL.md` (portables Claude Code / Codex).
 > Voir la correspondance NowStack → `ns-*` dans `docs/CORRESPONDANCE-NOWSTACK-VS-NS.md`.

@@ -289,13 +289,22 @@ if (!hasVariantTemplate && variant === "b2c") {
 if (!DRY) {
   const typeTemplate = path.join(TARGET, "supabase", "schema-variants", type);
   const targetMigrationsDir = path.join(TARGET, "supabase", "migrations");
+  const targetSeedDir = path.join(TARGET, "supabase", "seed");
   if (fs.existsSync(typeTemplate) && fs.existsSync(targetMigrationsDir)) {
     for (const f of fs.readdirSync(typeTemplate)) {
       if (!f.endsWith(".template")) continue;
-      const dest = path.join(targetMigrationsDir, f.replace(/\.template$/, ""));
+      // Un jeu d'essai n'est PAS une migration : le poser dans migrations/ le
+      // ferait jouer sur la base de production au premier `supabase db push`.
+      const isSeed = /^seed[_-]/i.test(f);
+      const destDir = isSeed ? targetSeedDir : targetMigrationsDir;
+      if (isSeed && !fs.existsSync(destDir))
+        fs.mkdirSync(destDir, { recursive: true });
+      const dest = path.join(destDir, f.replace(/\.template$/, ""));
       if (!fs.existsSync(dest)) {
         fs.copyFileSync(path.join(typeTemplate, f), dest);
-        console.log(`   ✅ Migration ${type} activée : ${path.basename(dest)}`);
+        console.log(
+          `   ✅ ${isSeed ? "Jeu d'essai" : "Migration"} ${type} : ${path.basename(dest)}`,
+        );
       }
     }
   } else if (type === "ecommerce") {

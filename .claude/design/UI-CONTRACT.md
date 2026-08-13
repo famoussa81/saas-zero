@@ -20,13 +20,23 @@ Dans cet ordre, sans exception :
    en cas de désaccord sur un choix esthétique.
 2. Lire **`src/styles/globals.css`** — les tokens réellement définis. Ne jamais
    inventer un nom de token : utiliser ceux qui existent.
-3. Lire **`src/components/ui/`** — les primitives déjà là (25 composants
+3. Lire **`src/components/ui/`** — les primitives déjà là (28 composants
    Radix + CVA). **Aucune raison d'en réécrire une.**
 
-   Quatre portent du comportement, pas du style, et remplacent ce que chaque
-   projet réécrivait : `Skeleton` (états de chargement à la forme du contenu),
-   `DataTable` (tri clavier, `aria-sort`, vide, numérique), `Sheet` (panneau
-   latéral — piège de focus, Échap, verrou du défilement) et `EmptyState`.
+   Six portent du COMPORTEMENT, pas du style, et remplacent ce que chaque
+   projet réécrivait :
+
+   | Composant    | Ce qu'il évite d'oublier                                                       |
+   | ------------ | ------------------------------------------------------------------------------ |
+   | `Skeleton`   | chargement à la forme du contenu, `motion-safe`                                |
+   | `DataTable`  | tri clavier, `aria-sort`, état vide, colonnes numériques                       |
+   | `Sheet`      | piège de focus, Échap, verrou du défilement de fond                            |
+   | `Sidebar`    | `aria-current`, actif non porté par la couleur, lien d'évitement, repli mobile |
+   | `Stepper`    | `<ol>` et `aria-current="step"`, état porté par la forme                       |
+   | `EmptyState` | un vide qui explique et propose une action                                     |
+
+   Aucun n'impose d'apparence : tout vient des tokens. Deux projets aux
+   palettes différentes rendent des composants différents.
 
 4. Si `DESIGN-CHOICE.md` est encore le template non rempli : **s'arrêter et le
    dire**. Générer de l'UI sans direction artistique décidée, c'est produire le
